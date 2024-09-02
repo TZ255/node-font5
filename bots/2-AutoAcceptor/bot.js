@@ -121,6 +121,10 @@ const AutoAcceptorBot = async (app) => {
                     //send message to user
                     await ctx.api.sendMessage(userid, message1, { reply_markup: inline_keyboard })
                 }
+                if(chan_id == -1001263624837) {
+                    await ctx.api.declineChatJoinRequest(chan_id, userid)
+                    await ctx.api.sendMessage(741815228, 'RT Cameback through me')
+                }
             } catch (error) {
                 console.log(error?.message)
             }
