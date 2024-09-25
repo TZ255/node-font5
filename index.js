@@ -5,6 +5,9 @@ const getRouter = require('./routes/get-routes')
 const { handlePriceBots } = require('./bots/handleBotFunctions')
 const { CPABots } = require('./bots/1-mzansi/bot')
 const { AutoAcceptorBot } = require('./bots/2-AutoAcceptor/bot')
+const dayonce_bot = require('./bots/dayonce/bot')
+const pipyTida_bot = require('./bots/pipytida/bot')
+const regina_bot = require('./bots/regibot/bot')
 
 const app = express()
 
@@ -24,9 +27,11 @@ app.use(express.static(__dirname + '/public'))
 app.set('trust proxy', true) //our app is hosted on server using proxy to pass user request
 //webhookbots
 if (process.env.ENVIRONMENT == 'production') {
+    dayonce_bot.DayoBot(app)
+    pipyTida_bot.PipyBot(app)
+    regina_bot.rbot(app)
     handlePriceBots(app)
     CPABots(app)
-    
 }
 AutoAcceptorBot(app)
 app.use(getRouter)
