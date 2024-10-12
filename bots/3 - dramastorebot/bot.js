@@ -45,7 +45,7 @@ const DramaStoreBot = async (app) => {
         //set webhook
         let hookPath = `/telebot/${process.env.USER}/dramastore`
         await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
-            drop_pending_updates: true
+            drop_pending_updates: true, max_connections: 60
         })
             .then(() => {
                 console.log(`webhook for dramastore is set`)
