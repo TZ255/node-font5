@@ -66,7 +66,7 @@ const DramaStoreBot = async (app) => {
         const { sendTome, sendToMe } = require('./functions/partials/sendtome')
         const { createChatInviteLink } = require('./functions/partials/createLink')
         const { moveNewChannel, ApproveReqs } = require('./functions/smallfns')
-        const { StartCommand } = require('./functions/start')
+        const StartCommand = require('./functions/start')
 
 
         // function to send any err in catch block

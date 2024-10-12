@@ -4,14 +4,15 @@ const nextEpModel = require('../models/botnextEp')
 const usersModel = require('../models/botusers')
 const inviteModel = require('../models/invitelink')
 
-const StartCommand = async (bot, ctx, dt, anyErr, trendingRateLimit) => {
+module.exports = async (bot, ctx, dt, anyErr, trendingRateLimit) => {
+
+    let delay = (ms) => new Promise(reslv => setTimeout(reslv, ms))
+
+    let ujumbe3 = 'You got the file and 2 points deducted from your points balance.\n\n<b>You remained with 8 points.</b>'
     try {
-        let delay = (ms) => new Promise(reslv => setTimeout(reslv, ms))
-        let ujumbe3 = 'You got the file and 2 points deducted from your points balance.\n\n<b>You remained with 8 points.</b>'
         let name = ctx.chat.first_name
         let message_id = ctx.message.message_id
         let msg = `Welcome ${name}, Visit Drama Store Website For Korean Series`
-
         if (!ctx.match) {
             await ctx.reply(msg, {
                 parse_mode: 'HTML',
@@ -252,11 +253,11 @@ const StartCommand = async (bot, ctx, dt, anyErr, trendingRateLimit) => {
         else if (ctx.match && trendingRateLimit.includes(ctx.chat.id)) {
             await ctx.api.deleteMessage(ctx.chat.id, message_id)
         }
+
     } catch (err) {
         console.log(err)
         anyErr(err)
         ctx.reply('An error occurred whilst trying give you the file, please forward this message to @shemdoe\n\n' + 'Error: ' + err.message)
     }
-}
 
-module.exports = {StartCommand}
+}
