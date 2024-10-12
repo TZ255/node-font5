@@ -371,7 +371,7 @@ const DramaStoreBot = async (app) => {
         })
 
         bot.on('chat_join_request', async ctx => {
-            ApproveReqs(bot, ctx, dt)
+            ApproveReqs(bot, ctx, dt, delay)
         })
 
         //help command

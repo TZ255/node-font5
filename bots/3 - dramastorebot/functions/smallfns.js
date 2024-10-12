@@ -40,7 +40,7 @@ const moveNewChannel = async (bot, ctx, dt, InlineKeyboard) => {
     }
 }
 
-const ApproveReqs = async (bot, ctx, dt) => {
+const ApproveReqs = async (bot, ctx, dt, delay) => {
     try {
         let userid = ctx.chatJoinRequest.from.id
         let chan_id = ctx.chatJoinRequest.chat.id
