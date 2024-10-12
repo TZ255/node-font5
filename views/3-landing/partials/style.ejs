@@ -1,0 +1,61 @@
+<style>
+    .land {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        margin: auto;
+        position: absolute;
+        right: 0; left: 0; bottom: 0; top: 0;
+    }
+
+    .land .tick i {
+        color: green;
+        font-size: 64px;
+        display: flex;
+    }
+
+    .land .butt {
+        margin-top: 12px;
+        text-align: center;
+    }
+
+    .land .butt button {
+        background-color: brown;
+        color: white;
+        padding: 12px;
+        font-weight: bold;
+        font-size: 14px;
+        border: none;
+        border-radius: 4px;
+        display: block;
+        margin: 12px auto;
+        cursor: pointer;
+    }
+
+    .land .butt button:active,
+    .land .butt button:hover {
+        background-color: black;
+    }
+
+    .land .butt i {
+        color: green;
+    }
+
+    .land .butt button i {
+        color: inherit;
+    }
+
+    #spin {
+    z-index: 999;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+</style>

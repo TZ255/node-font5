@@ -1,0 +1,38 @@
+<script>
+    const hash = window.location.hash
+    const ds = document.getElementById('ds')
+    const oh = document.getElementById('oh')
+    let uni = '<%= rand_chuo.code %>'
+
+    function ondoaSpin() {
+        setTimeout(() => {
+            document.getElementById('spin').style.display = 'none'
+            document.querySelector('.land').style.display = 'flex'
+        }, 3500)
+
+    }
+
+    if (hash.includes('#getting-full-show-') || hash.includes('#adding-points-ohmy')) {
+        ds.style.display = 'none'
+        let btn = document.getElementById('btn')
+        btn.setAttribute('onclick', `window.open('/${uni + hash}', '_self')`)
+        ondoaSpin()
+    }
+
+    if (hash.includes('#getting-episode-dramaid=') || hash.includes('#adding-points-dramastore')) {
+        let btn = document.getElementById('btn')
+        oh.style.display = 'none'
+
+        btn.setAttribute('onclick', `window.open('/${uni + hash}', '_self')`)
+        ondoaSpin()
+    }
+
+    if (!hash) {
+        document.querySelector('.land').style.display = 'none'
+        let con = confirm('The content you are trying to access has been removed, click OK to go to homepage')
+
+        if (con == true || con == false) {
+            window.open('/', '_self')
+        }
+    }
+</script>

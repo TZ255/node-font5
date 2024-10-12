@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Nauli elekezi ya mkoa wa <%= mkoa %> kutoka stand ya <%= post.info[0].from %> to <%= post.info[0].to %> kupitia barabara ya <%= post.info[0].via %> kwa ordinary, semi na luxury buses...">
+    <title>Nauli <%= post.info[0].from %> to <%= post.info[0].to %>
+    </title>
+    <%- include('./partials/style.ejs'); %>
+        <%- include('../global/style.ejs'); %>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+                integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
+                crossorigin="anonymous">
+            <%- include('../global/favicon.ejs') %>
+</head>
+
+<body>
+    <%- include('../global/header.ejs'); %>
+        <main>
+            <section class="left">
+                <h1 class="h2" style="font-size: 16px;">
+                    Nauli za Mabasi Elekezi from <%= post.info[0].from %> to <%= post.info[0].to %> via <%=
+                                post.info[0].via %>
+                </h1>
+                <p style="padding: 12px;">
+                    Before proceeding let us familiarize ourselves with this journey.
+                </p>
+                <div class="secs" itemscope itemtype="https://schema.org/Distance">
+                    <h2 itemprop="name">1. First What Is a Distance / Umbali from <span class="cap">
+                            <%= post.info[0].from.toLowerCase() %>
+                        </span> to <span class="cap">
+                            <%= post.info[0].to.toLowerCase() %>
+                        </span> </h2>
+                    <p itemprop="description">
+                        There is a distance of <b itemprop="distance">
+                            <%= post.info[0].dist %> KM
+                        </b> which is equal to <b itemprop="distance">
+                            <%= Number(Number(post.info[0].dist.replace(/,/g, '' )) * 0.621371).toLocaleString('en-us')
+                                %> miles,
+                        </b> this is via <span class="cap">
+                            <%= post.info[0].via.toLowerCase() %>
+                        </span> road.
+                    </p>
+                </div>
+                <div class="secs" itemscope itemtype="https://schema.org/BusReservation">
+                    <h2 itemprop="name">2. Nauli Kwa Ordinary buses from <span class="cap">
+                            <%= post.info[0].from.toLowerCase() %>
+                        </span> to <span class="cap">
+                            <%= post.info[0].to.toLowerCase() %>
+                        </span> via barabara ya <span class="cap">
+                            <%= post.info[0].via.toLowerCase() %>
+                        </span> </h2>
+                    <p>
+                        >> Kwa mabasi ya Ordinary Nauli in terms of Tanzanian Shillings is <b itemprop="totalPrice">Tsh.
+                            <%= post.info[0].ord %>/=
+                        </b>
+                    </p>
+                </div>
+
+                <div class="secs" itemscope itemtype="https://schema.org/BusReservation">
+                    <h2 itemprop="name">3. Nauli Kwa Semi Luxury buses from <span class="cap">
+                            <%= post.info[0].from.toLowerCase() %>
+                        </span> to <span class="cap">
+                            <%= post.info[0].to.toLowerCase() %>
+                        </span> via barabara ya <span class="cap">
+                            <%= post.info[0].via.toLowerCase() %>
+                        </span> </h2>
+                    <p>
+                        >> Kwa mabasi ya Semi Luxury Nauli in terms of Tanzanian Shillings is <b
+                            itemprop="totalPrice">Tsh. <%= post.info[0].slex %>/= </b>
+                    </p>
+                </div>
+
+                <div itemscope>
+                    <h2 class="h2" style="font-size: 16px;">
+                        Also See Nauli za Mabasi Elekezi from <%= post.info[0].from %> to Mikoani (Other Tanzanian
+                            Regions)
+                    </h2>
+                    <ol class="links">
+                        <% others.info.forEach(el => { %>
+                            <li><a href="/<%= mkoa %>/<%= el.rid %>">Nauli from <%= el.from %> to <%= el.to %> via <%=
+                                el.via %>.</a></li>
+                        <% }) %>
+                    </ol>
+                </div>
+
+                <%- include('../global/global-mwisho.ejs'); %> 
+            </section>
+
+            <%- include('../global/right.ejs'); %>
+        </main>
+
+        <%- include('../global/footer.ejs'); %>
+
+            <%- include('./partials/script.ejs'); %>
+                <%- include('../global/script.ejs'); %>
+
+                    <!-- bootstrap -->
+                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+                        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+                        crossorigin="anonymous"></script>
+</body>
+
+</html>

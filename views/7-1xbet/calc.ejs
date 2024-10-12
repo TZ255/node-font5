@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>1xbet Withdrawals Calculator</title>
+    <style>
+        *, *::after, *::before {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: rgb(15, 50, 79);
+            color: white;
+        }
+        .main {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            width: 360px;
+            margin: 32px auto 0 auto;
+        }
+
+        .main h1 {
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .main .in {
+            width: 100%;
+            text-align: center;
+        }
+
+        .main .in input {
+            font-size: medium;
+            width: 85%;
+            padding: 12px;
+            border-radius: 32px;
+            border: #0f324f 4px double;
+        }
+
+        .main .out {
+            text-align: left;
+            margin: 16px auto;
+            width: 85%;
+        }
+
+        .out div {
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <h1>Makato ya kutoa 1xbet Tanzania (Wakala)</h1>
+        <div class="in">
+            <input type="number" id="in" placeholder="Ingiza kiasi cha kutoa...">
+        </div>
+        <div class="out">
+            <div>
+                Unatoa: <b>Tsh. <span id="toa">0</span></b>
+            </div>
+            <div>
+                Makato (3%): <b>Tsh. <span id="mk">0</span></b>
+            </div>
+            <div>
+                Utapokea: <b>Tsh. <span id="hela">0</span></b>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const kiasi = document.getElementById('in')
+        const majibu = document.getElementById('hela')
+        const toa = document.getElementById('toa')
+        const mk = document.getElementById('mk')
+        kiasi.addEventListener('input', ()=> {
+            let val = document.getElementById('in').value
+            toa.innerText = Number(val).toLocaleString('en-us')
+
+            let final = val * 0.97
+            mk.innerText = (val - final).toLocaleString('en-us')
+            majibu.innerText = final.toLocaleString('en-us')
+        })
+    </script>
+</body>
+</html>

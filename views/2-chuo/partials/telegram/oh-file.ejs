@@ -1,0 +1,71 @@
+<div class="tgBody ddhide" id="tgBodyOHTG">
+    <h2 class="kd">OH MY! CHANNEL BOT</h2>
+    <div class="logo-oh">
+        <i class="fa-solid fa-file-video"></i>
+    </div>
+    <div class="caption">
+        <h4>GET FULL PREMIUM SHOW <br> <br> 👇👇</h4>
+    </div>
+    <div class="button">
+        <button id="realOHTG"><b>OPEN IN TELEGRAM APP <i
+                    class="fa-solid fa-arrow-up-right-from-square"></i></b></button>
+        <button class="wait" id="waitBOHTG">WAITING - <span id="waitOHTG">00</span> sec</button>
+        <p id="maelz2" style="font-size: smaller;"><i>⚠ click above to get the file.... In the bot click
+                "START"</i> </p>
+
+        <div class="ohtweb tweb">
+            <a id="ohtweb" href="#" target="_blank" rel="nofollow">OPEN IN TELEGRAM WEB</a>
+            <p id="par_desc" style="font-size: smaller;"><i>⚠ click above if the first link don't work</i> </p>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function ohTelegramFile() {
+        let hash = window.location.hash
+        if (hash.includes('#getting-full-show')) {
+            //mfan0 #getting-full-show-showid=GHGghdttY
+
+            let nano = hash.split('showid=')[1]
+            let ohtweb = document.getElementById('ohtweb')
+            let wait = document.getElementById('waitOHTG')
+            let real = document.getElementById('realOHTG')
+            let waitButton = document.getElementById('waitBOHTG')
+
+            if (hash.includes('-NAN-uid')) {
+                let uid = hash.split('NAN-uid=')[1].split('&-showid')[0].trim()
+                ohtweb.setAttribute('href', `/oh-req/${uid}/${nano}`)
+                ohtweb.removeAttribute('target')
+                document.getElementById('par_desc').style.display = 'none'
+                document.getElementById('maelz2').style.display = 'none'
+                ohtweb.innerText = 'REQUEST FULL VIDEO'
+                real.style.display = 'none'
+            } else {
+                ohtweb.setAttribute('href', `https://t.me/ohmychannelV2bot?start=fromWeb-${nano}`)
+                real.setAttribute('onclick', `openTg('${nano}')`)
+            }
+
+            let count = 12
+            let interval = setInterval(() => {
+                count -= 1
+                wait.innerText = count
+
+                if (count == 0) {
+                    clearInterval(interval)
+                    waitButton.style.display = 'none'
+                    if(!hash.includes('-NAN-uid')) {
+                        real.style.display = 'block'
+                    }
+                    document.querySelector('.ohtweb').style.display = 'flex'
+                }
+            }, 1000)
+        }
+    }
+
+    ohTelegramFile()
+
+    function openTg(nano) {
+        window.open(`tg://resolve?domain=ohmychannelV2bot&start=fromWeb-${nano}`)
+    }
+</script>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="robots" content="noindex,nofollow"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        const mainUrl = window.location.href
+
+        if (mainUrl.includes('?msgid=777shemdoe')) {
+            let tData = mainUrl.split('777shemdoe')
+            let msgid = tData[1]
+            let size = tData[2]
+            let epno = tData[3]
+
+            let posts = [
+                '62c84d54da06342665e31fb7',
+                '62ca86111afa2af6f7a1026c',
+                '62cd8fbe9de0786aafdb98b7',
+                '62df23671eef6dabf5feecde',
+                '63212e1f6eeba4e82a45bd27'
+            ]
+            let rrnp = Math.floor(Math.random() * posts.length)
+
+            let url = `/blog/post.html?id=${posts[rrnp]}#getting-episode-dramaid=${msgid}&size=${size}&epno=${epno}`
+            window.open(url, '_self')
+        }
+
+        if (mainUrl.includes('?nano=')) {
+            let nano = mainUrl.split('nano=')[1]
+
+            let posts = [
+                '62c84d54da06342665e31fb7',
+                '62ca86111afa2af6f7a1026c',
+                '62cd8fbe9de0786aafdb98b7',
+                '62df23671eef6dabf5feecde',
+                '63212e1f6eeba4e82a45bd27',
+                '632e58662744c9849dd69ba1',
+                '632e5c7d2744c9849dd69c0a'
+            ]
+            let rnp = Math.floor(Math.random() * posts.length)
+
+            let url = `/blog/post.html?id=${posts[rnp]}#getting-full-show-showid=${nano}`
+
+            window.open(url, '_self')
+        }
+    </script>
+</body>
+</html>

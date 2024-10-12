@@ -1,0 +1,56 @@
+<style>
+    .left .cont {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        padding: 12px;
+    }
+
+    .left .cont .mkoa {
+        width: 45%;
+        background-color: whitesmoke;
+        padding: 16px;
+        margin: 12px 0;
+        border-radius: 12px;
+        cursor: pointer;
+        display: block;
+        text-decoration: none;
+    }
+
+    .left .cont .mkoa:hover,
+    .left .cont .mkoa:active {
+        border: 2px brown solid;
+        background-color: white;
+    }
+
+    .left .cont .mkoa h3 {
+        color: black;
+        border-bottom: 2px brown solid;
+    }
+
+    .left .cont .mkoa span {
+        display: block;
+        color: brown;
+        margin-top: 12px;
+        font-size: 14px;
+        font-weight: bold;
+        background-color: white;
+        padding: 8px;
+        border-radius: 2px;
+    }
+
+    .left .cont ul li {
+        color: gray;
+    }
+
+    @media (max-width: 800px) {
+        main .left .cont {
+            flex-direction: column;
+        }
+
+        main .left .mkoa {
+            width: 98% !important;
+            margin: 16px auto !important;
+        }
+    }
+</style>

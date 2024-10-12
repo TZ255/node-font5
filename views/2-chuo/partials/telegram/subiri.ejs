@@ -1,0 +1,92 @@
+<div class="directs" id="directs">
+    <span id="fullv"></span>
+    <span class="fingers">
+        <i class="fa-regular fa-hand-point-down"></i>
+        <i class="fa-regular fa-hand-point-down"></i>
+    </span>
+</div>
+
+<div class="subiri" id="subiri">
+    <div class="top-cont">
+        <span class="subiri-top"></span>
+        <span id="scount">05</span>
+    </div>
+
+
+    <div class="subiri-body" id="subiri-body">
+
+        <div class="text-center spinner-4">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+        <div class="get-file" id="get-file">
+            <button id="btn-get-file"></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function subiriFn() {
+        let hash = window.location.hash
+        let scroll_btn = document.getElementById('btn-get-file')
+        let stitle = document.querySelector('.subiri-top')
+        let scount = document.getElementById('scount')
+        let fullv = document.getElementById('fullv')
+        if (hash.includes('#getting') || hash.includes('#adding')) {
+            let count = 5;
+            if (hash.includes('#getting-episode')) {
+                stitle.innerText = 'Fetching Episode Info... '
+                fullv.innerHTML = '<i class="fa-solid fa-video"></i> Drama Episode'
+            } else if (hash.includes('#getting-full')) {
+                stitle.innerText = 'Fetching Video Info... '
+                fullv.innerHTML = '<i class="fa-solid fa-video"></i> Full Video'
+            }
+
+            let interval = setInterval(() => {
+                count--
+                scount.innerText = `0${count}`
+
+                if (count == 0) {
+                    clearInterval(interval)
+                    scount.style.display = 'none'
+                    the_scroll_btn.style.display = 'block'
+                    document.querySelector('.subiri-top').innerHTML = '<i style="color: green;" class="fa-solid fa-circle-check"></i> Data Fetched Successfully'
+                    document.querySelector('.spinner-4').style.display = 'none'
+
+                    if (hash.includes('#getting-full-show')) {
+                        document.querySelector('.oh-tg-file').style.display = 'block'
+                    }
+
+                    else if (hash.includes('#getting-episode')) {
+                        document.querySelector('.ds-tg-file').style.display = 'block'
+                    }
+                }
+            }, 1000)
+
+            document.getElementById('subiri').style.display = 'flex'
+            document.getElementById('directs').style.display = 'block'
+
+            if (hash.includes('#getting-episode')) {
+                scroll_btn.innerText = 'Get the Episode'
+            }
+            else if (hash.includes('#adding-points-dramastore')) {
+                scroll_btn.innerText = 'Go to Add Points'
+            }
+            else if (hash.includes('#getting-full-show')) {
+                scroll_btn.innerText = 'Get the Video'
+            }
+        }
+    }
+
+    subiriFn()
+
+    let the_scroll_btn = document.getElementById('btn-get-file')
+    the_scroll_btn.addEventListener('click', () => {
+        let toAds = document.getElementById('toAds')
+        toAds.scrollIntoView({
+            behavior: "smooth"
+        })
+    })
+</script>

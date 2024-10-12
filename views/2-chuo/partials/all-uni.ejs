@@ -1,0 +1,20 @@
+<div class="accordion" id="accordionExample" style="margin: 24px auto !important;">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="background-color: brown; color: white; font-weight: bolder;">
+          Other Universities Admission Requirements
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          <ol>
+            <% all.forEach(u => { %>
+                <% if (u.code != chuo.code) { %>
+                    <li><a href="/<%= u.code %>" style="text-decoration: underline; color: gray; font-weight: bold;"><%= u.name %></a></li>
+                <% } %>
+            <% }) %>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>

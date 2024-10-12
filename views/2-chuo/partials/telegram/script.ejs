@@ -1,0 +1,14 @@
+<script>
+    function addingPoints() {
+        let hash = window.location.hash
+
+        if(hash.includes('#adding-points')) {
+            let con = confirm('Adding points function has been terminated by the Admin')
+
+            if(con == true || con == false) {
+                window.open('/', '_self')
+            }
+        }
+    }
+    addingPoints()
+</script>

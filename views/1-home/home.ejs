@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Tanzania Universities | Courses, Addmission Requirements, University Capacity, and Programmes Cutting Points.">
+    <title>Tanzanian Universities | Courses and Admission Requirements</title>
+    <%- include('./partials/style.ejs'); %>
+        <%- include('../0-global/style.ejs'); %>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+                integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
+                crossorigin="anonymous">
+            <%- include('../0-global/favicon.ejs') %>
+</head>
+
+<body>
+    <%- include('../0-global/header.ejs'); %>
+        <div class="h-title" style="text-align: center; margin: 24px auto;">
+            <br>
+            <h1 style="font-size: 24px !important;">Tanzanian Universities | Courses & Admission Requirements</h1>
+            <br>
+        </div>
+        <main>
+            <section class="left">
+                <h2 class="h2" style="font-size: 16px;">List of Tanzanian Universities, University Collages and Non-Universities Approved to Admit Undergraduate Students.</h2>
+                <div class="cont" itemscope>
+                    <% vyuo.forEach(chuo=> { %>
+                        <a href="/<%= chuo.code %>" class="mkoa">
+                            <h3>
+                                <%= chuo.name %>
+                            </h3>
+                            <ul>
+                                <li>
+                                    University Code:
+                                    <b>
+                                        <%= chuo.code %>
+                                    </b>
+                                </li>
+                                <li>
+                                    Ownership Status:
+                                    <b>
+                                        <%= chuo.own %>
+                                    </b>
+                                </li>
+                                <li>
+                                    Institution Type:
+                                    <b>
+                                        <%= chuo.type %>
+                                    </b>
+                                </li>
+                                <li>
+                                    University Location:
+                                    <b>
+                                        <%= chuo.loc %>
+                                    </b>
+                                </li>
+                            </ul>
+                            <span>See Addmission Requirements...</span>
+                        </a>
+                        <% }) %>
+                </div>
+            </section>
+
+            <%- include('../0-global/right.ejs'); %>
+        </main>
+
+        <%- include('../0-global/footer.ejs'); %>
+
+            <%- include('./partials/script.ejs'); %>
+                <%- include('../0-global/script.ejs'); %>
+
+                    <!-- bootstrap -->
+                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+                        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+                        crossorigin="anonymous"></script>
+</body>
+
+</html>

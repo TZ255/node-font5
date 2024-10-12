@@ -1,0 +1,175 @@
+<style>
+    :root {
+        --dodger: #1e90ff;
+        --light_g: #d3d3d3;
+        --white_sm: #f5f5f5;
+    }
+    .directs {
+        display: none;
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+        margin: 4px auto;
+        border-top: 2px solid var(--dodger);
+        border-radius: 12px;
+        padding-top: 6px;
+    }
+
+    .directs span {
+        display: block;
+    }
+
+    .directs #fullv {
+        margin-bottom: 8px;
+    }
+
+    .directs .fingers {
+        margin-bottom: 4px;
+    }
+
+    .subiri {
+        display: none;
+        flex-direction: column;
+        border-radius: 12px;
+        margin: 8px auto 32px auto;
+        padding: 8px;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--white_sm);
+        border-left: var(--dodger) 4px solid;
+        border-right: var(--dodger) solid 4px;
+        border-top: 1px solid var(--dodger);
+        border-bottom: 1px solid var(--dodger);
+    }
+
+    .subiri .top-cont {
+        font-weight: bold;
+        font-size: 14px;
+        border-bottom: 1px #d3d3d3 solid;
+        margin-bottom: 8px;
+    }
+
+    .subiri button {
+        border: none;
+        background-color: green;
+        color: white;
+        padding: 8px;
+        border-radius: 2px;
+        display: none;
+        font-size: 12px;
+        border-radius: 3px;
+    }
+
+    .ds-tg-file,
+    .oh-tg-file {
+        display: none;
+    }
+
+    .tgBody {
+        width: 97%;
+        margin: 32px auto;
+        border-left: 8px dodgerblue solid;
+        border-right: 8px dodgerblue solid;
+        border-bottom: 1px solid dodgerblue;
+        border-top: 1px solid dodgerblue;
+        padding: 32px 4px;
+        border-radius: 24px;
+    }
+
+    .kd {
+        text-align: center;
+        margin: 12px auto 24px auto;
+        font-size: 20px;
+        width: 95%;
+        font-weight: bold;
+    }
+
+    .logo-oh {
+        margin: 8px auto;
+        text-align: center;
+    }
+
+    .logo-oh i {
+        font-size: 100px;
+    }
+
+    .button,
+    .tweb {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .tweb {
+        margin-top: 24px !important;
+    }
+
+    .button #real,
+    .button #realDSTG,
+    .button #realOHTG,
+    .tweb {
+        display: none;
+    }
+
+    .button button,
+    #ohtweb,
+    #dstweb {
+        font-weight: bolder;
+        color: white;
+        background-color: #33d684;
+        border: none;
+        border-radius: 48px;
+        padding: 16px 12px;
+        outline: none;
+        cursor: pointer;
+        width: 260px;
+        font-size: 16px;
+        margin: auto;
+        text-decoration: none;
+    }
+
+    .button .wait {
+        background-color: lightgray !important;
+        color: gray !important;
+        cursor: wait;
+    }
+
+    .button button:hover,
+    .button button:active,
+    #dstweb:hover,
+    #dstweb:active,
+    #ohtweb:active,
+    #ohtweb:hover {
+        background-color: dodgerblue;
+        color: white;
+        outline: none;
+    }
+
+    .caption {
+        width: 80%;
+        text-align: center;
+        margin: 12px auto;
+        padding: 8px;
+    }
+
+    .caption h4 {
+        font-size: 16px !important;
+    }
+
+    @media (max-width: 450px) {
+        .telegramWrapper .logo .fa {
+            font-size: 30px;
+        }
+
+        .telegramWrapper .title {
+            font-size: 15px;
+            margin-top: 8px;
+        }
+    }
+
+    @keyframes s4 {
+        to {
+            transform: rotate(1turn)
+        }
+    }
+</style>

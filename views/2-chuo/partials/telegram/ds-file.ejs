@@ -1,0 +1,81 @@
+<div class="tgBody ddhide" id="tgBodyDSTG">
+    <h2 class="kd">DRAMA STORE BOT</h2>
+    <div class="logo-oh">
+        <i class="fa-solid fa-file-video"></i>
+    </div>
+    <div class="caption">
+        <h4 id="episode">EPISODE <span id="ep"></span> <br><br> 👇👇</h4>
+    </div>
+    <div class="button">
+        <button id="realDSTG">
+            <b>OPEN IN TELEGRAM APP
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </b>
+        </button>
+        
+        <button class="wait" id="waitBDSTG">WAITING - <span id="waitDSTG">
+                00</span> sec
+        </button>
+        <p id="maelz" style="font-size: smaller;"><i>⚠ click above to get the file.... In the bot click "START"</i>
+        </p>
+
+        <div class="dstweb tweb">
+            <a id="dstweb" href="#" target="_blank" rel="nofollow">OPEN IN TELEGRAM WEB</a>
+            <p id="ds_par" style="font-size: smaller;"><i>⚠ click above if the first link don't work</i> </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showingHide() {
+        let hash = window.location.hash
+
+        if (hash.includes('#getting-episode')) {
+            let msgid = hash.split('dramaid=')[1].split('&')[0]
+            let size = hash.split('&size=')[1].split('&')[0]
+            let epno = hash.split('&epno=')[1]
+
+            let realBtn = document.getElementById('realDSTG')
+            let dsWeb = document.getElementById('dstweb')
+            let dsWebClass = document.querySelector('.dstweb')
+
+            if (size.includes('NAN')) {
+                let uid = hash.split('&epno=')[1] // replace with userid
+                dsWeb.setAttribute('href', `/req/${uid}/${msgid}`)
+                dsWeb.removeAttribute('target')
+                document.getElementById('maelz').style.display = 'none'
+                document.getElementById('episode').innerHTML = 'FULL EPISODE WITH ENG SUB <br><br> 👇👇'
+                document.getElementById('ds_par').style.display = 'none'
+                dsWeb.innerText = 'REQUEST THE EPISODE'
+                realBtn.style.display = 'none'
+
+            } else {
+                realBtn.setAttribute('onclick', `openTgDS('${msgid}', '${epno}', '${size}')`)
+                dsWeb.setAttribute('href', `https://t.me/dramastorebot?start=fromWeb${msgid}`)
+                document.getElementById('ep').innerText = `${epno} (${size} MB)`
+            }
+
+            let waitSpan = document.getElementById('waitDSTG')
+            let fakeBtn = document.getElementById('waitBDSTG')
+            let count = 12
+            let interval = setInterval(() => {
+                count--
+                waitSpan.innerText = count
+
+                if (count == 0) {
+                    clearInterval(interval)
+                    fakeBtn.style.display = 'none'
+                    document.querySelector('.dstweb').style.display = 'flex'
+                    if (!size.includes('NAN')) {
+                        realBtn.style.display = 'block'
+                    }
+                }
+            }, 1000)
+        }
+    }
+    showingHide()
+
+    function openTgDS(msgid, epno, size) {
+        window.open(`tg://resolve?domain=dramastorebot&start=fromWeb${msgid}`)
+    }
+</script>
