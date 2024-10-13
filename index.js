@@ -31,7 +31,6 @@ if (process.env.ENVIRONMENT == 'production') {
     dayonce_bot.DayoBot(app)
     pipyTida_bot.PipyBot(app)
     regina_bot.rbot(app)
-    //DramaStore_bot.DramaStoreBot(app)
     handlePriceBots(app)
     CPABots(app)
 }
