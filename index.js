@@ -8,7 +8,6 @@ const { AutoAcceptorBot } = require('./bots/2-AutoAcceptor/bot')
 const dayonce_bot = require('./bots/dayonce/bot')
 const pipyTida_bot = require('./bots/pipytida/bot')
 const regina_bot = require('./bots/regibot/bot')
-const DramaStore_bot = require('./bots/3 - dramastorebot/bot')
 
 const app = express()
 
