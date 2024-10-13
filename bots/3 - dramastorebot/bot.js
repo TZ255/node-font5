@@ -1,5 +1,6 @@
 const { Bot, webhookCallback, InlineKeyboard, InlineQueryResultBuilder } = require('grammy')
 const { autoRetry } = require("@grammyjs/auto-retry");
+const { limit } = require("@grammyjs/ratelimiter");
 require('dotenv').config()
 const usersModel = require('./models/botusers')
 const inviteModel = require('./models/invitelink')
@@ -40,7 +41,10 @@ const dt = {
 
 const DramaStoreBot = async (app) => {
     try {
-        const bot = new Bot(process.env.DS_TOKEN)
+        const bot = new Bot(process.env.DS_TOKEN, {
+            client: {apiRoot: process.env.API_ROOT}
+        })
+        bot.use(limit());
 
         //set webhook
         let hookPath = `/telebot/${process.env.USER}/dramastore`
