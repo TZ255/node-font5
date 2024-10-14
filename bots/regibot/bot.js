@@ -572,6 +572,27 @@ const reginaBot = async (app) => {
                         let info = await ctx.reply('Graph posted', { reply_to_message_id: rp_id })
                         await delay(2000)
                         await ctx.api.deleteMessage(ctx.chat.id, info.message_id)
+                    } else if (txt.toLowerCase().includes('whatsapp')) {
+                        let cap = ctx.channelPost.reply_to_message?.caption
+                        let title = `*${cap.split('🔥')[0].trim().split('\n')[0]}*\n\`${cap.split('🔥')[0].trim().split('\n')[1]}\``
+                        let odds = cap.split('Total Odds: ')[1].substring(0,4)
+                        let splitData = cap.split('📠 Booking code:')[0].trim().split('•••')
+                        let final_text = `${title}\n\n\n*🔥 Total Odds: ${odds}*`
+                        let bottom_text = ``
+                        for (let [i,d] of splitData.entries()) {
+                            if (i == 0) {
+                                continue;
+                            }
+                            let match_data = d.trim().split('\n')
+                            let title = match_data[0].trim()
+                            let game = match_data[1].trim()
+                            let tip = match_data[2].trim().replace('☑️', '🎯 ')
+                            let expl = match_data[3].trim()
+                            
+                            let t = `\n\n•••\n\n${title}\n*${game}*\n> *${tip}*\n> ${expl}`
+                            final_text = final_text + t
+                        }
+                        await ctx.reply(final_text)
                     }
                 }
 

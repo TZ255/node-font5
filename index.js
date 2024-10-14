@@ -29,11 +29,12 @@ app.set('trust proxy', true) //our app is hosted on server using proxy to pass u
 if (process.env.ENVIRONMENT == 'production') {
     dayonce_bot.DayoBot(app)
     pipyTida_bot.PipyBot(app)
-    regina_bot.rbot(app)
+    
     handlePriceBots(app)
     CPABots(app)
+    AutoAcceptorBot(app)
 }
-AutoAcceptorBot(app)
+regina_bot.rbot(app)
 app.use(getRouter)
 
 app.listen(process.env.PORT || 3000, () => console.log('Listen to port 3000'))
