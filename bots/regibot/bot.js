@@ -574,11 +574,15 @@ const reginaBot = async (app) => {
                         await ctx.api.deleteMessage(ctx.chat.id, info.message_id)
                     } else if (txt.toLowerCase().includes('whatsapp')) {
                         let cap = ctx.channelPost.reply_to_message?.caption
-                        let title = `*${cap.split('🔥')[0].trim().split('\n')[0]}*\n\`${cap.split('🔥')[0].trim().split('\n')[1]}\``
+                        let title = `*${cap.split('🔥')[0].trim().split('\n')[0].replace('Leo', 'Siku')}*\n\`${cap.split('🔥')[0].trim().split('\n')[1]}\``
                         let odds = cap.split('Total Odds: ')[1].substring(0,4)
                         let splitData = cap.split('📠 Booking code:')[0].trim().split('•••')
-                        let final_text = `${title}\n\n\n*🔥 Total Odds: ${odds}*`
-                        let bottom_text = ``
+                        let booking_code = cap.split('📠 Booking code: ')[1].split('\n')[0].trim()
+                        let final_text = `${title}\n\n\n`
+                        let bottom_text = `•••\n\n*🔥 Total Odds: ${odds}*\n📲 Booking Code: *${booking_code}*\n\n> Mkeka huu umeandaliwa *BetWay*. Wanatoa refund kwa mkeka uliochanwa na mechi moja.\n\nIkiwa bado huna account\n*🔗 Jisajili Hapa!*\n*www.bet-link.top/betway/register*`
+                        if(cap.includes('Gal Sport')) {
+                            bottom_text = `•••\n\n*🔥 Total Odds: ${odds}*\n📲 Booking Code: *${booking_code}*\n\n> Mkeka huu umeandaliwa *Gal Sport Betting*. Wanatoa bonus ya 150% kwa deposit ya kwanza.\n\nIkiwa bado huna account\n*🔗 Jisajili Hapa!*\n*www.bet-link.top/gsb/register*`
+                        }
                         for (let [i,d] of splitData.entries()) {
                             if (i == 0) {
                                 continue;
@@ -589,10 +593,12 @@ const reginaBot = async (app) => {
                             let tip = match_data[2].trim().replace('☑️', '🎯 ')
                             let expl = match_data[3].trim()
                             
-                            let t = `\n\n•••\n\n${title}\n*${game}*\n> *${tip}*\n> ${expl}`
+                            let t = `${title}\n*${game}*\n> *${tip}*\n> ${expl}\n\n\n`
                             final_text = final_text + t
                         }
-                        await ctx.reply(final_text)
+                        let wa_msg = await ctx.reply(final_text+bottom_text)
+                        await ctx.deleteMessage()
+                        setTimeout(()=> {ctx.api.deleteMessage(ctx.chat.id, wa_msg.message_id)},10000)
                     }
                 }
 
