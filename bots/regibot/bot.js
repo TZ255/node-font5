@@ -574,14 +574,15 @@ const reginaBot = async (app) => {
                         await ctx.api.deleteMessage(ctx.chat.id, info.message_id)
                     } else if (txt.toLowerCase().includes('whatsapp')) {
                         let cap = ctx.channelPost.reply_to_message?.caption
-                        let title = `*${cap.split('🔥')[0].trim().split('\n')[0].replace('Leo', 'Siku')}*\n\`${cap.split('🔥')[0].trim().split('\n')[1]}\``
+                        let title = `*${cap.split('🔥')[0].trim().split('\n')[0].replace('Leo', 'Siku')}*\n\`\`\`${cap.split('🔥')[0].trim().split('\n')[1]}\`\`\``
                         let odds = cap.split('Total Odds: ')[1].substring(0,4)
                         let splitData = cap.split('📠 Booking code:')[0].trim().split('•••')
                         let booking_code = cap.split('📠 Booking code: ')[1].split('\n')[0].trim()
                         let final_text = `${title}\n\n\n`
-                        let bottom_text = `•••\n\n*🔥 Total Odds: ${odds}*\n📲 Booking Code: *${booking_code}*\n\n> Mkeka huu umeandaliwa *BetWay*. Wanatoa refund kwa mkeka uliochanwa na mechi moja.\n\nIkiwa bado huna account\n*🔗 Jisajili Hapa!*\n*www.bet-link.top/betway/register*`
+                        let other_ct = `\n\n*🇰🇪 Kenya*\n*www.bet-link.top/22bet/register*\n\n*🇺🇬 Uganda*\n*www.bet-link.top/gsb-ug/register*`
+                        let bottom_text = `•••\n\n*🔥 Total Odds: ${odds}*\n📲 Booking Code: *${booking_code}*\n\n> Mkeka huu umeandaliwa *BetWay*. Wanatoa refund kwa mkeka uliochanwa na mechi moja.\n\nIkiwa bado huna account\n*🔗 Jisajili Hapa!*\n\n*🇹🇿 Tanzania*\n*www.bet-link.top/betway/register*${other_ct}`
                         if(cap.includes('Gal Sport')) {
-                            bottom_text = `•••\n\n*🔥 Total Odds: ${odds}*\n📲 Booking Code: *${booking_code}*\n\n> Mkeka huu umeandaliwa *Gal Sport Betting*. Wanatoa bonus ya 150% kwa deposit ya kwanza.\n\nIkiwa bado huna account\n*🔗 Jisajili Hapa!*\n*www.bet-link.top/gsb/register*`
+                            bottom_text = `•••\n\n*🔥 Total Odds: ${odds}*\n📲 Booking Code: *${booking_code}*\n\n> Mkeka huu umeandaliwa *Gal Sport Betting*. Wanatoa bonus ya 150% kwa deposit ya kwanza.\n\nIkiwa bado huna account\n*🔗 Jisajili Hapa!*\n\n*🇹🇿 Tanzania*\n*www.bet-link.top/gsb/register*${other_ct}`
                         }
                         for (let [i,d] of splitData.entries()) {
                             if (i == 0) {
