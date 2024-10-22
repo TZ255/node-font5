@@ -330,7 +330,7 @@ const utapeliMsg = async (bot, imp) => {
 //call verifiedlist
 const watoaHuduma = async (bot, imp, grpId) => {
     try {
-        let watoa = await verifiedList.find({ paid: true }).sort('createdAt')
+        let watoa = await verifiedList.find({ paid: true }).sort('-updatedAt')
         let txt = `<b><u>List ya watoa huduma waliothibitishwa kufanya kazi kwenye group hili</u></b>\n\nMteja, hakikisha unafanya kazi na waliotajwa kwenye list hii tu, nje na hapo ukitapeliwa hatutakuwa na msaada na wewe.\n\n`
         for (let [i, w] of watoa.entries()) {
             let loc = w.loc ? w.loc : '---'
