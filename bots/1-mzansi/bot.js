@@ -150,7 +150,7 @@ const myBotsFn = async (app) => {
                             let commData = {
                                 commands: [
                                     { command: 'betslip', description: '🔥 Bet of the Day' },
-                                    { command: 'hookup', description: '🍑 Beautiful Escorts' },
+                                    { command: 'hookup', description: '🍑 Hot Escorts' },
                                 ]
                             }
                             await axios.post(commAPI, commData)
