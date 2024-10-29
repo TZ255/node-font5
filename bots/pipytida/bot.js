@@ -608,7 +608,7 @@ const PipyBot = async (app) => {
             let tzHours = Number(new Date().toLocaleTimeString('en-GB', { timeZone: 'Africa/Nairobi', timeStyle: 'short', hour12: false }).split(':')[0])
             let mins = new Date().getMinutes()
             //post kati ya saa tatu asubuhi hadi saa 8 usiku
-            if ((tzHours > 8 || tzHours < 3) && mins % 24 == 0) {
+            if ((tzHours > 8 || tzHours < 3) && mins === 0) {
                 for (let G of chatGroups) {
                     otheFns.watoaHuduma(bot, imp, G).catch(err => console.log(err.message, err))
                 }
@@ -619,8 +619,8 @@ const PipyBot = async (app) => {
                 otheFns.clearingGroup(bot, imp, delay)
             }
 
-            //every 10 minutes kati ya saa tatu asubuhi hadi saa nane usiku
-            if (mins % 10 == 0 && (tzHours > 8 || tzHours < 3)) {
+            //every 30 minutes kati ya saa tatu asubuhi hadi saa nane usiku
+            if (mins % 30 == 0 && (tzHours > 8 || tzHours < 3)) {
                 otheFns.utapeliMsg(bot, imp)
             }
         }, 60000)
