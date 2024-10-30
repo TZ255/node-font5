@@ -257,7 +257,7 @@ const DayoBot = async (app) => {
 
         bot.command('app_bw', async ctx => {
             try {
-                await bot.api.copyMessage(ctx.chat.id, imp.matangazoDB, 97)
+                await bot.api.copyMessage(ctx.chat.id, imp.matangazoDB, 192)
             } catch (err) {
                 console.log("(Dayo) " + err.message)
             }

@@ -280,7 +280,7 @@ const PipyBot = async (app) => {
 
         bot.command('app_bw', async ctx => {
             try {
-                await bot.api.copyMessage(ctx.chat.id, imp.matangazoDB, 97, {
+                await bot.api.copyMessage(ctx.chat.id, imp.matangazoDB, 192, {
                     reply_parameters: { message_id: ctx.message.message_id, allow_sending_without_reply: true }
                 })
             } catch (err) {
