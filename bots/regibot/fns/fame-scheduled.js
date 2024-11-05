@@ -42,12 +42,12 @@ const famecheckOdds = async (bot, imp, tablehusika, siku) => {
                 let nano = nanoid(4)
                 let UTC3 = Date.UTC(mwk, mwz - 1, trh, actual_time, Number(min))
 
-                let league = $('td:nth-child(2)', el).text()
-                let match = $('td:nth-child(3)', el).text()
-                match = match.replace(/\n/g, '').replace(/vs /gi, ' - ')
+                let league = $('td:nth-child(2)', el).text().trim()
+                let match = $('td:nth-child(3)', el).text().trim()
+                match = match.replace(/\s*VS\s*/gi, ' - ')
 
-                let tip = $('td:nth-child(4)', el).text()
-                let matokeo = $('td:nth-child(5)', el).text()
+                let tip = $('td:nth-child(4)', el).text().trim()
+                let matokeo = $('td:nth-child(5)', el).text().trim()
                 matokeo = matokeo.replace(/\n/g, '')
                 if (matokeo.length < 2) {
                     matokeo = '-:-'
@@ -88,17 +88,15 @@ const famecheckMatokeo = async (bot, imp, tablehusika, siku) => {
         let tday_trs = $(`#pills-tabContent ${tablehusika} table tbody tr`)
 
         tday_trs.each(async (i, el) => {
-            let match = $('td:nth-child(3)', el).text()
-            match = match.replace(/\n/g, '').replace(/vs /gi, ' - ')
-            let matokeo = $('td:nth-child(5)', el).text()
-            matokeo = matokeo.replace(/\n/g, '')
+            let match = $('td:nth-child(3)', el).text().trim()
+            match = match.replace(/\s*VS\s*/gi, ' - '); // replace vs with - (* any spaces follow)
+            let matokeo = $('td:nth-child(5)', el).text().replace(/\s+/g, '')
 
             //check matokeo, if updated, update
             if (matokeo.length > 2) {
                 let mtch = await fametips_Model.findOne({ match, siku })
                 if (mtch.matokeo == '-:-') {
                     await mtch.updateOne({ $set: { matokeo } })
-                    await bot.api.sendMessage(imp.shemdoe, `Fame: Results for ${mtch.match} updated to ${matokeo}`)
                 }
             }
         })
