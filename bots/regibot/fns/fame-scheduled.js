@@ -90,8 +90,7 @@ const famecheckMatokeo = async (bot, imp, tablehusika, siku) => {
         tday_trs.each(async (i, el) => {
             let match = $('td:nth-child(3)', el).text().trim()
             match = match.replace(/\s*VS\s*/gi, ' - '); // replace vs with - (* any spaces follow)
-            let matokeo = $('td:nth-child(5)', el).text().replace(/\s+/g, '')
-
+            let matokeo = $('td:nth-child(5)', el).text().trim()
             //check matokeo, if updated, update
             if (matokeo.length > 2) {
                 let mtch = await fametips_Model.findOne({ match, siku })
