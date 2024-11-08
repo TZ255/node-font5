@@ -498,8 +498,8 @@ const reginaBot = async (app) => {
                         await delay(500)
                         await ctx.api.deleteMessage(ctx.chat.id, txtid)
                     }
-                    else if (txt.toLowerCase().includes('wrap betwinner')) {
-                        await bot.api.copyMessage(ctx.chat.id, imp.mikekaDB, 2582)
+                    else if (txt.toLowerCase().includes('wrap leon')) {
+                        await bot.api.copyMessage(ctx.chat.id, imp.mikekaDB, 5323)
                         await delay(500)
                         await ctx.api.deleteMessage(ctx.chat.id, txtid)
                     }
