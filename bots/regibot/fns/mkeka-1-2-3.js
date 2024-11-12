@@ -7,7 +7,7 @@ const sendMkeka1 = async (ctx, delay, bot, imp) => {
     try {
         let td = new Date().toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
         let tzHrs = new Date().getUTCHours() + 3
-        if(tzHrs > 23) {tzHrs = tzHrs - 24}
+        if (tzHrs > 23) { tzHrs = tzHrs - 24 }
         let mk = await tg_slips.findOne({ siku: td, brand: 'gsb' })
         await waombajiModel.findOneAndUpdate({ pid: 'shemdoe' }, { $inc: { mk1: 1 } })
         console.log(tzHrs)
@@ -34,7 +34,7 @@ const sendMkeka2 = async (ctx, delay, bot, imp) => {
     try {
         let td = new Date().toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
         let tzHrs = new Date().getUTCHours() + 3
-        if(tzHrs > 23) {tzHrs = tzHrs - 24}
+        if (tzHrs > 23) { tzHrs = tzHrs - 24 }
         let mk = await tg_slips.findOne({ siku: td, brand: 'betway' })
         await waombajiModel.findOneAndUpdate({ pid: 'shemdoe' }, { $inc: { mk2: 1 } })
         if (mk && (tzHrs >= 0 && tzHrs < 22)) {
@@ -61,10 +61,11 @@ const sendMkeka3 = async (ctx, delay, bot, imp) => {
         let gsb = 'http://mkekawaleo.com/gsb-tz/register'
         let pm = `http://pmaff.com/?serial=61291818&creative_id=1788`
         let ke = `http://bet-link.top/22bet/register`
-        let ug = `http://bet-link.top/22bet/register`
+        let ug = `http://bet-link.top/gsb-ug/register`
         let prm = `http://mkekawaleo.com/premierbet/register`
         let tz_888 = `http://mkekawaleo.com/888bet/register`
-let betlion_ke = `https://media.888africa.com/C.ashx?btag=a_416b_311c_&affid=356&siteid=416&adid=311&c=`
+        let betlion_ke = `https://media.888africa.com/C.ashx?btag=a_416b_311c_&affid=356&siteid=416&adid=311&c=`
+        let betwinner = `https://bw-prm.com/bonus-100-01/?p=%2Fregistration%2F&lang=en&id=29lf`
 
         await ctx.replyWithChatAction('typing')
         await delay(1000)
@@ -85,7 +86,7 @@ let betlion_ke = `https://media.888africa.com/C.ashx?btag=a_416b_311c_&affid=356
                 odds = (odds * m.odds).toFixed(2)
             }
 
-            let finaText = txt + `<b>🔥 Total Odds: ${Number(odds).toLocaleString('en-US')}\n\n•••••\n\n<blockquote>Mkeka huu umeandaliwa <a href="${bwTZ}">BetWay</a>\n\nJisajili na upokee Tsh. 3,000 bure pamoja na bonus ya 150% kwa deposit ya kwanza</blockquote>\n\nJisajili Sasa \n\n👤 (Tanzania 🇹🇿)\n<a href="${bwTZ}">https://betway.co.tz/register\nhttps://betway.co.tz/register</a>\n\n👤 (Kenya 🇰🇪)\n<a href="${betlion_ke}">https://mobile.betlion.ke/register</a>\n\n👤 (Uganda 🇺🇬)\n<a href="${ug}">https://22bet.co.ug/register</a>\n\n\n@mkeka_wa_leo</b>`
+            let finaText = txt + `<b>🔥 Total Odds: ${Number(odds).toLocaleString('en-US')}\n\n•••••\n\n<blockquote>Mkeka huu umeandaliwa <a href="${bwTZ}">BetWay</a>\n\nJisajili na upokee Tsh. 3,000 bure pamoja na bonus ya 150% kwa deposit ya kwanza</blockquote>\n\nJisajili Sasa \n\n👤 (Tanzania 🇹🇿)\n<a href="${bwTZ}">https://betway.co.tz/register\nhttps://betway.co.tz/register</a>\n\n👤 (Kenya 🇰🇪)\n<a href="${betwinner}">https://betwinner.ke/register</a>\n\n👤 (Uganda 🇺🇬)\n<a href="${ug}">https://www.gsb.ug/register</a>\n\n\n@mkeka_wa_leo</b>`
 
             await ctx.reply(finaText, { parse_mode: 'HTML', disable_web_page_preview: true })
         } else if (keka.length > 0 && (tzHrs >= 22)) {
