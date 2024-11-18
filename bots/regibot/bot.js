@@ -29,6 +29,8 @@ const reginaBot = async (app) => {
         const call_scheduled_checker_fn = require('./fns/scheduled-odds')
         const call_venas15_fn = require('./fns/venas15')
         const call_venas25_fn = require('./fns/venas25')
+        const call_passion35_fn = require('./fns/passionpredict')
+        const { QualityTipsCheck } = require('./fns/qualitycheck')
 
         const imp = {
             replyDb: -1001608248942,
@@ -782,6 +784,11 @@ const reginaBot = async (app) => {
             j.setDate(j.getDate() - 1)
             let trhJana = j.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
 
+            //Quality Check
+            if(time2check == '09:04') {
+                QualityTipsCheck(bot, imp).catch(e => console.log(e?.message))
+            }
+
             switch (time2check) {
                 case '03:10':
                 case '03:30':
@@ -829,9 +836,10 @@ const reginaBot = async (app) => {
                     call_famescheduled_fn.famecheckOdds(bot, imp, '#pills-contact', trhKesho)
                     break;
 
-                //venas 1.5 & 2.5 odds
+                //venas 1.5 & 2.5 odds &&& Passion 3.5 Odds
                 case '00:12': case '01:12': case '02:12': case '03:12': case '06:02': case '07:02': case '08:02': case '04:46':
-                    call_venas15_fn.checkOdds(bot, imp)
+                    call_venas15_fn.checkOdds(bot, imp).catch(e => console.log(e?.message))
+                    call_passion35_fn.checkOdds(bot, imp).catch(e => console.log(e?.message))
                     setTimeout(() => {
                         call_venas25_fn.checkOdds(bot, imp)
                     }, 5000)
@@ -839,7 +847,8 @@ const reginaBot = async (app) => {
 
                 //venas 1.5 & 2.5 odds
                 case '15:12': case '16:12': case '17:12': case '18:12': case '19:02': case '20:02': case '21:02': case '22:02': case '23:12':
-                    call_venas15_fn.checkTomorrowOdds(bot, imp)
+                    call_venas15_fn.checkTomorrowOdds(bot, imp).catch(e => console.log(e?.message))
+                    call_passion35_fn.checkTomorrowOdds(bot, imp).catch(e => console.log(e?.message))
                     setTimeout(() => {
                         call_venas25_fn.checkTomorrowOdds(bot, imp)
                     }, 5000)
@@ -847,7 +856,8 @@ const reginaBot = async (app) => {
 
                 //venas 1.5 & 2.5 matokeo
                 case '03:13': case '05:13': case '07:13': case '08:13': case '09:13': case '11:03':
-                    call_venas15_fn.checkMatokeoJana(bot, imp)
+                    call_venas15_fn.checkMatokeoJana(bot, imp).catch(e => console.log(e?.message))
+                    call_passion35_fn.checkMatokeoJana(bot, imp).catch(e => console.log(e?.message))
                     setTimeout(() => {
                         call_venas25_fn.checkMatokeoJana(bot, imp)
                     }, 5000)
