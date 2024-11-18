@@ -26,8 +26,7 @@ const QualityTipsCheck = async (bot, imp) => {
             if (count === 0) {
                 let DURL = `https://api.telegram.org/bot${DBOT}/sendMessage`
                 let text = `❌❌ No any matches for ${name}`
-                //await axios.post(DURL, {chat_id: imp.shemdoe, text})
-                console.log(text)
+                await axios.post(DURL, {chat_id: imp.shemdoe, text})
             }
         }
     } catch (error) {
