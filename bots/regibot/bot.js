@@ -837,7 +837,7 @@ const reginaBot = async (app) => {
                     break;
 
                 //venas 1.5 & 2.5 odds &&& Passion 3.5 Odds
-                case '00:12': case '01:12': case '02:12': case '03:12': case '06:02': case '07:02': case '08:02': case '09:22':
+                case '00:12': case '01:12': case '02:12': case '03:12': case '06:02': case '07:02': case '08:02': case '09:25':
                     call_venas15_fn.checkOdds(bot, imp).catch(e => console.log(e?.message))
                     call_passion35_fn.checkOdds(bot, imp).catch(e => console.log(e?.message))
                     setTimeout(() => {
