@@ -1,6 +1,6 @@
 //midds
 const cheerio = require('cheerio')
-const axios = require('axios').default
+const axios = require('axios')
 const { nanoid } = require('nanoid')
 
 const supatips_Model = require('../database/supatips')
@@ -143,8 +143,68 @@ const check_waLeo = async (bot, imp, siku) => {
     }
 }
 
+//MyBetsToday
+async function extractMyBetsToday(path) {
+    try {
+        const url = `https://www.mybets.today/${path}`
+        const { data: html } = await axios.get(url);
+        const $ = cheerio.load(html);
+        const results = [];
+
+        let currentLeague = null;
+
+        $('article .listgames .titlegames, .listgames .event-fixtures').each((_, element) => {
+            const $element = $(element);
+
+            if ($element.hasClass('titlegames')) {
+                // Extract the league name
+                currentLeague = $element.find('.leaguename .link').text().trim();
+            } else if ($element.hasClass('event-fixtures')) {
+                if (currentLeague) {
+                    // Extract time and date
+                    const timeElement = $element.find('.timediv time');
+                    let time = timeElement.text().trim();
+                    let datetime = timeElement.attr('datetime');
+
+                    // Add one hour to the time
+                    const [hours, minutes] = time.split(':').map(Number);
+                    let newHours = (hours + 1) % 24;
+                    newHours = newHours < 10 ? '0' + newHours : newHours;
+                    const formattedTime = `${newHours}:${minutes < 10 ? '0' + minutes : minutes}`;
+
+                    // Format datetime to dd/mm/yyyy
+                    const dateObj = new Date(datetime);
+                    const siku = `${String(dateObj.getDate()).padStart(2, '0')}/${String(dateObj.getMonth() + 1).padStart(2, '0')}/${dateObj.getFullYear()}`;
+
+                    // Extract home and away teams
+                    const homeTeam = $element.find('.homediv .homeTeam .homespan').text().trim();
+                    const awayTeam = $element.find('.awaydiv .awayTeam .awayspan').text().trim();
+                    const tip = $element.find('.tipdiv span').text().trim();
+
+                    let nano = nanoid(6)
+
+                    results.push({
+                        league: currentLeague,
+                        siku,
+                        time: formattedTime,
+                        match: `${homeTeam} - ${awayTeam}`,
+                        tip,
+                        nano
+                    });
+                }
+            }
+        });
+
+        let tips = await supatips_Model.insertMany(results)
+        console.log('MyBetsToday Fetched successfully')
+    } catch (error) {
+        console.error('Error fetching or processing data:', error);
+    }
+}
+
 module.exports = {
     checkOdds,
     checkMatokeo,
-    check_waLeo
+    check_waLeo,
+    extractMyBetsToday
 }

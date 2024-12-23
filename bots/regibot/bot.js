@@ -791,24 +791,22 @@ const reginaBot = async (app) => {
 
             switch (time2check) {
                 case '03:10':
-                case '03:30':
-                case '04:10':
+                // case '03:30':
+                // case '04:10':
                 case '06:00':
                 case '08:00':
                 case '09:00':
                 case '10:00':
-                case '11:00':
-                case '12:00':
-                case '13:00':
-                    call_scheduled_checker_fn.checkOdds(bot, imp, 'div#nav-profile', trhLeo)
+                // case '11:00':
+                // case '12:00':
+                // case '13:00':
+                    //call_scheduled_checker_fn.checkOdds(bot, imp, 'div#nav-profile', trhLeo)
+                    call_scheduled_checker_fn.extractMyBetsToday('soccer-predictions/')
                     break;
 
-                case '19:30':
-                case '20:30':
-                case '21:45':
-                case '22:30':
-                case '23:45':
-                    call_scheduled_checker_fn.checkOdds(bot, imp, 'div#nav-contact', trhKesho)
+                case '11:30': case '14:30': case '18:45': case '20:18': case '23:45':
+                    //call_scheduled_checker_fn.checkOdds(bot, imp, 'div#nav-contact', trhKesho)
+                    call_scheduled_checker_fn.extractMyBetsToday('soccer-predictions/tomorrow/')
                     break;
 
                 //fametips
