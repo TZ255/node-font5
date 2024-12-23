@@ -19,6 +19,7 @@ const bot_oh = new Bot(process.env.OH_TOKEN)
 
 //others
 const oh_vids = require('../model/ohmy-vids')
+const { extractMyBetsToday } = require('../bots/regibot/fns/scheduled-odds')
 
 //send success (no content) response to browser
 const limiter = elimit({
@@ -77,7 +78,7 @@ router.get('/blog', (req, res) => {
     res.redirect(301, '/')
 })
 
-router.get('/withdraw-tax-1xbet-tanzania', (req, res)=> {
+router.get('/withdraw-tax-1xbet-tanzania', (req, res) => {
     res.render('7-1xbet/calc')
 })
 
@@ -102,7 +103,7 @@ router.get('/req/:uid/:msgid', async (req, res) => {
             await bot.api.copyMessage(userId, -1001239425048, msgid)
             let user = await ds_users.findOneAndUpdate({ userId }, { $inc: { downloaded: 1 } }, { new: true })
             await bin_db.create({ uid: `${userId}`, mid: `${msgid}`, ch: 'ds' })
-            await analytics.findOneAndUpdate({}, {$inc: {times: 1}})
+            await analytics.findOneAndUpdate({}, { $inc: { times: 1 } })
             console.log(`${user.fname} - Got episode by req`)
         }
         res.redirect(`/dramastore/success/${userId}`)
@@ -121,10 +122,10 @@ router.get('/dramastore/success/:userId', async (req, res) => {
         let users = await ds_users.find().sort('-downloaded').select('fname downloaded updatedAt userId').limit(1000)
         let wote = []
         for (let huyu of users) {
-            if(huyu.userId == 1473393723) {
-                wote.push({fname: huyu.fname, downloaded: huyu.downloaded, last: '🤪🤪🤪'})
+            if (huyu.userId == 1473393723) {
+                wote.push({ fname: huyu.fname, downloaded: huyu.downloaded, last: '🤪🤪🤪' })
             } else {
-                wote.push({fname: huyu.fname, downloaded: huyu.downloaded, last: timeAgo.format(new Date(huyu.updatedAt))})
+                wote.push({ fname: huyu.fname, downloaded: huyu.downloaded, last: timeAgo.format(new Date(huyu.updatedAt)) })
             }
         }
         let all_users = await ds_users.find().sort('-downloaded').select('fname downloaded')
@@ -161,10 +162,10 @@ router.get('/ohmy-channel/success/:uid', async (req, res) => {
     res.render('6-showsent/sent', { userId })
 })
 
-router.get('/mkekawaleo/tanzania', async (req, res)=> {
+router.get('/mkekawaleo/tanzania', async (req, res) => {
     try {
         res.redirect('http://mkekawaleo.com/betslip/leo')
-        await graphModel.findOneAndUpdate({siku: '22/04/2023'}, {$inc: {loaded: 1}})
+        await graphModel.findOneAndUpdate({ siku: '22/04/2023' }, { $inc: { loaded: 1 } })
     } catch (err) {
         console.log(err.message)
     }
@@ -219,6 +220,16 @@ router.get('/:code', async (req, res) => {
         } else {
             res.render('2-chuo/chuo', { chuo, all })
         }
+    } catch (err) {
+        console.log(err)
+        console.log(err.message)
+    }
+})
+
+router.get('/API/testing', async (req, res) => {
+    try {
+        extractMyBetsToday('soccer-predictions/tomorrow/', '24/12/2024')
+        res.end()
     } catch (err) {
         console.log(err)
         console.log(err.message)

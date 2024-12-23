@@ -151,6 +151,9 @@ async function extractMyBetsToday(path, trh) {
         const $ = cheerio.load(html);
         const results = [];
 
+        //empty results
+        results.length = 0
+
         let currentLeague = null;
 
         $('article .listgames .titlegames, .listgames .event-fixtures').each((_, element) => {
@@ -164,7 +167,6 @@ async function extractMyBetsToday(path, trh) {
                     // Extract time and date
                     const timeElement = $element.find('.timediv time');
                     let time = timeElement.text().trim();
-                    let datetime = timeElement.attr('datetime');
 
                     // Add one hour to the time
                     const [hours, minutes] = time.split(':').map(Number);
@@ -179,9 +181,6 @@ async function extractMyBetsToday(path, trh) {
 
                     let nano = nanoid(6)
 
-                    //empty array
-                    results.length = 0
-                    //push to array
                     results.push({
                         league: currentLeague,
                         siku: trh,
