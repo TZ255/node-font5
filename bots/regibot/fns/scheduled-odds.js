@@ -144,7 +144,7 @@ const check_waLeo = async (bot, imp, siku) => {
 }
 
 //MyBetsToday
-async function extractMyBetsToday(path) {
+async function extractMyBetsToday(path, trh) {
     try {
         const url = `https://www.mybets.today/${path}`
         const { data: html } = await axios.get(url);
@@ -168,13 +168,9 @@ async function extractMyBetsToday(path) {
 
                     // Add one hour to the time
                     const [hours, minutes] = time.split(':').map(Number);
-                    let newHours = (hours + 1) % 24;
+                    let newHours = (hours + 3) % 24;
                     newHours = newHours < 10 ? '0' + newHours : newHours;
                     const formattedTime = `${newHours}:${minutes < 10 ? '0' + minutes : minutes}`;
-
-                    // Format datetime to dd/mm/yyyy
-                    const dateObj = new Date(datetime);
-                    const siku = `${String(dateObj.getDate()).padStart(2, '0')}/${String(dateObj.getMonth() + 1).padStart(2, '0')}/${dateObj.getFullYear()}`;
 
                     // Extract home and away teams
                     const homeTeam = $element.find('.homediv .homeTeam .homespan').text().trim();
@@ -183,9 +179,12 @@ async function extractMyBetsToday(path) {
 
                     let nano = nanoid(6)
 
+                    //empty array
+                    results.length = 0
+                    //push to array
                     results.push({
                         league: currentLeague,
-                        siku,
+                        siku: trh,
                         time: formattedTime,
                         match: `${homeTeam} - ${awayTeam}`,
                         tip,
@@ -195,8 +194,12 @@ async function extractMyBetsToday(path) {
             }
         });
 
-        let tips = await supatips_Model.insertMany(results)
-        console.log('MyBetsToday Fetched successfully')
+        let db_length = await supatips_Model.countDocuments({siku: trh})
+        if(results.length > 0 && (db_length != results.length)) {
+            await supatips_Model.deleteMany({siku: trh})
+            await supatips_Model.insertMany(results)
+            console.log('MyBetsToday Fetched successfully')
+        }
     } catch (error) {
         console.error('Error fetching or processing data:', error);
     }

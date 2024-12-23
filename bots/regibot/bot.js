@@ -801,12 +801,12 @@ const reginaBot = async (app) => {
                 // case '12:00':
                 // case '13:00':
                     //call_scheduled_checker_fn.checkOdds(bot, imp, 'div#nav-profile', trhLeo)
-                    call_scheduled_checker_fn.extractMyBetsToday('soccer-predictions/')
+                    call_scheduled_checker_fn.extractMyBetsToday('soccer-predictions/', trhLeo)
                     break;
 
-                case '11:30': case '14:30': case '18:45': case '20:18': case '23:45':
+                case '11:30': case '14:30': case '18:45': case '20:35': case '23:45':
                     //call_scheduled_checker_fn.checkOdds(bot, imp, 'div#nav-contact', trhKesho)
-                    call_scheduled_checker_fn.extractMyBetsToday('soccer-predictions/tomorrow/')
+                    call_scheduled_checker_fn.extractMyBetsToday('soccer-predictions/tomorrow/', trhKesho)
                     break;
 
                 //fametips
