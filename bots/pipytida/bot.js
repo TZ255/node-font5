@@ -35,7 +35,7 @@ const PipyBot = async (app) => {
             mylove: -1001748858805,
             mkekaLeo: -1001733907813,
             matangazoDB: -1001570087172,
-            r_chatting: -1001722693791,
+            r_chatting: -1002214501026,
             r_testing: -4115709988,
             muvikap2: 5940671686,
             blackberry: 1101685785,

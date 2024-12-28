@@ -4,7 +4,7 @@ const linkListModel = require('../database/linklist')
 const grps = {
     rhtp: -1001263624837,
     rt_prem: -1001946174983,
-    r_chatting: -1001722693791,
+    r_chatting: -1002214501026,
     sio_shida: -1002110306030,
     muvika: -1002067713854,
     jf: -100123,

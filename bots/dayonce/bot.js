@@ -33,7 +33,7 @@ const DayoBot = async (app) => {
             mylove: -1001748858805,
             mkekaLeo: -1001733907813,
             matangazoDB: -1001570087172,
-            r_chatting: -1001722693791,
+            r_chatting: -1002214501026,
             dstore: -1001245181784,
             linksChannel: -1002042952349,
             sio_shida: -1002110306030
