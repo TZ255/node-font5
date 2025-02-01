@@ -236,7 +236,7 @@ router.get('/API/testing', async (req, res) => {
     }
 })
 
-//this all placed on post requests because it is the last on index.js
+//this all placed on post requests because it is the last on our index.js
 router.get('*', (req, res) => {
     res.sendStatus(404)
 })
