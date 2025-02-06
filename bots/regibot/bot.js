@@ -1,36 +1,37 @@
+const { Bot, webhookCallback } = require('grammy')
+const { autoRetry } = require("@grammyjs/auto-retry")
+const nyumbuModel = require('./database/chats')
+const dayoUsers = require('./database/dayo-chats')
+const pipyUsers = require('./database/dayo-chats')
+const tempChat = require('./database/temp-req')
+const my_channels_db = require('./database/my_channels')
+const mkekadb = require('./database/mkeka')
+const tg_slips = require('./database/tg_slips')
+const vidb = require('./database/db')
+const mkekaMega = require('./database/mkeka-mega')
+const graphDB = require('./database/graph-tips')
+const waombajiModel = require('./database/waombaji')
+const supatips_Model = require('./database/supatips')
+
+//functions
+const call_supatips_function = require('./fns/supatips')
+const call_fametips_function = require('./fns/fametips')
+const call_famescheduled_fn = require('./fns/fame-scheduled')
+const call_betslip_function = require('./fns/betslip')
+const call_oncallbackquery_function = require('./fns/oncallbackquery')
+const call_sendMikeka_functions = require('./fns/mkeka-1-2-3')
+const call_scheduled_checker_fn = require('./fns/scheduled-odds')
+const call_venas15_fn = require('./fns/venas15')
+const call_venas25_fn = require('./fns/venas25')
+const call_passion35_fn = require('./fns/passionpredict')
+const { QualityTipsCheck } = require('./fns/qualitycheck')
+const { correctScoreFn } = require('./fns/correct-score')
 
 
 
 const reginaBot = async (app) => {
     try {
-        const { Bot, webhookCallback } = require('grammy')
-        const { autoRetry } = require("@grammyjs/auto-retry")
         const bot = new Bot(process.env.REGI_TOKEN)
-        const nyumbuModel = require('./database/chats')
-        const dayoUsers = require('./database/dayo-chats')
-        const pipyUsers = require('./database/dayo-chats')
-        const tempChat = require('./database/temp-req')
-        const my_channels_db = require('./database/my_channels')
-        const mkekadb = require('./database/mkeka')
-        const tg_slips = require('./database/tg_slips')
-        const vidb = require('./database/db')
-        const mkekaMega = require('./database/mkeka-mega')
-        const graphDB = require('./database/graph-tips')
-        const waombajiModel = require('./database/waombaji')
-        const supatips_Model = require('./database/supatips')
-
-
-        const call_supatips_function = require('./fns/supatips')
-        const call_fametips_function = require('./fns/fametips')
-        const call_famescheduled_fn = require('./fns/fame-scheduled')
-        const call_betslip_function = require('./fns/betslip')
-        const call_oncallbackquery_function = require('./fns/oncallbackquery')
-        const call_sendMikeka_functions = require('./fns/mkeka-1-2-3')
-        const call_scheduled_checker_fn = require('./fns/scheduled-odds')
-        const call_venas15_fn = require('./fns/venas15')
-        const call_venas25_fn = require('./fns/venas25')
-        const call_passion35_fn = require('./fns/passionpredict')
-        const { QualityTipsCheck } = require('./fns/qualitycheck')
 
         const imp = {
             replyDb: -1001608248942,
@@ -66,7 +67,7 @@ const reginaBot = async (app) => {
                     .catch(e => console.log(e.message))
             })
             .catch(e => console.log(e.message))
-        app.use(`${hookPath}`, webhookCallback(bot, 'express', {timeoutMilliseconds: 30000}))
+        app.use(`${hookPath}`, webhookCallback(bot, 'express', { timeoutMilliseconds: 30000 }))
 
         const mkArrs = ['mkeka', 'mkeka1', 'mkeka2', 'mkeka3', 'mikeka', 'mkeka wa leo', 'mikeka ya leo', 'mkeka namba 1', 'mkeka namba 2', 'mkeka namba 3', 'mkeka #1', 'mkeka #2', 'mkeka #3', 'mkeka no #1', 'mkeka no #2', 'mkeka no #3', 'za leo', 'naomba mkeka', 'naomba mikeka', 'naomba mkeka wa leo', 'nitumie mkeka', 'ntumie mkeka', 'nitumie mikeka ya leo', 'odds', 'odds za leo', 'odds ya leo', 'mkeka waleo', 'mkeka namba moja', 'mkeka namba mbili', 'mkeka namba tatu', 'nataka mkeka', 'nataka mikeka', 'mkeka wa uhakika', 'odds za uhakika', 'mkeka?', 'mkeka wa leo?', '/mkeka 1', '/mkeka 2', '/mkeka 3']
 
@@ -577,16 +578,16 @@ const reginaBot = async (app) => {
                     } else if (txt.toLowerCase().includes('whatsapp')) {
                         let cap = ctx.channelPost.reply_to_message?.caption
                         let title = `*${cap.split('🔥')[0].trim().split('\n')[0].replace('Leo', 'Siku')}*\n\`\`\`${cap.split('🔥')[0].trim().split('\n')[1]}\`\`\``
-                        let odds = cap.split('Total Odds: ')[1].substring(0,4)
+                        let odds = cap.split('Total Odds: ')[1].substring(0, 4)
                         let splitData = cap.split('📠 Booking code:')[0].trim().split('•••')
                         let booking_code = cap.split('📠 Booking code: ')[1].split('\n')[0].trim()
                         let final_text = `${title}\n\n\n`
                         let other_ct = `\n\n*🇰🇪 Kenya*\n*www.bet-link.top/22bet/register*\n\n*🇺🇬 Uganda*\n*www.bet-link.top/gsb-ug/register*`
                         let bottom_text = `•••\n\n*🔥 Total Odds: ${odds}*\n📲 Booking Code: *${booking_code}*\n\n> Mkeka huu umeandaliwa *BetWay*. Wanatoa refund kwa mkeka uliochanwa na mechi moja.\n\nIkiwa bado huna account\n*🔗 Jisajili Hapa!*\n\n*🇹🇿 Tanzania*\n*www.bet-link.top/betway/register*${other_ct}`
-                        if(cap.includes('Gal Sport')) {
+                        if (cap.includes('Gal Sport')) {
                             bottom_text = `•••\n\n*🔥 Total Odds: ${odds}*\n📲 Booking Code: *${booking_code}*\n\n> Mkeka huu umeandaliwa *Gal Sport Betting*. Wanatoa bonus ya 150% kwa deposit ya kwanza.\n\nIkiwa bado huna account\n*🔗 Jisajili Hapa!*\n\n*🇹🇿 Tanzania*\n*www.bet-link.top/gsb/register*${other_ct}`
                         }
-                        for (let [i,d] of splitData.entries()) {
+                        for (let [i, d] of splitData.entries()) {
                             if (i == 0) {
                                 continue;
                             }
@@ -595,13 +596,13 @@ const reginaBot = async (app) => {
                             let game = match_data[1].trim()
                             let tip = match_data[2].trim().replace('☑️', '🎯 ')
                             let expl = match_data[3].trim()
-                            
+
                             let t = `${title}\n*${game}*\n> *${tip}*\n> ${expl}\n\n\n`
                             final_text = final_text + t
                         }
-                        let wa_msg = await ctx.reply(final_text+bottom_text)
+                        let wa_msg = await ctx.reply(final_text + bottom_text)
                         await ctx.deleteMessage()
-                        setTimeout(()=> {ctx.api.deleteMessage(ctx.chat.id, wa_msg.message_id)},10000)
+                        setTimeout(() => { ctx.api.deleteMessage(ctx.chat.id, wa_msg.message_id) }, 10000)
                     }
                 }
 
@@ -785,28 +786,24 @@ const reginaBot = async (app) => {
             let trhJana = j.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
 
             //Quality Check
-            if(time2check == '09:04') {
+            if (time2check == '09:04') {
                 QualityTipsCheck(bot, imp).catch(e => console.log(e?.message))
             }
 
             switch (time2check) {
-                case '03:10':
-                // case '03:30':
-                // case '04:10':
-                case '06:00':
-                case '08:00':
-                case '09:00':
-                case '10:00':
-                // case '11:00':
-                // case '12:00':
-                // case '13:00':
-                    //call_scheduled_checker_fn.checkOdds(bot, imp, 'div#nav-profile', trhLeo)
+                //mybets.today
+                case '03:10': case '06:00': case '08:00': case '09:00': case '10:00':
                     call_scheduled_checker_fn.extractMyBetsToday('soccer-predictions/', trhLeo)
+                    setTimeout(() => {
+                        correctScoreFn('soccer-predictions/correct-score-predictions/', trhLeo)
+                    }, 5000);
                     break;
 
                 case '11:30': case '14:30': case '18:45': case '20:35': case '23:45':
-                    //call_scheduled_checker_fn.checkOdds(bot, imp, 'div#nav-contact', trhKesho)
                     call_scheduled_checker_fn.extractMyBetsToday('soccer-predictions/tomorrow/', trhKesho)
+                    setTimeout(() => {
+                        correctScoreFn('soccer-predictions/correct-score-predictions/tomorrow/', trhKesho)
+                    }, 5000);
                     break;
 
                 //fametips

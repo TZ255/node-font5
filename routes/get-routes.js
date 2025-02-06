@@ -20,6 +20,7 @@ const bot_oh = new Bot(process.env.OH_TOKEN)
 //others
 const oh_vids = require('../model/ohmy-vids')
 const { extractMyBetsToday } = require('../bots/regibot/fns/scheduled-odds')
+const { correctScoreFn } = require('../bots/regibot/fns/correct-score')
 
 //send success (no content) response to browser
 const limiter = elimit({
@@ -228,7 +229,7 @@ router.get('/:code', async (req, res) => {
 
 router.get('/API/testing', async (req, res) => {
     try {
-        extractMyBetsToday('soccer-predictions/tomorrow/', '24/12/2024')
+        correctScoreFn('soccer-predictions/correct-score-predictions/', '06/02/2025')
         res.end()
     } catch (err) {
         console.log(err)
