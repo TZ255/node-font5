@@ -134,9 +134,7 @@ const reusableRestriction = async (bot, ctx, caption, charsNum, delay) => {
                     await remindMtoaHuduma(ctx, tag, msgid)
                 } else if (diff > tenHrs) {
                     //send uaminifu message
-                    let notf = await uaminifuMessage(ctx, tag, muda, loc, userid, msgid)
-                    //delete message later
-                    await toDeleteModel.create({ chatid: ctx.chat.id, msgid: notf.message_id })
+                    await uaminifuMessage(ctx, tag, muda, loc, userid, msgid)
                 }
                 if (now >= dbEnd) {
                     //delete user message
@@ -234,7 +232,7 @@ const checkSenderFn = async (bot, ctx, imp) => {
                 txt = txt + `<b>${i + 1}. ${username} - (${w.fname})</b>\n\n`
             }
             let mambo = await ctx.reply(`Mambo <b>${name}</b> Nimekupumzisha kwa masaa 6.\n\nHuruhusiwi kutuma tangazo la picha wala video kwenye group hili. Huduma hii ipo kwa watoa huduma waliothibitishwa tu.\n\nKama wewe ni mdada (mtoa huduma) tafadhali wasiliana na admin <b>@Blackberry255</b> kuthibitishwa. Ukimfuata admin inbox hakikisha wewe ni mtoa huduma vinginevyo atakublock na mimi nitakuondoa kwenye group (hatupendi usumbufu 😏)\n\n\n${txt}`, { parse_mode: 'HTML', reply_to_message_id: msg_id })
-            await toDeleteModel.create({ chatid: ctx.chat.id, msgid: mambo.message_id })
+
             setTimeout(() => {
                 ctx.api.deleteMessage(ctx.chat.id, msg_id).catch(e => console.log(e.message))
             }, 30000)

@@ -614,11 +614,6 @@ const PipyBot = async (app) => {
                 }
             }
 
-            //clear bin saa sita na dakika moja
-            if (tzHours == 0 && mins == 1) {
-                otheFns.clearingGroup(bot, imp, delay)
-            }
-
             //every 30 minutes kati ya saa tatu asubuhi hadi saa nane usiku
             if (mins % 30 == 0 && (tzHours > 8 || tzHours < 3)) {
                 otheFns.utapeliMsg(bot, imp)
