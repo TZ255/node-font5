@@ -34,7 +34,7 @@ async function correctScoreFn(path, trh) {
 
                     // Add one hour to the time
                     const [hours, minutes] = time.split(':').map(Number);
-                    let newHours = (hours + 3) % 24;
+                    let newHours = (hours + 2) % 24;
                     newHours = newHours < 10 ? '0' + newHours : newHours;
                     const formattedTime = `${newHours}:${minutes < 10 ? '0' + minutes : minutes}`;
 
