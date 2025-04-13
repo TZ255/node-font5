@@ -780,6 +780,11 @@ const reginaBot = async (app) => {
             k.setDate(k.getDate() + 1)
             let trhKesho = k.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
 
+            //after kesho
+            let k2 = new Date()
+            k2.setDate(k2.getDate() + 2)
+            let afterKesho = k2.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
+
             //jana
             let j = new Date()
             j.setDate(j.getDate() - 1)
@@ -800,10 +805,18 @@ const reginaBot = async (app) => {
                     break;
 
                 case '11:30': case '14:30': case '18:45': case '20:35': case '23:45':
+                    //extract tomorrow 1x2
                     call_scheduled_checker_fn.extractMyBetsToday('soccer-predictions/tomorrow/', trhKesho)
+
+                    //extract after tomorrow 1x2
+                    setTimeout(() => {
+                        call_scheduled_checker_fn.extractMyBetsToday('soccer-predictions/after-tomorrow/', afterKesho)
+                    }, 5000);
+
+                    //extract correct score tomorrow
                     setTimeout(() => {
                         correctScoreFn('soccer-predictions/correct-score-predictions/tomorrow/', trhKesho)
-                    }, 5000);
+                    }, 10000);
                     break;
 
                 //fametips
