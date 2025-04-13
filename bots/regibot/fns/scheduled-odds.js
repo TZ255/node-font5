@@ -6,6 +6,7 @@ const { nanoid } = require('nanoid')
 const supatips_Model = require('../database/supatips')
 const bin_supatips_Model = require('../database/supatips-bin')
 const tg_slips = require('../database/tg_slips')
+const { GetJsDate, GetDayFromDateString } = require('./weekday')
 
 
 const checkOdds = async (bot, imp, tablehusika, siku) => {
@@ -187,7 +188,9 @@ async function extractMyBetsToday(path, trh) {
                         time: formattedTime,
                         match: `${homeTeam} - ${awayTeam}`,
                         tip,
-                        nano
+                        nano,
+                        jsDate: GetJsDate(trh),
+                        weekday: GetDayFromDateString(trh)
                     });
                 }
             }

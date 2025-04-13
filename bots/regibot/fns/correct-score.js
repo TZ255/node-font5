@@ -6,6 +6,7 @@ const { nanoid } = require('nanoid')
 const correctScoreModel = require('../database/cscore')
 const bin_correctScoreModel = require('../database/supatips-bin')
 const tg_slips = require('../database/tg_slips')
+const { GetJsDate, GetDayFromDateString } = require('./weekday')
 
 //MyBetsToday correctscore
 async function correctScoreFn(path, trh) {
@@ -51,7 +52,9 @@ async function correctScoreFn(path, trh) {
                         time: formattedTime,
                         match: `${homeTeam} - ${awayTeam}`,
                         tip,
-                        nano
+                        nano,
+                        jsDate: GetJsDate(trh),
+                        weekday: GetDayFromDateString(trh)
                     });
                 }
             }
