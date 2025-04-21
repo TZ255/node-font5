@@ -46,23 +46,26 @@ async function correctScoreFn(path, trh) {
 
                     let nano = nanoid(6)
 
-                    results.push({
-                        league: currentLeague,
-                        siku: trh,
-                        time: formattedTime,
-                        match: `${homeTeam} - ${awayTeam}`,
-                        tip,
-                        nano,
-                        jsDate: GetJsDate(trh),
-                        weekday: GetDayFromDateString(trh)
-                    });
+                    //check the length of time, if good push it
+                    if (formattedTime.length == 5) {
+                        results.push({
+                            league: currentLeague,
+                            siku: trh,
+                            time: formattedTime,
+                            match: `${homeTeam} - ${awayTeam}`,
+                            tip,
+                            nano,
+                            jsDate: GetJsDate(trh),
+                            weekday: GetDayFromDateString(trh)
+                        });
+                    }
                 }
             }
         });
 
-        let db_length = await correctScoreModel.countDocuments({siku: trh})
-        if(results.length > 0 && (db_length != results.length)) {
-            await correctScoreModel.deleteMany({siku: trh})
+        let db_length = await correctScoreModel.countDocuments({ siku: trh })
+        if (results.length > 0 && (db_length != results.length)) {
+            await correctScoreModel.deleteMany({ siku: trh })
             await correctScoreModel.insertMany(results)
             console.log('MyBetsToday Fetched successfully')
         }
