@@ -3,7 +3,7 @@ const toDeleteModel = require('../database/MsgtoDelete')
 const pipyUsers = require('../database/chats')
 const { uaminifuMessage, remindMtoaHuduma } = require('./partials/smallFns')
 
-const zingatiaMsg = `<b>❌ ZINGATIA HILI, ACHA UFALA ❌\n\nUsitume hela kwa yeyote atakaekufuata inbox kukuambia ni Admin, dalali au mtoa huduma wa group hili.</b> \n\nNjia pekee ya kuwasiliana na dalali au mtoa huduma wa group hili ni kwa kubonyeza jina lake kwenye list ya watoa huduma waaminifu au ujumbe chini ya tangazo lake unaosema yeye ni mwaminifu.\n\n<b>⚠⚠ KUMBUKA: ADMIN SIO MTOA HUDUMA na HATOI CONNECTION, USITAPELIWE\n\nMteja! Narudia tena... \nUKITAPELIWA NI UFALA WAKO BRO.\n\nYEYOTE ATAKAE KUFUATA INBOX NI TAPELI, USIMSIKILIZE... PIGA BLOCK </b> kisha report kwenye group aondolewe.\n\n<b>By Admin:</b> @Blackberry255 \n<blockquote>(Zingatia: Admin hatoi connection wala sio mtoa huduma)\nAngalia list ya watoa huduma hapa chini</blockquote>`
+const zingatiaMsg = `<b>❌ ZINGATIA HILI, ACHA UFALA ❌\n\nMIMI PIPYTIDA SIO ADMIN NA WALA SITOI CONNECTION, PUNGUZA NYEGE na EPUKA MATAPELI\n\nUsitume hela kwa yeyote atakaekufuata inbox kukuambia ni Admin, dalali au mtoa huduma wa group hili.</b> \n\nNjia pekee ya kuwasiliana na dalali au mtoa huduma wa group hili ni kwa kubonyeza jina lake kwenye list ya watoa huduma waaminifu au ujumbe chini ya tangazo lake unaosema yeye ni mwaminifu.\n\n<b>⚠⚠ KUMBUKA: ADMIN SIO MTOA HUDUMA na HATOI CONNECTION, USITAPELIWE\n\nMteja! Narudia tena... \nUKITAPELIWA NI UFALA WAKO BRO.\n\nYEYOTE ATAKAE KUFUATA INBOX NI TAPELI, USIMSIKILIZE... PIGA BLOCK </b> kisha report kwenye group aondolewe.\n\n<blockquote>Angalia list ya watoa huduma hapa chini</blockquote>`
 
 const rmarkup = {
     inline_keyboard: [
