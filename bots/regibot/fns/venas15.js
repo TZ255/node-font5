@@ -26,7 +26,7 @@ const checkOdds = async (bot, imp) => {
         let tday_table = $(`#home table tbody tr`)
 
         //compare length
-        if (tday_table && ourDb.length < tday_table.length) {
+        if (tday_table && tday_table.length > 1) {
             await venas15Model.deleteMany({ siku })
             tday_table.each(async (i, el) => {
                 let time_data = $('td:nth-child(1)', el).text().trim()

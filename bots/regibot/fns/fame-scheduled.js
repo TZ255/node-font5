@@ -23,7 +23,7 @@ const famecheckOdds = async (bot, imp, tablehusika, siku) => {
         let tday_trs = $(`#pills-tabContent ${tablehusika} table tbody tr`)
 
         //compare length
-        if (ourDb.length < tday_trs.length) {
+        if (tday_trs && tday_trs.length > 1) {
             await fametips_Model.deleteMany({ siku })
             tday_trs.each(async (i, el) => {
                 let time_data = $('td:nth-child(1)', el).text()

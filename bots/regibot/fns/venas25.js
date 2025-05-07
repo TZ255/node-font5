@@ -24,7 +24,7 @@ const checkOdds = async (bot, imp) => {
         let tday_table = $(`#home table tbody tr`)
 
         //compare length
-        if (tday_table && ourDb.length < tday_table.length) {
+        if (tday_table && tday_table.length > 1) {
             await venas25Model.deleteMany({ siku })
             tday_table.each(async (i, el) => {
                 //check if data in rows are 4 or above

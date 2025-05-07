@@ -33,7 +33,7 @@ const checkOdds = async (bot, imp) => {
         let tday_table = $(`.container .row .tabs section:nth-of-type(2) table tbody tr`)
 
         //compare length
-        if (tday_table && ourDb.length < tday_table.length) {
+        if (tday_table && tday_table.length > 1) {
             await PassionUnder35Model.deleteMany({ siku })
             tday_table.each(async (i, el) => {
                 let time_data = $('td:nth-child(1)', el).text().trim()
@@ -102,7 +102,7 @@ const checkTomorrowOdds = async (bot, imp) => {
         let tday_table = $(`.container .row .tabs section:nth-of-type(3) table tbody tr`)
 
         //compare length
-        if (tday_table && ourDb.length < tday_table.length) {
+        if (tday_table && tday_table.length > 1) {
             await PassionUnder35Model.deleteMany({ siku })
             tday_table.each(async (i, el) => {
                 let time_data = $('td:nth-child(1)', el).text().trim()
