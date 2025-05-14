@@ -15,5 +15,5 @@ const nyumbuSchema = new Schema({
 }, {strict: false, timestamps: true })
 
 const ohMy = mongoose.connection.useDb('ohmyNew')
-const model = ohMy.model('nyumbuModel', nyumbuSchema)
-module.exports = model
+const nyumbuModel = ohMy.model('nyumbuModel', nyumbuSchema)
+module.exports = nyumbuModel

@@ -20,5 +20,5 @@ const pipySchema = new Schema({
 }, {strict: false, timestamps: true })
 
 const ohMy = mongoose.connection.useDb('ohmyNew')
-const model = ohMy.model('Dayo-Users', pipySchema)
-module.exports = model
+const dayoUsersModel = ohMy.model('Dayo-Users', pipySchema)
+module.exports = dayoUsersModel

@@ -1,21 +1,20 @@
+const { Bot, webhookCallback } = require('grammy')
+const { autoRetry } = require("@grammyjs/auto-retry")
+const bot = new Bot(process.env.PIPY_TOKEN)
 
+const pipyUsers = require('./database/chats')
+const verifiedList = require('./database/verified')
+const tg_slips = require('./database/tg_slips')
+const vidb = require('./database/db')
+const mkekaMega = require('./database/mkeka-mega')
+const toDeleteModel = require('./database/MsgtoDelete')
+const switchUserText = require('./fns/text-arr')
+const otheFns = require('./fns/otherFn')
+const call_sendMikeka_functions = require('./fns/mkeka-1-2-3')
+const makeConvo = require('./fns/convoFn')
 
 const PipyBot = async (app) => {
     try {
-        const { Bot, webhookCallback } = require('grammy')
-        const { autoRetry } = require("@grammyjs/auto-retry")
-        const bot = new Bot(process.env.PIPY_TOKEN)
-
-        const pipyUsers = require('./database/chats')
-        const verifiedList = require('./database/verified')
-        const tg_slips = require('./database/tg_slips')
-        const vidb = require('./database/db')
-        const mkekaMega = require('./database/mkeka-mega')
-        const toDeleteModel = require('./database/MsgtoDelete')
-        const switchUserText = require('./fns/text-arr')
-        const otheFns = require('./fns/otherFn')
-        const call_sendMikeka_functions = require('./fns/mkeka-1-2-3')
-
         const imp = {
             replyDb: -1001608248942,
             pzone: -1001352114412,
@@ -57,7 +56,7 @@ const PipyBot = async (app) => {
                     .catch(e => console.log(e.message))
             })
             .catch(e => console.log(e.message))
-        app.use(`${hookPath}`, webhookCallback(bot, 'express', {timeoutMilliseconds: 30000}))
+        app.use(`${hookPath}`, webhookCallback(bot, 'express', { timeoutMilliseconds: 30000 }))
 
         const mkArrs = ['mkeka', 'mkeka1', 'mkeka2', 'mkeka3', 'mikeka', 'mkeka wa leo', 'mikeka ya leo', 'mkeka namba 1', 'mkeka namba 2', 'mkeka namba 3', 'mkeka #1', 'mkeka #2', 'mkeka #3', 'mkeka no #1', 'mkeka no #2', 'mkeka no #3', 'za leo', 'naomba mkeka', 'naomba mikeka', 'naomba mkeka wa leo', 'nitumie mkeka', 'ntumie mkeka', 'nitumie mikeka ya leo', 'odds', 'odds za leo', 'odds ya leo', 'mkeka waleo', 'mkeka namba moja', 'mkeka namba mbili', 'mkeka namba tatu', 'nataka mkeka', 'nataka mikeka', 'mkeka wa uhakika', 'odds za uhakika', 'mkeka?', 'mkeka wa leo?', '/mkeka 1', '/mkeka 2', '/mkeka 3']
 
@@ -161,38 +160,8 @@ const PipyBot = async (app) => {
             }
         })
 
-        const convoFn = async (ctx) => {
-            if ([imp.halot, imp.shemdoe].includes(ctx.chat.id) && ctx.match) {
-                let msg_id = Number(ctx.match.trim())
-                let bads = ['deactivated', 'blocked', 'initiate', 'chat not found']
-                try {
-                    let all_users = await pipyUsers.find({ refferer: "Pipy" })
-                    await ctx.reply(`Starting broadcasting for ${all_users.length} users`)
-
-                    all_users.forEach((u, i) => {
-                        setTimeout(() => {
-                            bot.api.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
-                                .then(() => {
-                                    if (i == all_users.length - 1) {
-                                        ctx.reply('Nimemaliza convo').catch(e => console.log(e.message))
-                                    }
-                                })
-                                .catch((err) => {
-                                    if (bads.some((b) => err?.message.toLowerCase().includes(b))) {
-                                        u.deleteOne()
-                                        console.log(`${i + 1}. Pipy - ${u?.chatid} deleted`)
-                                    } else { console.log(`🤷‍♂️ ${err.message}`) }
-                                })
-                        }, i * 50) //20 messages per second
-                    })
-                } catch (err) {
-                    console.log(err.message)
-                }
-            }
-        }
-
         bot.command('convo', async ctx => {
-            convoFn(ctx)
+            makeConvo(bot, ctx, imp, defaultReplyMkp)
         })
 
         bot.command(['mkeka', 'mkeka1'], async ctx => {

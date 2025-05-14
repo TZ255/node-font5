@@ -20,5 +20,5 @@ const pipySchema = new Schema({
 }, {strict: false, timestamps: true })
 
 const ohMy = mongoose.connection.useDb('ohmyNew')
-const model = ohMy.model('PipyTida-Users', pipySchema)
-module.exports = model
+const pipyUsersModel = ohMy.model('PipyTida-Users', pipySchema)
+module.exports = pipyUsersModel

@@ -1,20 +1,21 @@
+const { Bot, webhookCallback } = require('grammy')
+const { autoRetry } = require("@grammyjs/auto-retry")
+const bot = new Bot(process.env.DAYO_TOKEN)
+const dayoUsers = require('./database/chats')
+const pipyUsers = require('./database/pipy-users')
+const tg_slips = require('./database/tg_slips')
+const vidb = require('./database/db')
+const mkekaMega = require('./database/mkeka-mega')
+const channelListModel = require('./database/linklist')
+const switchUserText = require('./fns/text-arr')
+const call_sendMikeka_functions = require('./fns/mkeka-1-2-3')
+const { postingFn } = require('./fns/deleteJoinMsgs')
+const makeConvo = require('./fns/convoFn')
+
 
 
 const DayoBot = async (app) => {
     try {
-        const { Bot, webhookCallback } = require('grammy')
-        const { autoRetry } = require("@grammyjs/auto-retry")
-        const bot = new Bot(process.env.DAYO_TOKEN)
-        const dayoUsers = require('./database/chats')
-        const pipyUsers = require('./database/pipy-users')
-        const tg_slips = require('./database/tg_slips')
-        const vidb = require('./database/db')
-        const mkekaMega = require('./database/mkeka-mega')
-        const channelListModel = require('./database/linklist')
-        const switchUserText = require('./fns/text-arr')
-        const call_sendMikeka_functions = require('./fns/mkeka-1-2-3')
-        const { postingFn } = require('./fns/deleteJoinMsgs')
-
         const imp = {
             replyDb: -1001608248942,
             pzone: -1001352114412,
@@ -153,40 +154,9 @@ const DayoBot = async (app) => {
             }
         })
 
-        const convoFn = async (ctx) => {
-            if ([imp.halot, imp.shemdoe].includes(ctx.chat.id) && ctx.match) {
-                let msg_id = Number(ctx.match.trim())
-                let bads = ['deactivated', 'blocked', 'initiate', 'chat not found']
-                try {
-                    let all_users = await dayoUsers.find({ refferer: "Dayo" })
-                    await ctx.reply(`Starting broadcasting for ${all_users.length} users`)
-
-                    all_users.forEach((u, i) => {
-                        setTimeout(() => {
-                            bot.api.copyMessage(u.chatid, imp.mikekaDB, msg_id, { reply_markup: defaultReplyMkp })
-                                .then(() => {
-                                    if (i === all_users.length - 1) {
-                                        ctx.reply('Nimemaliza conversation').catch(e => console.log(e.message))
-                                    }
-                                })
-                                .catch((err) => {
-                                    if (bads.some((b) => err?.message.toLowerCase().includes(b))) {
-                                        u.deleteOne()
-                                        console.log(`${i + 1}. Dayo - ${u?.chatid} deleted`)
-                                    } else {
-                                        console.log(`🤷‍♂️ ${err.message}`)
-                                    }
-                                })
-                        }, i * 50) // 20 messages per second
-                    })
-                } catch (err) {
-                    console.log(err?.message)
-                }
-            }
-        }
-
+        
         bot.command('convo', async ctx => {
-            convoFn(ctx)
+            makeConvo(bot, ctx, imp, defaultReplyMkp)
         })
 
         bot.command(['mkeka', 'mkeka1'], async ctx => {

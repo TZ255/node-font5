@@ -1,4 +1,4 @@
-const dayoUsersModel = require('../database/chats')
+const nyumbuModel = require("../database/chats");
 
 const makeConvo = async (bot, ctx, imp, defaultReplyMkp) => {
     const admins = [imp.halot, imp.shemdoe];
@@ -12,7 +12,7 @@ const makeConvo = async (bot, ctx, imp, defaultReplyMkp) => {
     const bads = ['deactivated', 'blocked', 'initiate', 'chat not found'];
 
     try {
-        const all_users = await dayoUsersModel.find({ refferer: "Dayo" })
+        const all_users = await nyumbuModel.find({ refferer: "Regina" })
         await ctx.reply(`🚀 Starting broadcasting for ${all_users.length} users`);
 
         for (const user of all_users) {
@@ -25,10 +25,10 @@ const makeConvo = async (bot, ctx, imp, defaultReplyMkp) => {
                 console.log(err?.message || 'Unknown error');
 
                 if (bads.some((b) => errorMsg.includes(b))) {
-                    await dayoUsersModel.findOneAndDelete({ chatid });
-                    console.log(`🗑 Dayo User ${chatid} deleted for ${errorMsg}`);
+                    await nyumbuModel.findOneAndDelete({ chatid });
+                    console.log(`🗑 Regi User ${chatid} deleted for ${errorMsg}`);
                 } else {
-                    console.log(`🤷‍♂️ Dayo Unexpected error for ${chatid}: ${err.message}`);
+                    console.log(`🤷‍♂️ Regi Unexpected error for ${chatid}: ${err.message}`);
                 }
             }
         }
