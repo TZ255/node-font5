@@ -12,7 +12,7 @@ const makeConvo = async (bot, ctx, imp, defaultReplyMkp) => {
     const bads = ['deactivated', 'blocked', 'initiate', 'chat not found'];
 
     try {
-        const all_users = await pipyUsersModel.find({ refferer: "Pipy" })
+        const all_users = await pipyUsersModel.find({ refferer: "Pipy" }).select('chatid')
         await ctx.reply(`🚀 Starting broadcasting for ${all_users.length} users`);
 
         for (const user of all_users) {

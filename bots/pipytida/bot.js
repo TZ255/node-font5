@@ -161,7 +161,7 @@ const PipyBot = async (app) => {
         })
 
         bot.command('convo', async ctx => {
-            makeConvo(bot, ctx, imp, defaultReplyMkp)
+            makeConvo(bot, ctx, imp, defaultReplyMkp).catch(e => console.log(e?.message))
         })
 
         bot.command(['mkeka', 'mkeka1'], async ctx => {
