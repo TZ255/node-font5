@@ -28,7 +28,7 @@ const txtArr = async (call_sendMikeka_functions, bot, ctx, imp, mkArrs, delay) =
                 }
                 break;
             case '💯 BetWinner App (200% Bonus)':
-                await bot.api.copyMessage(userid, imp.matangazoDB, 102);
+                await bot.api.copyMessage(userid, imp.rtcopyDB, 23);
                 break;
             case '👑 SUPATIPS':
                 await call_sendMikeka_functions.supatips(ctx, bot, delay, imp);
@@ -38,16 +38,6 @@ const txtArr = async (call_sendMikeka_functions, bot, ctx, imp, mkArrs, delay) =
                 break;
             case '🔥 MIKEKA YA UHAKIKA LEO 💰':
                 await bot.api.copyMessage(ctx.chat.id, imp.mikekaDB, 592);
-                break;
-            case '🪙 Crypto User (Get Free 5 USDT) 🪙':
-                await ctx.replyWithChatAction('typing');
-                setTimeout(() => {
-                    bot.api.copyMessage(userid, imp.matangazoDB, 84, {
-                        reply_markup: {
-                            inline_keyboard: [[{ text: "➕ RECEIVE YOUR 5 USDT", url: 'https://bc.game/i-vhy4ij2x-n/' }]]
-                        }
-                    }).catch(e => console.log(e.message));
-                }, 1500);
                 break;
             default:
                 //check if ni mkeka anataka

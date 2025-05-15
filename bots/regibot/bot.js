@@ -51,7 +51,7 @@ const reginaBot = async (app) => {
             logsBin: -1001845473074,
             mylove: -1001748858805,
             mkekaLeo: -1001733907813,
-            matangazoDB: -1001570087172,
+            rtcopyDB: -1002634850653,
         }
 
         //use auto-retry
@@ -314,7 +314,7 @@ const reginaBot = async (app) => {
 
         bot.command('kujisajili_bw', async ctx => {
             try {
-                await bot.api.copyMessage(ctx.chat.id, imp.matangazoDB, 99)
+                await bot.api.copyMessage(ctx.chat.id, imp.rtcopyDB, 21)
             } catch (err) {
                 console.log(err.message)
             }
@@ -322,7 +322,7 @@ const reginaBot = async (app) => {
 
         bot.command('app_bw', async ctx => {
             try {
-                await bot.api.copyMessage(ctx.chat.id, imp.matangazoDB, 192)
+                await bot.api.copyMessage(ctx.chat.id, imp.rtcopyDB, 23)
             } catch (err) {
                 console.log(err.message)
             }
@@ -653,22 +653,13 @@ const reginaBot = async (app) => {
                     } else if (txt == '🤑 MKEKA 3' || txt == '🤑 MKEKA #3') {
                         await call_sendMikeka_functions.sendMkeka3(ctx, delay, bot, imp)
                     } else if (txt == '💯 BetWinner App (200% Bonus)' || txt.toLowerCase() == 'betwinner') {
-                        await bot.api.copyMessage(userid, imp.matangazoDB, 102)
+                        await bot.api.copyMessage(userid, imp.rtcopyDB, 23)
                     } else if (txt == '👑 SUPATIPS') {
                         await call_sendMikeka_functions.supatips(ctx, bot, delay, imp)
                     } else if (txt == '💡 MSAADA') {
                         await bot.api.copyMessage(ctx.chat.id, imp.mikekaDB, 481)
                     } else if (txt == '🔥 MIKEKA YA UHAKIKA LEO 💰') {
                         await bot.api.copyMessage(ctx.chat.id, imp.mikekaDB, 592)
-                    } else if (txt == '🪙 Crypto User (Get Free 5 USDT) 🪙') {
-                        await ctx.replyWithChatAction('typing')
-                        setTimeout(() => {
-                            bot.api.copyMessage(userid, imp.matangazoDB, 84, {
-                                reply_markup: {
-                                    inline_keyboard: [[{ text: "➕ RECEIVE YOUR 5 USDT", url: 'https://bc.game/i-vhy4ij2x-n/' }]]
-                                }
-                            }).catch(e => console.log(e.message))
-                        }, 1500)
                     }
                     //forward to me if sio mkeka
                     else {

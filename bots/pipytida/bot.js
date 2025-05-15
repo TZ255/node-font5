@@ -33,7 +33,7 @@ const PipyBot = async (app) => {
             logsBin: -1001845473074,
             mylove: -1001748858805,
             mkekaLeo: -1001733907813,
-            matangazoDB: -1001570087172,
+            rtcopyDB: -1002634850653,
             r_chatting: -1002214501026,
             r_testing: -4115709988,
             muvikap2: 5940671686,
@@ -239,7 +239,7 @@ const PipyBot = async (app) => {
 
         bot.command('kujisajili_bw', async ctx => {
             try {
-                await bot.api.copyMessage(ctx.chat.id, imp.matangazoDB, 99, {
+                await bot.api.copyMessage(ctx.chat.id, imp.rtcopyDB, 21, {
                     reply_parameters: { message_id: ctx.message.message_id, allow_sending_without_reply: true }
                 })
             } catch (err) {
@@ -249,7 +249,7 @@ const PipyBot = async (app) => {
 
         bot.command('app_bw', async ctx => {
             try {
-                await bot.api.copyMessage(ctx.chat.id, imp.matangazoDB, 192, {
+                await bot.api.copyMessage(ctx.chat.id, imp.rtcopyDB, 23, {
                     reply_parameters: { message_id: ctx.message.message_id, allow_sending_without_reply: true }
                 })
             } catch (err) {

@@ -33,7 +33,7 @@ const DayoBot = async (app) => {
             logsBin: -1001845473074,
             mylove: -1001748858805,
             mkekaLeo: -1001733907813,
-            matangazoDB: -1001570087172,
+            rtcopyDB: -1002634850653,
             r_chatting: -1002214501026,
             dstore: -1001245181784,
             linksChannel: -1002042952349,
@@ -219,7 +219,7 @@ const DayoBot = async (app) => {
 
         bot.command('kujisajili_bw', async ctx => {
             try {
-                await bot.api.copyMessage(ctx.chat.id, imp.matangazoDB, 99)
+                await bot.api.copyMessage(ctx.chat.id, imp.rtcopyDB, 21)
             } catch (err) {
                 console.log("(Dayo) " + err.message)
             }
@@ -227,7 +227,7 @@ const DayoBot = async (app) => {
 
         bot.command('app_bw', async ctx => {
             try {
-                await bot.api.copyMessage(ctx.chat.id, imp.matangazoDB, 192)
+                await bot.api.copyMessage(ctx.chat.id, imp.rtcopyDB, 22)
             } catch (err) {
                 console.log("(Dayo) " + err.message)
             }
@@ -345,7 +345,7 @@ const DayoBot = async (app) => {
                 let tangazo = ctx.channelPost.chat.id
                 console.log(ctx.chat.id)
 
-                if (tangazo == imp.matangazoDB && ctx.channelPost.reply_to_message) {
+                if (tangazo == imp.rtcopyDB && ctx.channelPost.reply_to_message) {
                     let tangazo_id = ctx.channelPost.reply_to_message.message_id
                     let reply = ctx.channelPost.text
                     let reply_id = ctx.channelPost.message_id

@@ -31,7 +31,7 @@ const createLink = async (bot, imp, chid, name, expire) => {
 //post link
 const postLink = async (bot, imp, msgid, linkName, chlink) => {
     try {
-        await bot.api.copyMessage(imp.linksChannel, imp.matangazoDB, msgid, {
+        await bot.api.copyMessage(imp.linksChannel, imp.rtcopyDB, msgid, {
             reply_markup: {
                 inline_keyboard: [
                     [
@@ -49,7 +49,7 @@ const postLink = async (bot, imp, msgid, linkName, chlink) => {
 //post link
 const postIphoneLink = async (bot, imp, msgid, linkName, droidLink, iosLink) => {
     try {
-        await bot.api.copyMessage(imp.linksChannel, imp.matangazoDB, msgid, {
+        await bot.api.copyMessage(imp.linksChannel, imp.rtcopyDB, msgid, {
             reply_markup: {
                 inline_keyboard: [
                     [
