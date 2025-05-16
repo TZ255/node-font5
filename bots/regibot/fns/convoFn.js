@@ -1,5 +1,7 @@
 const nyumbuModel = require("../database/chats");
 
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 const makeConvo = async (bot, ctx, imp, defaultReplyMkp) => {
     const admins = [imp.halot, imp.shemdoe];
 
@@ -8,29 +10,43 @@ const makeConvo = async (bot, ctx, imp, defaultReplyMkp) => {
     }
 
     const msg_id = Number(ctx.match.trim());
+    if (isNaN(msg_id)) {
+        return await ctx.reply('⚠ Invalid message ID.');
+    }
+
     const mikekaDB = imp.mikekaDB;
     const bads = ['deactivated', 'blocked', 'initiate', 'chat not found'];
 
     try {
-        const all_users = await nyumbuModel.find({ refferer: "Regina" }).select('chatid')
+        const all_users = await nyumbuModel.find({ refferer: "Regina" }).select('chatid -_id');
         await ctx.reply(`🚀 Starting broadcasting for ${all_users.length} users`);
 
-        for (const user of all_users) {
-            const chatid = user.chatid;
+        const batchSize = 20;
 
-            try {
-                await bot.api.copyMessage(chatid, mikekaDB, msg_id, {reply_markup: defaultReplyMkp});
-            } catch (err) {
-                const errorMsg = err?.message?.toLowerCase() || '';
-                console.log(err?.message || 'Unknown error');
+        for (let i = 0; i < all_users.length; i += batchSize) {
+            const batch = all_users.slice(i, i + batchSize);
 
-                if (bads.some((b) => errorMsg.includes(b))) {
-                    await nyumbuModel.findOneAndDelete({ chatid });
-                    console.log(`🗑 Regi User ${chatid} deleted for ${errorMsg}`);
-                } else {
-                    console.log(`🤷‍♂️ Regi Unexpected error for ${chatid}: ${err.message}`);
+            await Promise.all(batch.map(async user => {
+                const chatid = user.chatid;
+
+                try {
+                    await bot.api.copyMessage(chatid, mikekaDB, msg_id, {
+                        reply_markup: defaultReplyMkp
+                    });
+                } catch (err) {
+                    const errorMsg = err?.message?.toLowerCase() || '';
+                    console.log(err?.message || 'Unknown error');
+
+                    if (bads.some(b => errorMsg.includes(b))) {
+                        await nyumbuModel.findOneAndDelete({ chatid });
+                        console.log(`🗑 Regi User ${chatid} deleted for ${errorMsg}`);
+                    } else {
+                        console.log(`🤷‍♂️ Regi Unexpected error for ${chatid}: ${err.message}`);
+                    }
                 }
-            }
+            }));
+
+            await sleep(1000); // 1 second pause per batch
         }
 
         return await ctx.reply('✅ Finished broadcasting');
