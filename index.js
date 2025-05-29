@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 require('dotenv').config()
 const getRouter = require('./routes/get-routes')
+const postRouter = require('./routes/post')
 const { handlePriceBots } = require('./bots/handleBotFunctions')
 const { CPABots } = require('./bots/1-mzansi/bot')
 const { AutoAcceptorBot } = require('./bots/2-AutoAcceptor/bot')
@@ -36,6 +37,7 @@ if (process.env.ENVIRONMENT == 'production') {
 }
 
 app.use(getRouter)
+app.use(postRouter)
 
 app.listen(process.env.PORT || 3000, () => console.log('Listen to port 3000'))
 
