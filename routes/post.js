@@ -14,8 +14,8 @@ router.post('/API/whatsapp', async (req, res) => {
     try {
         const message = await client.messages.create({
             body: `Vipi ${ProfileName},\n\nNamba yako ya WhatsApp ni ${clientNum} na umetuma ${MessageType}.\n\nUjumbe uliotumwa: "${Body}"\n\nAsante kwa kuwasiliana nasi!`,
-            to: clientNum,
-            from: myNum,
+            to: From,
+            from: To,
         });
         console.log(`Message sent successfully: ${message.sid}`, message);
     } catch (error) {
