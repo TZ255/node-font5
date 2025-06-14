@@ -419,17 +419,17 @@ const PipyBot = async (app) => {
             }
         })
 
-        bot.on(':new_chat_members', async ctx => {
-            let bannedNames = ['sister g', 'nanaof']
+        bot.on('message:new_chat_members', async ctx => {
+            let bannedNames = ['sister g',  'sister g tz', 'sister gtz', 'sisterg', 'nanaof']
             try {
                 if (chatGroups.includes(ctx.chat.id)) {
                     const newMembers = ctx.message.new_chat_members;
 
                     for (let member of newMembers) {
-                        const firstName = member.first_name ? member.first_name.toLowerCase() : '';
-                        const lastName = member.last_name ? member.last_name.toLowerCase() : '';
-                        const username = member.username ? member.username.toLowerCase() : '';
-                        const fullName = `${firstName} ${lastName} ${username}`.trim();
+                        const firstName = member.first_name ? member.first_name : '';
+                        const lastName = member.last_name ? member.last_name : '';
+                        const username = member.username ? member.username : '';
+                        const fullName = `${firstName} ${lastName} ${username}`.toLowerCase().trim();
 
                         if (bannedNames.some(b => fullName.includes(b))) {
                             await ctx.banChatMember(member.id, 0);

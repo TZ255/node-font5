@@ -2,25 +2,23 @@ const router = require('express').Router()
 const client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 router.post('/API/whatsapp', async (req, res) => {
-    const { From, To, Body, WaId, SmsSid, MessageType, ProfileName, NumMedia, SmsMessageSid } = req.body
-    
+    const { From, To, Body, MessageType, ProfileName } = req.body
+
+    console.log(req.body)
+   
     // Send immediate response to Twilio
     res.status(200).send('OK');
-    
-    // Process the message
-    const clientNum = From.replace('whatsapp:', '')
-    const myNum = To.replace('whatsapp:', '')
-    
+   
     try {
         const message = await client.messages.create({
-            body: `Vipi ${ProfileName},\n\nNamba yako ya WhatsApp ni ${clientNum} na umetuma ${MessageType}.\n\nUjumbe uliotumwa: "${Body}"\n\nAsante kwa kuwasiliana nasi!`,
-            to: From,
-            from: To,
+            body: `Vipi ${ProfileName},\n\nNamba yako ya WhatsApp ni ${From.replace('whatsapp:', '')} na umetuma ${MessageType}.\n\nUjumbe uliotumwa: "${Body}"\n\nAsante kwa kuwasiliana nasi!`,
+            to: From, // whatsapp:+255711935460 (user who sent the message)
+            from: 'whatsapp:+255757259678'
         });
-        console.log(`Message sent successfully: ${message.sid}`, message);
+        console.log(`Message sent successfully: ${message.sid}`);
+        console.log(message)
     } catch (error) {
         console.error('Failed to send WhatsApp reply:', error.message);
-        // Could log to monitoring service, database, etc. here
     }
 })
 
