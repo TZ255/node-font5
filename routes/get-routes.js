@@ -21,6 +21,7 @@ const bot_oh = new Bot(process.env.OH_TOKEN)
 const oh_vids = require('../model/ohmy-vids')
 const { extractMyBetsToday } = require('../bots/regibot/fns/scheduled-odds')
 const { correctScoreFn } = require('../bots/regibot/fns/correct-score')
+const { scrapeBetimateBothToScore } = require('../bots/regibot/fns/Betimate')
 
 //send success (no content) response to browser
 const limiter = elimit({
@@ -229,7 +230,7 @@ router.get('/:code', async (req, res) => {
 
 router.get('/API/testing', async (req, res) => {
     try {
-        correctScoreFn('soccer-predictions/correct-score-predictions/', '06/02/2025')
+        scrapeBetimateBothToScore('https://betimate.com/en/football-predictions/both-to-score?date=2025-06-17')
         res.end()
     } catch (err) {
         console.log(err)

@@ -13,7 +13,7 @@ const regina_bot = require('./bots/regibot/bot')
 const app = express()
 
 // database connection
-mongoose.connect(`mongodb://${process.env.USER}:${process.env.PASS}@nodetuts-shard-00-00.ngo9k.mongodb.net:27017,nodetuts-shard-00-01.ngo9k.mongodb.net:27017,nodetuts-shard-00-02.ngo9k.mongodb.net:27017/vyuo-degree?ssl=true&replicaSet=atlas-pyxyme-shard-0&authSource=admin&retryWrites=true&w=majority`)
+mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('Connected to Vyuo Degree'))
     .catch((err) => {
         console.log(err)
