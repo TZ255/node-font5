@@ -23,7 +23,7 @@ const scrapeBetimateBothToScore = async (jsDate) => {
                 const match = `${home} vs ${away}`;
 
                 const time = $(body).find('time.date_bah').text()?.split(' ')[1].trim()
-                const date = $(body).find('time.date_bah').text()?.split(' ')[0].trim()
+                let date = $(body).find('time.date_bah').text()?.split(' ')[0].trim()
                 date = mmddyyyy_to_ddmmyyyy(date)
                 const noText = $(body).find('.probability-sub').eq(0).text().trim();
                 const yesText = $(body).find('.probability-sub').eq(1).text().trim();
