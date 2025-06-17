@@ -1,6 +1,6 @@
 const { default: axios } = require('axios');
 const cheerio = require('cheerio');
-const { GetJsDate, GetDayFromDateString, GMTTimeToGMT3 } = require('./weekday');
+const { GetJsDate, GetDayFromDateString, GMTTimeToGMT3, mmddyyyy_to_ddmmyyyy } = require('./weekday');
 const betiMateBTTSModel = require('../database/betimates');
 
 const BASE_URL = 'https://betimate.com/en/football-predictions/both-to-score?';
@@ -22,8 +22,8 @@ const scrapeBetimateBothToScore = async (jsDate) => {
                 const away = $(body).find('.awayTeam').text().trim();
                 const match = `${home} vs ${away}`;
 
-                const time = $(body).find('time.date_bah').text()?.split(' ')[1]
-                const date = $(body).find('time.date_bah').text()?.split(' ')[0]
+                const time = $(body).find('time.date_bah').text()?.split(' ')[1].trim()
+                const date = $(body).find('time.date_bah').text()?.split(' ')[0].trim()
                 const noText = $(body).find('.probability-sub').eq(0).text().trim();
                 const yesText = $(body).find('.probability-sub').eq(1).text().trim();
 
@@ -39,7 +39,7 @@ const scrapeBetimateBothToScore = async (jsDate) => {
                         league,
                         match,
                         time: GMTTimeToGMT3(time),
-                        date,
+                        date: mmddyyyy_to_ddmmyyyy(date),
                         yesPercent,
                         noPercent,
                         bet: tip,

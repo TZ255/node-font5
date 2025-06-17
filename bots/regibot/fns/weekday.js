@@ -83,6 +83,11 @@ const GMTTimeToGMT3 = (HH_MM = "00:00") => {
     return `${String(newHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
 }
 
+const mmddyyyy_to_ddmmyyyy = (mmddyyyy) => {
+    const [mm, dd, yyyy] = mmddyyyy.split('/')
+    return `${dd}/${mm}/${yyyy}`
+}
+
 module.exports = {
-    WeekDayFn, GetDayFromDateString, GetJsDate, SwahiliDayToEnglish, GMTTimeToGMT3
+    WeekDayFn, GetDayFromDateString, GetJsDate, SwahiliDayToEnglish, GMTTimeToGMT3, mmddyyyy_to_ddmmyyyy
 }
