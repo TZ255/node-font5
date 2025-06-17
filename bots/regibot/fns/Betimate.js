@@ -55,7 +55,7 @@ const scrapeBetimateBothToScore = async (jsDate) => {
         await betiMateBTTSModel.insertMany(matches)
         console.log(`${matches.length} Betimate BTTS Saved`)
     } catch (error) {
-        console.error('Error scraping:', error.message, error?.response.data);
+        console.error('Error scraping:', error.message);
         return [];
     }
 }
