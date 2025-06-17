@@ -24,6 +24,7 @@ const scrapeBetimateBothToScore = async (jsDate) => {
 
                 const time = $(body).find('time.date_bah').text()?.split(' ')[1].trim()
                 const date = $(body).find('time.date_bah').text()?.split(' ')[0].trim()
+                date = mmddyyyy_to_ddmmyyyy(date)
                 const noText = $(body).find('.probability-sub').eq(0).text().trim();
                 const yesText = $(body).find('.probability-sub').eq(1).text().trim();
 
@@ -39,7 +40,7 @@ const scrapeBetimateBothToScore = async (jsDate) => {
                         league,
                         match,
                         time: GMTTimeToGMT3(time),
-                        date: mmddyyyy_to_ddmmyyyy(date),
+                        date,
                         yesPercent,
                         noPercent,
                         bet: tip,
