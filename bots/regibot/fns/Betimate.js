@@ -9,6 +9,7 @@ const SCRAPER_API_KEY = process.env.SCRAPER_API_KEY
 const scrapeBetimateBothToScore = async (jsDate) => {
     try {
         const url = BASE_URL+jsDate
+        console.log(url)
         const html = await axios.get(`https://api.scraperapi.com/?api_key=${SCRAPER_API_KEY}&url=${encodeURI(url)}`);
         const $ = cheerio.load(html.data);
 
@@ -24,6 +25,7 @@ const scrapeBetimateBothToScore = async (jsDate) => {
 
                 const time = $(body).find('time.date_bah').text()?.split(' ')[1].trim()
                 let date = $(body).find('time.date_bah').text()?.split(' ')[0].trim()
+                console.log(date)
                 date = mmddyyyy_to_ddmmyyyy(date)
                 const noText = $(body).find('.probability-sub').eq(0).text().trim();
                 const yesText = $(body).find('.probability-sub').eq(1).text().trim();
@@ -32,10 +34,10 @@ const scrapeBetimateBothToScore = async (jsDate) => {
                 const noPercent = parseInt(noText);
 
                 let tip = '';
-                if (yesPercent >= 75) tip = 'GG';
-                else if (noPercent >= 75) tip = 'NG';
+                if (yesPercent >= 65) tip = 'GG';
+                else if (noPercent >= 65) tip = 'NG';
 
-                if (tip) {
+                if (tip && date === jsDate.split('-').reverse().join('/')) {
                     matches.push({
                         league,
                         match,

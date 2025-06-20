@@ -420,7 +420,8 @@ const PipyBot = async (app) => {
         })
 
         bot.on('message:new_chat_members', async ctx => {
-            let bannedNames = ['sister g',  'sister g tz', 'sister gtz', 'sisterg', 'nanaof']
+            let bannedNames = ['sister g',  'sister g tz', 'sister gtz', 'sisterg', 'nanaof', 'bavon']
+            console.log(ctx)
             try {
                 if (chatGroups.includes(ctx.chat.id)) {
                     const newMembers = ctx.message.new_chat_members;

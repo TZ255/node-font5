@@ -230,7 +230,7 @@ router.get('/:code', async (req, res) => {
 
 router.get('/API/testing', async (req, res) => {
     try {
-        scrapeBetimateBothToScore('2025-06-17')
+        //scrapeBetimateBothToScore('2025-06-17')
         res.end()
     } catch (err) {
         console.log(err)
