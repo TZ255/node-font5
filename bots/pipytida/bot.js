@@ -46,12 +46,14 @@ const PipyBot = async (app) => {
         bot.api.config.use(autoRetry());
 
         //set webhook
+        const allowed_updates = ["update_id", "message", "channel_post", "callback_query", "my_chat_member", "chat_member", "chat_join_request"];
+
         let hookPath = `/telebot/${process.env.USER}/pipytida`
         await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
-            drop_pending_updates: true
+            drop_pending_updates: true, allowed_updates
         })
-            .then(() => {
-                console.log(`webhook for Pipy is set`)
+            .then((hook) => {
+                console.log(`webhook for Pipy is set`, hook)
                 bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`)
                     .catch(e => console.log(e.message))
             })
@@ -133,9 +135,14 @@ const PipyBot = async (app) => {
             }
         })
 
+        bot.command('settings', ctx => {
+            ctx.reply('Habari')
+        })
+
         bot.command('admin', async ctx => {
             try {
-                let txt = `<u>Admin Commands</u>\n\n/stats - stats\n/convo-id - copy from mikekaDB\n/supaleo - fetch supatips (today)\n/supajana - fetch supatips (yesterday)\n/supakesho - fetch supatips (tomorrow)\n/graph - graph stats`
+                console.log('Admin command called by: ' + ctx.chat.id)
+                let txt = `<u>Admin Commands:--</u>\n\n/stats - stats\n/convo-id - copy from mikekaDB\n/supaleo - fetch supatips (today)\n/supajana - fetch supatips (yesterday)\n/supakesho - fetch supatips (tomorrow)\n/graph - graph stats`
                 if (ctx.chat.id == imp.shemdoe) { ctx.reply(txt, { parse_mode: 'HTML' }) }
             } catch (err) {
                 await ctx.reply(err.message)
@@ -419,23 +426,23 @@ const PipyBot = async (app) => {
             }
         })
 
-        bot.on('message:new_chat_members', async ctx => {
-            let bannedNames = ['sister g',  'sister g tz', 'sister gtz', 'sisterg', 'nanaof', 'bavon']
-            console.log(ctx)
+        bot.on('chat_member', async ctx => {
+            let bannedNames = ['sister g', 'sister g tz', 'sister gtz', 'sisterg', 'nanaof', 'bavon']
             try {
                 if (chatGroups.includes(ctx.chat.id)) {
-                    const newMembers = ctx.message.new_chat_members;
+                    const status = ctx.chatMember.new_chat_member.status
 
-                    for (let member of newMembers) {
-                        const firstName = member.first_name ? member.first_name : '';
-                        const lastName = member.last_name ? member.last_name : '';
-                        const username = member.username ? member.username : '';
+                    if (status === 'member') {
+                        const member = ctx.chatMember.new_chat_member
+                        const firstName = member.user.first_name;
+                        const lastName = member.user?.last_name ? member.user.last_name : '';
+                        const username = member.user?.username ? member.user.username : '';
                         const fullName = `${firstName} ${lastName} ${username}`.toLowerCase().trim();
 
                         if (bannedNames.some(b => fullName.includes(b))) {
-                            await ctx.banChatMember(member.id, 0);
+                            await ctx.banChatMember(member.user.id, 0);
                             await bot.api.sendMessage(imp.blackberry, `${fullName} banned`)
-                            await ctx.reply(`<b>${fullName}</b> amejaribu kuingia kwenye group, nimemuondoa`, { parse_mode: 'HTML' })
+                            await ctx.reply(`<b><a href="tg://user?id=${member.user.id}">${fullName}</a></b> amejaribu kuingia kwenye group, nimemuondoa`, { parse_mode: 'HTML' })
                         }
                     }
                 }
@@ -589,13 +596,6 @@ const PipyBot = async (app) => {
                 otheFns.utapeliMsg(bot, imp)
             }
         }, 60000)
-
-        if (process.env.environment == 'local') {
-            await bot.api.deleteWebhook({ drop_pending_updates: true })
-            bot.start().catch(e => {
-                bot.api.sendMessage(741815228, e.message).catch(e => console.log(e.message))
-            })
-        }
     } catch (error) {
         console.log(error.message, error)
     }

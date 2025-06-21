@@ -35,6 +35,7 @@ if (process.env.ENVIRONMENT == 'production') {
     CPABots(app)
     AutoAcceptorBot(app)
 }
+pipyTida_bot.PipyBot(app)
 
 app.use(getRouter)
 app.use(postRouter)

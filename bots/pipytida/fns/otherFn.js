@@ -150,7 +150,7 @@ const reusableRestriction = async (bot, ctx, caption, charsNum, delay) => {
         //delete her messages if paid false
         if (list && list?.paid == false) {
             await ctx.api.deleteMessage(ctx.chat.id, msgid)
-                .catch(e => console.log(e))
+                .catch(e => console.log(e?.message))
             await ctx.reply(`Mtoa huduma ${tag} tafadhali wasiliana na admin @Blackberry255`, { parse_mode: 'HTML' })
         }
     } catch (error) { console.log(error.message, error) }
@@ -249,7 +249,7 @@ const checkSenderFn = async (bot, ctx, imp) => {
             let dbEnd = data?.unix
             if (unixNow >= dbEnd) {
                 await data.updateOne({ $set: { paid: false } })
-                await bot.api.sendMessage(1101685785, `${list.fname} paid false`) //blackberry
+                await bot.api.sendMessage(1101685785, `${data?.fname} paid false`) //blackberry
             }
         }
         if (data && data?.paid == false) {
