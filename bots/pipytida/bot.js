@@ -427,19 +427,27 @@ const PipyBot = async (app) => {
         })
 
         bot.on('chat_member', async ctx => {
-            let bannedNames = ['sister g', 'sister g tz', 'sister gtz', 'sisterg', 'nanaof', 'bavon']
+            let bannedNames = ['sister g', 'sister g tz', 'sister gtz', 'sisterg', 'sistergtz', 'nanaof']
             try {
                 if (chatGroups.includes(ctx.chat.id)) {
                     const status = ctx.chatMember.new_chat_member.status
 
                     if (status === 'member') {
+                        //new_member
                         const member = ctx.chatMember.new_chat_member
                         const firstName = member.user.first_name;
                         const lastName = member.user?.last_name ? member.user.last_name : '';
                         const username = member.user?.username ? member.user.username : '';
                         const fullName = `${firstName} ${lastName} ${username}`.toLowerCase().trim();
 
-                        if (bannedNames.some(b => fullName.includes(b))) {
+                        //old member info
+                        const old_member = ctx.chatMember.old_chat_member
+                        const old_firstName = old_member.user.first_name;
+                        const old_lastName = old_member.user?.last_name ? old_member.user.last_name : '';
+                        const old_username = old_member.user?.username ? old_member.user.username : '';
+                        const old_fullName = `${old_firstName} ${old_lastName} ${old_username}`.toLowerCase().trim();
+
+                        if (bannedNames.some(b => fullName.includes(b)) || bannedNames.some(ob => old_fullName.includes(ob))) {
                             await ctx.banChatMember(member.user.id, 0);
                             await bot.api.sendMessage(imp.blackberry, `${fullName} banned`)
                             await ctx.reply(`<b><a href="tg://user?id=${member.user.id}">${fullName}</a></b> amejaribu kuingia kwenye group, nimemuondoa`, { parse_mode: 'HTML' })
