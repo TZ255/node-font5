@@ -56,6 +56,34 @@ const expected_output_example = {
             "bet": "BTTS: (Yes)",
             "odds": "1.9",
             "sw_explanation": "Timu zote kufungana"
+        },
+        {
+            "league": "Algeria - Ligue 1",
+            "match": "MC Alger - JS Saoura",
+            "bet": "1X2 & Total: (1 & Over 2.5)",
+            "odds": "2.67",
+            "sw_explanation": "MC Alger kushinda na jumla ya magoli hii mechi, Over 2.5"
+        },
+        {
+            "league": "Italy - Serie A",
+            "match": "Inter Milan - Napoli",
+            "bet": "1X2 & BTTS: (1 & Yes)",
+            "odds": "2.37",
+            "sw_explanation": "Inter Milan kushinda na timu zote kufungana"
+        },
+        {
+            "league": "France - Ligue 1",
+            "match": "PSG - Lyon",
+            "bet": "DC & BTTS: (X2 & Yes)",
+            "odds": "2.37",
+            "sw_explanation": "Lyon kushinda au kudroo na timu zote kufungana"
+        },
+        {
+            "league": "Netherlands - Eredivisie",
+            "match": "Ajax - PSV Eindhoven",
+            "bet": "DC & Total: (1X & Over 1.5)",
+            "odds": "1.87",
+            "sw_explanation": "Ajax kushinda au kudroo na jumla ya magoli hii mechi, Over 1.5"
         }
     ]
 }
@@ -94,29 +122,29 @@ You must be able to recognize these and extract them in a short, clean format li
 - 1X2 & Total: (1 & Over 2.5)
 - 1X2 & GG/NG: (1 & Yes)
 
-Example of bet shown on the slip and what you should format it like... the flow MUST be like this:
+Example of bet shown on the slip and expected bet value... the flow MUST be like this:
 slip: FT 1X2 & Under/Over 3.5 - 1&U
-formatted_bet: 1X2 & Total: (1 & Under 3.5)
-sw_explanation: <home_team> kushinda na jumla ya magoli hii mechi yasizidi matatu
+expected_value: 1X2 & Total: (1 & Under 3.5)
+sw_explanation: <home_team> kushinda na jumla ya magoli hii mechi, Under 3.5
 
 slip: GG & U/O 2.5 - GG&O
-formatted_bet: GG/NG & Total: (Yes & Over 2.5)
+expected_value: GG/NG & Total: (Yes & Over 2.5)
 sw_explanation: Timu zote kufungana na jumla ya magoli hii match, Over 2.5
 
 slip: Total Goals (2.5)
-formatted_bet: Total: (Over 2.5)
+expected_value: Total: (Over 2.5)
 sw_explanation: Jumla ya magoli matatu au zaidi kupatikana kwenye hii match
 
 slip: Both teams to score / GG/NG - Yes
-formatted_bet: BTTS: (Yes)
+expected_value: BTTS: (Yes)
 sw_explanation: Timu zote kufungana
 
 slip: FT 1X2 & GG 3.5 - 1&U
-formatted_bet: 1X2 & Total: (1 & Under 3.5)
+expected_value: 1X2 & Total: (1 & Under 3.5)
 sw_explanation: <home_team> kushinda na jumla ya magoli hii mechi yasizidi matatu
 
 slip: FT DC & GG/NG - X2&Y
-formatted_bet: DC & BTTS: (X2 & Yes)
+expected_value: DC & BTTS: (X2 & Yes)
 sw_explanation: <away_team> kushinda au kudroo na timu zote kufungana
 
 Stick to this format: [Bet Type]: ([Bet Option]) — for example: "1X2: (2)" or "BTTS: (No)". Be creative but consistent with short labels, and always wrap the option in brackets.
