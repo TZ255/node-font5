@@ -70,7 +70,7 @@ The matches field should be an array of objects, each with the following fields:
 - sw_explanation (a short swahili explanation of the bet)
 
 Here's an example of the expected output format:
-${expected_output_example}
+${JSON.stringify(expected_output_example, null, 2)}
 
 Important rules:
 - The totalOdds field might not be present in the betslip. If it’s missing, calculate it by multiplying all match odds together.
@@ -128,10 +128,10 @@ Keep the explanations clear and natural in Swahili while following the flow like
 const ExtractTextFromSlip = async (imgUrl) => {
     try {
         const response = await openai.responses.parse({
-            model: "gpt-4.1",
+            model: "gpt-4.1-mini",
             input: [
                 {
-                    role: "system",
+                    role: "assistant",
                     content: systemInstruction
                 },
                 {
