@@ -590,6 +590,7 @@ const reginaBot = async (app) => {
                         //structure message
                         const caption = StructureBetslipCaption(gpt_res, affiliate, booking)
                         await ctx.api.editMessageCaption(ctx.channelPost.chat.id, rp_id, {parse_mode: 'HTML', caption})
+                        await ctx.deleteMessage()
                     }
                 }
 
