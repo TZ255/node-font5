@@ -29,6 +29,7 @@ const { correctScoreFn } = require('./fns/correct-score')
 const makeConvo = require('./fns/convoFn')
 const { ExtractTextFromSlip } = require('../../routes/functions/extractSlipText')
 const { StructureBetslipCaption } = require('./fns/structureSlipMessage')
+const { ShemdoeAssistant } = require('../../routes/functions/kbase')
 
 
 
@@ -430,6 +431,21 @@ const reginaBot = async (app) => {
             }
         })
 
+        bot.command('gpt', async ctx => {
+            try {
+                if (!ctx?.match || ctx.chat.id !== imp.shemdoe) return await ctx.reply('Unauthorized or no match');
+
+                await ctx.replyWithChatAction('typing')
+                const match = ctx.match.trim()
+                const userid = ctx.chat.id
+                const response = await ShemdoeAssistant(userid, match)
+                return await ctx.reply(response)
+            } catch (error) {
+                console.error(error.message, error)
+                await ctx.reply(error.message)
+            }
+        })
+
         bot.on('channel_post', async ctx => {
             let txt = ctx.channelPost.text
             let txtid = ctx.channelPost.message_id
@@ -456,6 +472,7 @@ const reginaBot = async (app) => {
                                     .catch((err) => console.log(err))
                             }, 1000)
                         }
+                        return;
                     }
                     else if (txt.toLowerCase().includes('wrap gsb')) {
                         let waombaji = await waombajiModel.findOne({ pid: 'shemdoe' })
@@ -463,7 +480,7 @@ const reginaBot = async (app) => {
                         await delay(1000)
                         await bot.api.copyMessage(ctx.chat.id, imp.mikekaDB, 2652)
                         await delay(500)
-                        await ctx.api.deleteMessage(ctx.chat.id, txtid)
+                        return await ctx.api.deleteMessage(ctx.chat.id, txtid)
                     }
                     else if (txt.toLowerCase().includes('wrap betway')) {
                         let waombaji = await waombajiModel.findOne({ pid: 'shemdoe' })
@@ -471,25 +488,7 @@ const reginaBot = async (app) => {
                         await delay(1000)
                         await bot.api.copyMessage(ctx.chat.id, imp.mikekaDB, 2608)
                         await delay(500)
-                        await ctx.api.deleteMessage(ctx.chat.id, txtid)
-                    }
-                    else if (txt.toLowerCase().includes('wrap leon')) {
-                        await bot.api.copyMessage(ctx.chat.id, imp.mikekaDB, 5323)
-                        await delay(500)
-                        await ctx.api.deleteMessage(ctx.chat.id, txtid)
-                    }
-                    else if (txt.toLowerCase().includes('wrap meridian')) {
-                        await bot.api.copyMessage(ctx.chat.id, imp.mikekaDB, 55)
-                        await delay(500)
-                        await ctx.api.deleteMessage(ctx.chat.id, txtid)
-                    }
-                    else if (txt.toLowerCase().includes('wrap pm')) {
-                        let waombaji = await waombajiModel.findOne({ pid: 'shemdoe' })
-                        await ctx.reply(`Hizi ni stats zilizopita:\n\n- Mkeka 1 = ${waombaji.mk1}\n- Mkeka 2 = ${waombaji.mk2}\n- Mkeka 3 = ${waombaji.mk3}\n\nPost mkeka mpya ku reset`)
-                        await delay(1000)
-                        await bot.api.copyMessage(ctx.chat.id, imp.mikekaDB, 1770)
-                        await delay(500)
-                        await ctx.api.deleteMessage(ctx.chat.id, txtid)
+                        return await ctx.api.deleteMessage(ctx.chat.id, txtid)
                     }
                     else if (txt.toLowerCase().includes('delete mkeka') && ctx.channelPost.reply_to_message) {
                         let siku = new Date().toLocaleDateString('en-gb', { timeZone: 'Africa/Nairobi' })
@@ -497,7 +496,7 @@ const reginaBot = async (app) => {
                         await tg_slips.findOneAndDelete({ mid, siku })
                         let mm = await ctx.reply('Mkeka Deleted')
                         await delay(2000)
-                        await ctx.api.deleteMessage(ctx.chat.id, mm.message_id)
+                        return await ctx.api.deleteMessage(ctx.chat.id, mm.message_id)
                     }
                 }
 
@@ -579,17 +578,17 @@ const reginaBot = async (app) => {
                         let photo = ctx.channelPost.reply_to_message.photo.at(-1)
                         let file = await ctx.api.getFile(photo.file_id)
                         let imgUrl = `https://api.telegram.org/file/bot${ctx.api.token}/${file.file_path}`
-                        
+
                         //extract
                         let gpt_res = await ExtractTextFromSlip(imgUrl)
-                        
+
                         if (!gpt_res.ok) return await ctx.reply(gpt_res?.error || 'Unknown error on fn call');
 
                         let [, affiliate, booking] = txt.split(' ')
                         console.log(affiliate, booking)
                         //structure message
                         const caption = StructureBetslipCaption(gpt_res, affiliate, booking)
-                        await ctx.api.editMessageCaption(ctx.channelPost.chat.id, rp_id, {parse_mode: 'HTML', caption})
+                        await ctx.api.editMessageCaption(ctx.channelPost.chat.id, rp_id, { parse_mode: 'HTML', caption })
                         await ctx.deleteMessage()
                     }
                 }
