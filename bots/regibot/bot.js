@@ -27,6 +27,8 @@ const call_passion35_fn = require('./fns/passionpredict')
 const { QualityTipsCheck } = require('./fns/qualitycheck')
 const { correctScoreFn } = require('./fns/correct-score')
 const makeConvo = require('./fns/convoFn')
+const { ExtractTextFromSlip } = require('../../routes/functions/extractSlipText')
+const { StructureBetslipCaption } = require('./fns/structureSlipMessage')
 
 
 
@@ -573,16 +575,27 @@ const reginaBot = async (app) => {
                         let wa_msg = await ctx.reply(final_text + bottom_text)
                         await ctx.deleteMessage()
                         setTimeout(() => { ctx.api.deleteMessage(ctx.chat.id, wa_msg.message_id) }, 10000)
+                    } else if (txt.toLocaleLowerCase().startsWith('automate ') && ctx.channelPost?.reply_to_message?.photo) {
+                        let photo = ctx.channelPost.reply_to_message.photo.at(-1)
+                        let file = await ctx.api.getFile(photo.file_id)
+                        let imgUrl = `https://api.telegram.org/file/bot${ctx.api.token}/${file.file_path}`
+                        
+                        //extract
+                        let gpt_res = await ExtractTextFromSlip(imgUrl)
+                        
+                        if (!gpt_res.ok) return await ctx.reply(gpt_res?.error || 'Unknown error on fn call');
+
+                        let [, affiliate, booking] = txt.split(' ')
+                        console.log(affiliate, booking)
+                        //structure message
+                        const caption = StructureBetslipCaption(gpt_res, affiliate, booking)
+                        await ctx.api.editMessageCaption(ctx.channelPost.chat.id, rp_id, {parse_mode: 'HTML', caption})
                     }
                 }
 
             } catch (err) {
                 console.log(err)
-                if (!err.message) {
-                    await bot.api.sendMessage(imp.shemdoe, err.description)
-                } else {
-                    await bot.api.sendMessage(imp.shemdoe, err.message)
-                }
+                await ctx.reply(err?.message)
             }
         })
 
