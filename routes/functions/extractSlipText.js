@@ -122,6 +122,8 @@ You must be able to recognize these and extract them in a short, clean format li
 - 1X2 & Total: (1 & Over 2.5)
 - 1X2 & GG/NG: (1 & Yes)
 
+Be attentive to the betslip as it may contain ambiguities or different formats. Bet like 1&U which mean "1 and Under" should be interpreted correctly: For example FT 1X2 & Under/Over 1.5 - 1&O should be interpreted as "1X2 & Total: (1 & Over 1.5)".
+
 Example of bet shown on the slip and expected bet value... the flow MUST be like this:
 slip: FT 1X2 & Under/Over 3.5 - 1&U
 expected_value: 1X2 & Total: (1 & Under 3.5)
