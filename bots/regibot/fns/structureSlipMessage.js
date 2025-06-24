@@ -18,7 +18,7 @@ const StructureBetslipCaption = (gpt_res, affiliate, booking) => {
 
     const caption = `
 <b>Mkeka wa Leo | Mkeka No. #${aff[affiliate].namba}</b>
-<code>🗓 date goes here</code>
+<code>🗓 Today, 2025</code>
 
 
 <b>🔥 Total Odds: ${totalOdds}</b>
@@ -51,12 +51,11 @@ ${matches[2].sw_explanation}
 ☑️ <b>${matches[3].bet}</b>
 ${matches[3].sw_explanation}
 
+
 📠 Booking code: <b><a href="${aff[affiliate].href}">${booking}</a></b>
 ▬▬▬▬▬▬▬▬▬▬▬▬▬
 
-<blockquote>
-${aff[affiliate].promo}
-</blockquote> 
+<blockquote>${aff[affiliate].promo}</blockquote> 
 
 Ikiwa bado huna account <b>Unaweza Jisajili Hapa Chini</b>
 
