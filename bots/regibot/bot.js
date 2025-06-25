@@ -433,10 +433,6 @@ const reginaBot = async (app) => {
             }
         })
 
-        bot.on('channel_post:text', (ctx)=> {
-            channel
-        })
-
         bot.on('channel_post', async ctx => {
             RegiChannelPostHandler(bot, ctx, imp)
         })
