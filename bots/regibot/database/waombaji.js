@@ -18,5 +18,5 @@ const waombajiSchema = new Schema({
 }, {strict: false, timestamps: false})
 
 const ohmyNew = mongoose.connection.useDb('ohmyNew')
-const model = ohmyNew.model('waombajiModel', waombajiSchema)
-module.exports = model
+const waombajiModel = ohmyNew.model('waombajiModel', waombajiSchema)
+module.exports = waombajiModel

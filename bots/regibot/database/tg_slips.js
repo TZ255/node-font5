@@ -17,5 +17,5 @@ const mkekaSchema = new Schema({
 }, {strict: false, timestamps: true })
 
 const mkeka_wa_leo = mongoose.connection.useDb('mkeka-wa-leo')
-let model = mkeka_wa_leo.model('telegram_slips', mkekaSchema)
-module.exports = model
+let tgSlipsModel = mkeka_wa_leo.model('telegram_slips', mkekaSchema)
+module.exports = tgSlipsModel

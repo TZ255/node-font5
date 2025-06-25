@@ -7,7 +7,7 @@ const convoSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now,
-        index: { expires: '4h' }
+        index: { expires: '1h' }
     }
 }, { strict: false, timestamps: false });
 
