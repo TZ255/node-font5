@@ -37,6 +37,13 @@ const expected_output_example = {
             "sw_explanation": "Manchester United kushinda"
         },
         {
+            "league": "Premier League",
+            "match": "Manchester City - Liverpool",
+            "bet": "1X2: (X)",
+            "odds": "2.5",
+            "sw_explanation": "Mechi kuisha sare"
+        },
+        {
             "league": "La Liga",
             "match": "Barcelona - Real Madrid",
             "bet": "Total: (Over 2.5)",
@@ -84,6 +91,13 @@ const expected_output_example = {
             "bet": "DC & Total: (1X & Over 1.5)",
             "odds": "1.87",
             "sw_explanation": "Ajax kushinda au kudroo na jumla ya magoli hii mechi, Over 1.5"
+        },
+        {
+            "league": "Netherlands - Eredivisie",
+            "match": "Ajax - PSV Eindhoven",
+            "bet": "BTTS & Total: (Yes & Over 2.5)",
+            "odds": "1.87",
+            "sw_explanation": "Timu zote kufungana, na jumla ya magoli hii match, Over 2.5"
         }
     ]
 }
@@ -130,7 +144,7 @@ expected_value: 1X2 & Total: (1 & Under 3.5)
 sw_explanation: <home_team> kushinda na jumla ya magoli hii mechi, Under 3.5
 
 slip: GG & U/O 2.5 - GG&O
-expected_value: GG/NG & Total: (Yes & Over 2.5)
+expected_value: BTTS & Total: (Yes & Over 2.5)
 sw_explanation: Timu zote kufungana na jumla ya magoli hii match, Over 2.5
 
 slip: Total Goals (2.5)
