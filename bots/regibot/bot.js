@@ -30,7 +30,7 @@ const makeConvo = require('./fns/convoFn')
 const { ExtractTextFromSlip } = require('../../routes/functions/extractSlipText')
 const { StructureBetslipCaption } = require('./fns/structureSlipMessage')
 const { ShemdoeAssistant } = require('../../routes/functions/kbase')
-const { RegiChannelPostHandler } = require('./fns/channelPostHandler')
+const { RegiChannelPostHandler, RegiAIGroupHandler } = require('./fns/channelPostHandler')
 
 
 
@@ -56,7 +56,7 @@ const reginaBot = async (app) => {
             mylove: -1001748858805,
             mkekaLeo: -1001733907813,
             rtcopyDB: -1002634850653,
-            ai_channel: -1002769939328
+            ai_group: -1002828977721
         }
 
         //use auto-retry
@@ -444,6 +444,11 @@ const reginaBot = async (app) => {
 
         bot.on('message:text', async ctx => {
             try {
+                if(['group', 'supergroup'].includes(ctx.chat.type) && ctx.chat.id == imp.ai_group) {
+                    const userid = ctx.message.from.id
+                    RegiAIGroupHandler(bot, ctx, imp, userid)
+                }
+
                 if (ctx.message.reply_to_message && ctx.chat.id == imp.halot) {
                     if (ctx.message.reply_to_message.text) {
                         let my_msg = ctx.message.text
@@ -482,7 +487,6 @@ const reginaBot = async (app) => {
                     }
                 }
 
-
                 else {
                     //create user if not on database
                     await create(bot, ctx)
@@ -519,7 +523,6 @@ const reginaBot = async (app) => {
                         }
                     }
                 }
-
             } catch (err) {
                 if (!err.message) {
                     await bot.api.sendMessage(imp.shemdoe, err.description)

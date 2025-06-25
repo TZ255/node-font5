@@ -122,28 +122,26 @@ const RegiChannelPostHandler = async (bot, ctx, imp) => {
                 await ctx.deleteMessage()
             }
         }
-
-        //AI Playing
-        if (ctx.channelPost?.text && ctx.channelPost.chat.id == imp.ai_channel) {
-            try {
-                await ctx.replyWithChatAction('typing')
-                const text = ctx.channelPost.text
-                const userid = ctx.chat.id
-                const response = await ShemdoeAssistant(userid, text)
-                return await ctx.reply(response)
-            } catch (error) {
-                console.error(error.message, error)
-                await ctx.reply(error.message)
-            }
-        }
-
     } catch (err) {
         console.log(err)
         await ctx.reply(err?.message)
     }
 }
 
+const RegiAIGroupHandler = async (bot, ctx, imp, userid) => {
+    try {
+        await ctx.replyWithChatAction('typing')
+        const text = ctx.message.text
+        const response = await ShemdoeAssistant(userid, text)
+        return await ctx.reply(response)
+    } catch (error) {
+        console.error(error)
+        await ctx.reply(err?.message)
+    }
+}
+
 
 module.exports = {
-    RegiChannelPostHandler
+    RegiChannelPostHandler,
+    RegiAIGroupHandler
 }
