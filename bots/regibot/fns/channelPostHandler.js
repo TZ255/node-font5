@@ -42,6 +42,7 @@ const RegiChannelPostHandler = async (bot, ctx, imp) => {
 
         // for regina only
         if (ctx.channelPost.reply_to_message && ctx.channelPost.chat.id == imp.mikekaDB) {
+            let txt = ctx.channelPost.text
             let rp_id = ctx.channelPost.reply_to_message.message_id
             let rp_msg = ctx.channelPost.reply_to_message.text
 
