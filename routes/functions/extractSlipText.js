@@ -86,6 +86,20 @@ const expected_output_example = {
             "sw_explanation": "Lyon kushinda au kudroo na timu zote kufungana"
         },
         {
+            "league": "France - Ligue 1",
+            "match": "PSG - Lyon",
+            "bet": "DC & BTTS: (12 & Yes)",
+            "odds": "2.37",
+            "sw_explanation": "Double Chance, timu yoyote kushinda, na wote kufungana"
+        },
+        {
+            "league": "France - Ligue 1",
+            "match": "PSG - Lyon",
+            "bet": "DC & Total: (12 & Over 2.5)",
+            "odds": "2.37",
+            "sw_explanation": "Double Chance, timu yoyote kushinda, na jumla ya magoli hii mechi, Over 2.5"
+        },
+        {
             "league": "Netherlands - Eredivisie",
             "match": "Ajax - PSV Eindhoven",
             "bet": "DC & Total: (1X & Over 1.5)",
