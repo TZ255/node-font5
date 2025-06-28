@@ -619,7 +619,7 @@ const reginaBot = async (app) => {
                     }, 5000);
                     break;
 
-                case '11:30': case '14:30': case "15:21": case '18:45': case '20:35': case '23:45':
+                case '11:30': case '14:30': case "15:25": case '18:45': case '20:35': case '23:45':
                     //extract tomorrow 1x2
                     call_scheduled_checker_fn.extractMyBetsToday('soccer-predictions/tomorrow/', trhKesho)
 
