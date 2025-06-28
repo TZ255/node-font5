@@ -129,7 +129,7 @@ Here's an example of the expected output format:
 ${JSON.stringify(expected_output_example, null, 2)}
 
 Important rules:
-- The totalOdds field might not be present in the betslip. If it’s missing, calculate it by multiplying all match odds together.
+- The totalOdds field might not be present in the betslip. If it’s missing, calculate it by multiplying all match odds together. Be careful here as the totalOdds field must be correct
 - If the betslip is invalid or text extraction fails, return { ok: false, error: "your error message here" }.
 - If the slip is valid, return { ok: true, ... } as shown in the example.
 
@@ -195,10 +195,11 @@ const ExtractTextFromSlip = async (imgUrl) => {
                 {
                     role: "user",
                     content: [
-                        { type: "input_text", text: "Extract:" },
+                        { type: "input_text", text: "Careful analyze and extract required data:" },
                         {
                             type: "input_image",
                             image_url: imgUrl,
+                            detail: "high"
                         },
                     ],
                 },
