@@ -1,4 +1,4 @@
-const StructureBetslipCaption = (gpt_res, affiliate, booking) => {
+const StructureBetslipCaption = (gpt_res, affiliate, booking, date) => {
     const matches = gpt_res.matches;
     const totalOdds = gpt_res.totalOdds;
     const aff = {
@@ -18,7 +18,7 @@ const StructureBetslipCaption = (gpt_res, affiliate, booking) => {
 
     const caption = `
 <b>Mkeka wa Leo | Mkeka No. #${aff[affiliate].namba}</b>
-<code>🗓 Today, 2025</code>
+<code>🗓 ${date}, 2025</code>
 
 
 <b>🔥 Total Odds: ${totalOdds}</b>

@@ -105,7 +105,10 @@ const RegiChannelPostHandler = async (bot, ctx, imp) => {
                 let wa_msg = await ctx.reply(final_text + bottom_text)
                 await ctx.deleteMessage()
                 setTimeout(() => { ctx.api.deleteMessage(ctx.chat.id, wa_msg.message_id) }, 10000)
-            } else if (txt.toLocaleLowerCase().startsWith('automate ') && ctx.channelPost?.reply_to_message?.photo) {
+            } 
+            else if (txt.toLocaleLowerCase().startsWith('automate') && ctx.channelPost?.reply_to_message?.photo) {
+                let [, affiliate, booking, date] = txt.split('\n').map(x => x.trim());
+
                 let photo = ctx.channelPost.reply_to_message.photo.at(-1)
                 let file = await ctx.api.getFile(photo.file_id)
                 let imgUrl = `https://api.telegram.org/file/bot${ctx.api.token}/${file.file_path}`
@@ -115,10 +118,8 @@ const RegiChannelPostHandler = async (bot, ctx, imp) => {
 
                 if (!gpt_res.ok) return await ctx.reply(gpt_res?.error || 'Unknown error on fn call');
 
-                let [, affiliate, booking] = txt.split(' ')
-                console.log(affiliate, booking)
                 //structure message
-                const caption = StructureBetslipCaption(gpt_res, affiliate, booking)
+                const caption = StructureBetslipCaption(gpt_res, String(affiliate).toLocaleLowerCase(), booking, date)
                 await ctx.api.editMessageCaption(ctx.channelPost.chat.id, rp_id, { parse_mode: 'HTML', caption })
                 await ctx.deleteMessage()
             }
