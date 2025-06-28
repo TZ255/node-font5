@@ -619,7 +619,7 @@ const reginaBot = async (app) => {
                     }, 5000);
                     break;
 
-                case '11:30': case '14:30': case '18:45': case '20:35': case '23:45':
+                case '11:30': case '14:30': case "15:21": case '18:45': case '20:35': case '23:45':
                     //extract tomorrow 1x2
                     call_scheduled_checker_fn.extractMyBetsToday('soccer-predictions/tomorrow/', trhKesho)
 
@@ -632,6 +632,11 @@ const reginaBot = async (app) => {
                     setTimeout(() => {
                         correctScoreFn('soccer-predictions/correct-score-predictions/tomorrow/', trhKesho)
                     }, 10000);
+
+                    //extract correct score after tomorrow
+                    setTimeout(() => {
+                        correctScoreFn('soccer-predictions/correct-score-predictions/after-tomorrow/', afterKesho)
+                    }, 15000);
                     break;
 
                 //fametips
