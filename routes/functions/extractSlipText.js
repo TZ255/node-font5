@@ -129,7 +129,7 @@ Here's an example of the expected output format:
 ${JSON.stringify(expected_output_example, null, 2)}
 
 Important rules:
-- The totalOdds field might not be present in the betslip. If it’s missing, calculate it by multiplying all match odds together. Be careful here as the totalOdds field must be correct
+- The totalOdds field might not be present in the betslip. If it’s missing, calculate it by multiplying all match odds together (eg. 2.11 * 1.77 * 1.88 * 1.55 = 10.88)
 - If the betslip is invalid or text extraction fails, return { ok: false, error: "your error message here" }.
 - If the slip is valid, return { ok: true, ... } as shown in the example.
 
