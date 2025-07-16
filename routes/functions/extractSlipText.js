@@ -120,70 +120,50 @@ const systemInstruction = `You are a Swahili betting expert assistant. You will 
 
 The matches field should be an array of objects, each with the following fields:
 - league
-- match (home - away) separated by " - " not "vs"
+- match (home - away), separated by " - " (not "vs"), using popular short team names (omit FC, SC, etc.)
 - bet
 - odds
-- sw_explanation (a short swahili explanation of the bet)
+- sw_explanation (a short Swahili explanation of the bet)
 
-Here's an example of the expected output format:
+Example output format:
 ${JSON.stringify(expected_output_example, null, 2)}
 
-Important rules:
-- The totalOdds field might not be present in the betslip. If it’s missing, calculate it by multiplying all match odds together (eg. 2.11 * 1.77 * 1.88 * 1.55 = 10.88)
+Rules:
+- If totalOdds is missing from the betslip, calculate it by multiplying all match odds (e.g., 2.11 * 1.77 * 1.88 * 1.55 = 10.88).
 - If the betslip is invalid or text extraction fails, return { ok: false, error: "your error message here" }.
 - If the slip is valid, return { ok: true, ... } as shown in the example.
 
-Betslip may contain various bet types, such as:
+Recognize and extract various bet types, such as:
 - 1X2
 - Total (Over/Under)
 - Double Chance (DC)
 - Both Teams to Score (BTTS / GG-NG)
-- And combinations like DC & BTTS or DC & Total
+- Combinations like DC & BTTS or DC & Total
 
-You must be able to recognize these and extract them in a short, clean format like this:
+Format bets as:
 - 1X2: (1), 1X2: (X), etc.
 - Total: (Over 2.5)
-- DC: (1X, X2 or 12)
+- DC: (1X, X2, or 12)
 - BTTS: (Yes)
 - DC & BTTS: (X2 & Yes)
 - DC & Total: (1X & Over 1.5)
 - 1X2 & Total: (1 & Over 2.5)
 - 1X2 & GG/NG: (1 & Yes)
 
-Be attentive to the betslip as it may contain ambiguities or different formats. Bet like 1&U which mean "1 and Under" should be interpreted correctly: For example FT 1X2 & Under/Over 1.5 - 1&O should be interpreted as "1X2 & Total: (1 & Over 1.5)".
+Interpret ambiguous or shorthand bets correctly. For example:
+- "FT 1X2 & Under/Over 3.5 - 1&U" → 1X2 & Total: (1 & Under 3.5)
+- "GG & U/O 2.5 - GG&O" → BTTS & Total: (Yes & Over 2.5)
+- "Total Goals (2.5)" → Total: (Over 2.5)
+- "Both teams to score / GG/NG - Yes" → BTTS: (Yes)
+- "FT DC & GG/NG - X2&Y" → DC & BTTS: (X2 & Yes)
 
-Example of bet shown on the slip and expected bet value... the flow MUST be like this:
-slip: FT 1X2 & Under/Over 3.5 - 1&U
-expected_value: 1X2 & Total: (1 & Under 3.5)
-sw_explanation: <home_team> kushinda na jumla ya magoli hii mechi, Under 3.5
+Always use the format: [Bet Type]: ([Bet Option]), e.g., "1X2: (2)" or "BTTS: (No)".
 
-slip: GG & U/O 2.5 - GG&O
-expected_value: BTTS & Total: (Yes & Over 2.5)
-sw_explanation: Timu zote kufungana na jumla ya magoli hii match, Over 2.5
-
-slip: Total Goals (2.5)
-expected_value: Total: (Over 2.5)
-sw_explanation: Jumla ya magoli matatu au zaidi kupatikana kwenye hii match
-
-slip: Both teams to score / GG/NG - Yes
-expected_value: BTTS: (Yes)
-sw_explanation: Timu zote kufungana
-
-slip: FT 1X2 & GG 3.5 - 1&U
-expected_value: 1X2 & Total: (1 & Under 3.5)
-sw_explanation: <home_team> kushinda na jumla ya magoli hii mechi yasizidi matatu
-
-slip: FT DC & GG/NG - X2&Y
-expected_value: DC & BTTS: (X2 & Yes)
-sw_explanation: <away_team> kushinda au kudroo na timu zote kufungana
-
-Stick to this format: [Bet Type]: ([Bet Option]) — for example: "1X2: (2)" or "BTTS: (No)". Be creative but consistent with short labels, and always wrap the option in brackets.
-
-Keep the explanations clear and natural in Swahili while following the flow like in the example.`;
+Keep Swahili explanations clear and natural, following the example flow.`;
 
 
 
-const ExtractTextFromSlip = async (imgUrl) => {
+const ExtractTextFromSlip = async (imgUrl, user_msg = '') => {
     try {
         const response = await openai.responses.parse({
             model: "gpt-4.1-mini",
@@ -195,7 +175,7 @@ const ExtractTextFromSlip = async (imgUrl) => {
                 {
                     role: "user",
                     content: [
-                        { type: "input_text", text: "Careful analyze and extract required data:" },
+                        { type: "input_text", text: `Careful analyze and extract required data: ${user_msg}` },
                         {
                             type: "input_image",
                             image_url: imgUrl,

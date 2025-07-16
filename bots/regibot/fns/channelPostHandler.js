@@ -107,14 +107,15 @@ const RegiChannelPostHandler = async (bot, ctx, imp) => {
                 setTimeout(() => { ctx.api.deleteMessage(ctx.chat.id, wa_msg.message_id) }, 10000)
             } 
             else if (txt.toLocaleLowerCase().startsWith('automate') && ctx.channelPost?.reply_to_message?.photo) {
-                let [, affiliate, booking, date] = txt.split('\n').map(x => x.trim());
+                let [, affiliate, booking, date, prompt = ''] = txt.split('\n').map(x => x.trim());
+
 
                 let photo = ctx.channelPost.reply_to_message.photo.at(-1)
                 let file = await ctx.api.getFile(photo.file_id)
                 let imgUrl = `https://api.telegram.org/file/bot${ctx.api.token}/${file.file_path}`
 
                 //extract
-                let gpt_res = await ExtractTextFromSlip(imgUrl)
+                let gpt_res = await ExtractTextFromSlip(imgUrl, prompt)
 
                 if (!gpt_res.ok) return await ctx.reply(gpt_res?.error || 'Unknown error on fn call');
 
