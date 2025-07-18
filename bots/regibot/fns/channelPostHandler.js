@@ -1,5 +1,10 @@
+const BetslipModel = require("../../../model/betslip")
+const BookingCodesModel = require("../../../model/booking_code")
+const paidVipModel = require("../../../model/paid-vips")
 const { ExtractTextFromSlip } = require("../../../routes/functions/extractSlipText")
 const { ShemdoeAssistant } = require("../../../routes/functions/kbase")
+const matchExplanation = require("../../../routes/functions/match-expl")
+const { ExtractSure3FromSlip } = require("../../../routes/functions/sure3Extract")
 const myBongoChannelsModel = require("../database/my_channels")
 const tgSlipsModel = require("../database/tg_slips")
 const waombajiModel = require("../database/waombaji")
@@ -105,7 +110,7 @@ const RegiChannelPostHandler = async (bot, ctx, imp) => {
                 let wa_msg = await ctx.reply(final_text + bottom_text)
                 await ctx.deleteMessage()
                 setTimeout(() => { ctx.api.deleteMessage(ctx.chat.id, wa_msg.message_id) }, 10000)
-            } 
+            }
             else if (txt.toLocaleLowerCase().startsWith('automate') && ctx.channelPost?.reply_to_message?.photo) {
                 let [, affiliate, booking, date, prompt = ''] = txt.split('\n').map(x => x.trim());
 
@@ -123,6 +128,41 @@ const RegiChannelPostHandler = async (bot, ctx, imp) => {
                 const caption = StructureBetslipCaption(gpt_res, String(affiliate).toLocaleLowerCase(), booking, date)
                 await ctx.api.editMessageCaption(ctx.channelPost.chat.id, rp_id, { parse_mode: 'HTML', caption })
                 await ctx.deleteMessage()
+            }
+            //sure 3 extract
+            else if (txt.toLocaleLowerCase().startsWith('vip') && ctx.channelPost?.reply_to_message?.photo) {
+                let [, vip_no, booking, date, prompt = ''] = txt.split('\n').map(x => x.trim());
+
+
+                let photo = ctx.channelPost.reply_to_message.photo.at(-1)
+                let file = await ctx.api.getFile(photo.file_id)
+                let imgUrl = `https://api.telegram.org/file/bot${ctx.api.token}/${file.file_path}`
+
+                //extract
+                let gpt_res = await ExtractSure3FromSlip(imgUrl, prompt)
+
+                if (!gpt_res.ok) return await ctx.reply(gpt_res?.error || 'Unknown error on fn call');
+
+                //post to vips
+                for (let match of gpt_res.matches) {
+                    if (Number(vip_no) === 3) {
+                        await paidVipModel.create({
+                            date, vip_no: 3, time: match.time, tip: match.bet, league: match.league, match: match.match, odd: match.odds, expl: matchExplanation(match.bet)
+                        })
+                    }
+                    else {
+                        await BetslipModel.create({
+                            date, vip_no: Number(vip_no), time: match.time, tip: match.bet, league: match.league, match: match.match, odd: match.odds, expl: matchExplanation(match.bet)
+                        })
+                    }
+                }
+                await BookingCodesModel.findOneAndUpdate({ date, slip_no: Number(vip_no) }, { $set: { code: booking } }, { upsert: true })
+                await ctx.deleteMessage()
+                await ctx.api.deleteMessage(ctx.channelPost.chat.id, ctx.channelPost?.reply_to_message?.message_id)
+                let success = await ctx.reply(`VIP No. ${vip_no} - Booking: ${booking} umewekwa kwenye database.`)
+                setTimeout(async () => {
+                    await ctx.api.deleteMessage(ctx.chat.id, success?.message_id)
+                }, 5000)
             }
         }
     } catch (err) {
