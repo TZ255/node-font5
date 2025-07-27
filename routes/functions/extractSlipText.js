@@ -48,7 +48,14 @@ const expected_output_example = {
             "match": "Barcelona - Real Madrid",
             "bet": "Total: (Over 2.5)",
             "odds": "1.8",
-            "sw_explanation": "Jumla ya mabao matatu au zaidi kupatikana kwenye hii mechi"
+            "sw_explanation": "Jumla ya magoli, matatu au zaidi"
+        },
+        {
+            "league": "La Liga",
+            "match": "Barcelona - Real Madrid",
+            "bet": "Total: (Over)",
+            "odds": "1.8",
+            "sw_explanation": "Jumla ya magoli, matatu au zaidi"
         },
         {
             "league": "Serie A",
@@ -69,21 +76,21 @@ const expected_output_example = {
             "match": "MC Alger - JS Saoura",
             "bet": "1X2 & Total: (1 & Over 2.5)",
             "odds": "2.67",
-            "sw_explanation": "MC Alger kushinda na jumla ya magoli hii mechi, Over 2.5"
+            "sw_explanation": "MC Alger kushinda, na jumla ya magoli hii mechi, Over 2.5"
         },
         {
             "league": "Italy - Serie A",
             "match": "Inter Milan - Napoli",
             "bet": "1X2 & BTTS: (1 & Yes)",
             "odds": "2.37",
-            "sw_explanation": "Inter Milan kushinda na timu zote kufungana"
+            "sw_explanation": "Inter Milan kushinda, na timu zote kufungana"
         },
         {
             "league": "France - Ligue 1",
             "match": "PSG - Lyon",
             "bet": "DC & BTTS: (X2 & Yes)",
             "odds": "2.37",
-            "sw_explanation": "Lyon kushinda au kudroo na timu zote kufungana"
+            "sw_explanation": "Lyon kushinda au kudroo, na timu zote kufungana"
         },
         {
             "league": "France - Ligue 1",
@@ -104,7 +111,7 @@ const expected_output_example = {
             "match": "Ajax - PSV Eindhoven",
             "bet": "DC & Total: (1X & Over 1.5)",
             "odds": "1.87",
-            "sw_explanation": "Ajax kushinda au kudroo na jumla ya magoli hii mechi, Over 1.5"
+            "sw_explanation": "Ajax kushinda au kudroo, na jumla ya magoli hii mechi, Over 1.5"
         },
         {
             "league": "Netherlands - Eredivisie",
