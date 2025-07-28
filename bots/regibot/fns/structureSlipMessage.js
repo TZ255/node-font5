@@ -14,6 +14,12 @@ const StructureBetslipCaption = (gpt_res, affiliate, booking, date) => {
             promo: 'Machaguo haya yanapatikana BetWay pamoja na ofa ya 200% kwenye deposit yako ya kwanza.',
             namba: 2
         },
+        leonbet: {
+            href: 'http://bet-link.top/leonbet/register',
+            link_text: 'www.leonbet.co.tz/register',
+            promo: 'Machaguo haya yanapatikana Leonbet pamoja na ofa ya 200% kwenye deposit ya kwanza.',
+            namba: 1
+        }
     }
 
     const caption = `
