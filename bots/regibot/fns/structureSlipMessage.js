@@ -58,8 +58,8 @@ ${matches[2].sw_explanation}
 ${matches[3].sw_explanation}
 
 
-📠 Booking code: <b><a href="${aff[affiliate].href}">${booking}</a></b>
-▬▬▬▬▬▬▬▬▬▬▬▬▬
+<b>📠 Booking code:</b> <code>${booking}</code>
+▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
 <blockquote>${aff[affiliate].promo}</blockquote> 
 
