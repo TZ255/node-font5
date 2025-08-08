@@ -58,7 +58,7 @@ ${matches[2].sw_explanation}
 ${matches[3].sw_explanation}
 
 
-<b>📠 Booking code:</b> <code>${booking}</code>
+<b>📠 Booking</b> 👉 <code>${booking}</code> 👈
 ▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
 <blockquote>${aff[affiliate].promo}</blockquote> 
