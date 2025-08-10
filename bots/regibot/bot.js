@@ -88,7 +88,6 @@ const reginaBot = async (app) => {
                     refferer: "Regina",
                     blocked: false
                 })
-                console.log('New user added to DB (Regina)')
             }
         }
 
@@ -118,7 +117,6 @@ const reginaBot = async (app) => {
                 if (ctx.match) {
                     let pload = ctx.match
                     if (pload == 'ngono_bongo') {
-                        console.log('Ngono Payload Started')
                         await bot.api.copyMessage(ctx.chat.id, imp.pzone, 8859, {
                             reply_markup: defaultReplyMkp
                         })
@@ -587,7 +585,6 @@ const reginaBot = async (app) => {
             let now = new Date().toLocaleTimeString('en-GB', { timeZone: 'Africa/Nairobi' })
             let timeStrings = now.split(':')
             let time2check = `${timeStrings[0]}:${timeStrings[1]}`
-            console.log(time2check)
             let trhLeo = new Date().toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
 
             //kesho

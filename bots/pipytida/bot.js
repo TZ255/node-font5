@@ -71,7 +71,6 @@ const PipyBot = async (app) => {
                     promo: 'unknown',
                     refferer: "Pipy"
                 })
-                console.log('New user added to DB (Pipy)')
             }
         }
 
@@ -104,7 +103,6 @@ const PipyBot = async (app) => {
                 if (ctx.match) {
                     let pload = ctx.match
                     if (pload == 'ngono_bongo') {
-                        console.log('Ngono Payload Started')
                         await bot.api.copyMessage(ctx.chat.id, imp.pzone, 8859, {
                             reply_markup: defaultReplyMkp
                         })

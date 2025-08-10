@@ -56,7 +56,6 @@ const DayoBot = async (app) => {
                     promo: 'unknown',
                     refferer: "Dayo"
                 })
-                console.log('New user added to DB (Dayo)')
             }
         }
 
@@ -98,7 +97,6 @@ const DayoBot = async (app) => {
                 if (ctx.match.length > 2) {
                     let pload = ctx.match
                     if (pload == 'ngono_bongo') {
-                        console.log('Ngono Payload Started')
                         await bot.api.copyMessage(ctx.chat.id, imp.pzone, 8859, {
                             reply_markup: defaultReplyMkp
                         })
