@@ -462,46 +462,45 @@ const PipyBot = async (app) => {
                 if (ctx.message && ctx.message.reply_to_message) {
                     if (admins.includes(ctx.chat.id) && ctx.message.reply_to_message.text) {
                         //call adminReplyToText
-                        await otheFns.adminReplyToMessageFn(bot, ctx, imp)
+                        return await otheFns.adminReplyToMessageFn(bot, ctx, imp)
                     }
 
                     if (ctx.message && ctx.message.reply_to_message && chatGroups.includes(ctx.chat.id) && admins.includes(ctx.message.from.id)) {
                         if (ctx.message.text.toLocaleLowerCase() == 'verified') {
                             //call verifying function
-                            await otheFns.verifyFn(bot, ctx, imp)
+                            return await otheFns.verifyFn(bot, ctx, imp)
                         } else if (ctx.message.text.toLocaleLowerCase() == 'unverify') {
                             //call verifying function
-                            await otheFns.UnverifyFn(bot, ctx, imp)
+                            return await otheFns.UnverifyFn(bot, ctx, imp)
                         } else if (ctx.message.text.toLocaleLowerCase().includes('loc=')) {
                             //update location
-                            await otheFns.updateLocation(bot, ctx)
+                            return await otheFns.updateLocation(bot, ctx)
                         } else if (ctx.message.text.toLocaleLowerCase().includes('phone=')) {
                             //update phone number
-                            await otheFns.updatePhone(bot, ctx)
+                            return await otheFns.updatePhone(bot, ctx)
                         } else if (ctx.message.text.toLocaleLowerCase().includes('itle=')) {
                             //update admin title
-                            await otheFns.updateAdminTitle(bot, ctx, imp)
+                            return await otheFns.updateAdminTitle(bot, ctx, imp)
                         }
                     }
 
                     if (ctx.message && ctx.message.reply_to_message.photo && admins.includes(ctx.chat.id) && ctx.chat.type == 'private') {
                         //if its text reply to photo
-                        await otheFns.adminReplyTextToPhotoFn(bot, ctx, imp)
+                        return await otheFns.adminReplyTextToPhotoFn(bot, ctx, imp)
                     }
                 }
 
                 //create user if not on database
                 if (ctx.chat.type == 'private') {
                     await create(bot, ctx)
+                    //switch kybd, mkeka arrays, forwarding
+                    return switchUserText.switchTxt(call_sendMikeka_functions, bot, ctx, imp, mkArrs, delay).catch(e => {})
                 }
 
                 if (chatGroups.includes(ctx.chat.id)) {
                     //check if member is restricted in our superGroups
-                    await otheFns.muteLongTextsAndVideos(bot, ctx, imp, delay)
+                    return otheFns.muteLongTextsAndVideos(bot, ctx, imp, delay).catch(e => {})
                 }
-
-                //switch kybd, mkeka arrays, forwarding
-                await switchUserText.switchTxt(call_sendMikeka_functions, bot, ctx, imp, mkArrs, delay)
             } catch (err) {
                 console.log(err.message, err)
             }
@@ -541,17 +540,17 @@ const PipyBot = async (app) => {
                         }
                     }
 
-                    await bot.api.copyMessage(imp.halot, chatid, mid, {
+                    return await bot.api.copyMessage(imp.halot, chatid, mid, {
                         caption: cap + `\n\nfrom = <code>${username}</code>\nid = <code>${chatid}</code>&mid=${mid}`,
                         parse_mode: 'HTML'
                     })
                 }
                 if (chatGroups.includes(ctx.chat.id) && !admins.includes(ctx.message.from.id)) {
                     //check if is verified (only applicable if all users are allowed to post)
-                    await otheFns.checkSenderFn(bot, ctx, imp)
+                    otheFns.checkSenderFn(bot, ctx, imp).catch(e => {})
 
                     //check if restricted, if not mute 30 minutes
-                    await otheFns.muteLongTextsAndVideos(bot, ctx, imp, delay)
+                    otheFns.muteLongTextsAndVideos(bot, ctx, imp, delay).catch(e => {})
                 }
             } catch (err) {
                 console.log(err.message, err)
