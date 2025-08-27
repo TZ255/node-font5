@@ -25,6 +25,10 @@ const passionpredictUnder35Schema = new Schema({
         type: String,
         default: '-:-'
     },
+    odds: {
+        type: String,
+        default: '-'
+    },
     status: {
         type: String,
         default: 'pending'

@@ -30,45 +30,55 @@ const checkOdds = async (bot, imp) => {
         let ourDb = await PassionUnder35Model.find({ siku })
 
         //fetch PassionPredict table
-        let tday_table = $(`.container .row .tabs section:nth-of-type(2) table tbody tr`)
+        let tday_table = $(`main .container section:nth-of-type(1) section.grid`)
 
         //compare length
         if (tday_table && tday_table.length > 1) {
             await PassionUnder35Model.deleteMany({ siku })
             tday_table.each(async (i, el) => {
-                let time_data = $('td:nth-child(1)', el).text().trim()
-                let time_arr = time_data.split(':')
-                let hrs = Number(time_arr[0])
-                let min = time_arr[1]
-                let actual_time = hrs + 2
-                if (actual_time >= 24) {
-                    actual_time = `23`
-                    min = '59'
-                }
-                String(actual_time).padStart(2, '0')
-                let time = `${actual_time}:${min}`
-                let nano = nanoid(4)
+                let table_li = $('ul li', el)
+                table_li.each(async (i, liEl) => {
+                    let time_data = $('div:nth-child(1) div span', liEl).text().trim()
+                    let time_arr = time_data.split(':')
+                    let hrs = Number(time_arr[0])
+                    let min = time_arr[1]
+                    let actual_time = hrs + 2
+                    if (actual_time >= 24) {
+                        actual_time = `23`
+                        min = '59'
+                    }
+                    String(actual_time).padStart(2, '0')
+                    let time = `${actual_time}:${min}`
+                    let nano = nanoid(4)
 
-                let league = $('td:nth-child(2)', el).text().trim()
-                let match = $('td:nth-child(3)', el).text().trim()
+                    let league = $('div:nth-child(1) div p', el).text()
+                        .replace(/\s+/g, ' ')          // collapse multiple spaces/newlines
+                        .trim()                        // remove leading/trailing spaces
+                        .replace(/^[:\s]+/, '');       // remove any leading colons or spaces
+                    let home_team = $('div:nth-child(2) div:nth-child(1) p', liEl).text().trim()
+                    let away_team = $('div:nth-child(2) div:nth-child(2) p', liEl).text().trim()
+                    let match = `${home_team} - ${away_team}`
 
-                //(?=\s) - This is a +ve lookahead that ensures there's a whitespace or \n after VS
-                //(?<=\s) - This is a +ve lookbehind that ensures there's a whitespace or \n after VS
-                match = match.replace(/\s+VS\s+/gi, ' - ')
+                    //results
+                    let home_results = $('div:nth-child(3) div:nth-child(1)', liEl).text().trim()
+                    let away_results = $('div:nth-child(3) div:nth-child(2)', liEl).text().trim()
+                    let matokeo = `${home_results}:${away_results}`
 
-                //for testing before production
-                if (process.env.ENVIRONMENT === 'local') {
-                    console.log(match)
-                }
-                let tip = $('td:nth-child(4)', el).text().trim()
-                tip = capitalizeTip(tip)
 
-                //check if we have match the add to database
-                if (match.length > 5) {
-                    await PassionUnder35Model.create({
-                        time, siku, league, match, tip, nano
-                    })
-                }
+                    //for testing before production
+                    if (process.env.ENVIRONMENT === 'local') {
+                        console.log(match)
+                    }
+                    let tip = $('div:nth-child(4)', liEl).text().trim()
+                    let odds = $('div:nth-child(5)', liEl).text().trim()
+
+                    //check if we have match the add to database
+                    if (match.length > 5) {
+                        await PassionUnder35Model.create({
+                            time, siku, league, match, tip, nano, odds
+                        })
+                    }
+                })
             })
             await bot.api.sendMessage(imp.shemdoe, `PassionPredict found and created`)
         } else {
@@ -99,42 +109,58 @@ const checkTomorrowOdds = async (bot, imp) => {
         let ourDb = await PassionUnder35Model.find({ siku })
 
         //fetch PassionPredict table
-        let tday_table = $(`.container .row .tabs section:nth-of-type(3) table tbody tr`)
+        let tday_table = $(`main .container section:nth-of-type(1) section.grid`)
 
         //compare length
         if (tday_table && tday_table.length > 1) {
             await PassionUnder35Model.deleteMany({ siku })
             tday_table.each(async (i, el) => {
-                let time_data = $('td:nth-child(1)', el).text().trim()
-                let time_arr = time_data.split(':')
-                let hrs = Number(time_arr[0])
-                let min = time_arr[1]
-                let actual_time = String(hrs + 2).padStart(2, '0')
-                if (actual_time >= 24) {
-                    actual_time = `23`
-                    min = '59'
-                }
-                let time = `${actual_time}:${min}`
-                let nano = nanoid(4)
+                let table_li = $('ul li', el)
+                table_li.each(async (i, liEl) => {
+                    let time_data = $('div:nth-child(1) div span', liEl).text().trim()
+                    let time_arr = time_data.split(':')
+                    let hrs = Number(time_arr[0])
+                    let min = time_arr[1]
+                    let actual_time = hrs + 2
+                    if (actual_time >= 24) {
+                        actual_time = `23`
+                        min = '59'
+                    }
+                    String(actual_time).padStart(2, '0')
+                    let time = `${actual_time}:${min}`
+                    let nano = nanoid(4)
 
-                let league = $('td:nth-child(2)', el).text().trim()
-                let match = $('td:nth-child(3)', el).text().trim()
-                match = match.replace(/\s+VS\s+/gi, ' - ')
-                //for testing before production
-                if (process.env.ENVIRONMENT === 'local') {
-                    console.log(match)
-                }
-                let tip = $('td:nth-child(4)', el).text().trim()
-                tip = capitalizeTip(tip)
+                    let league = $('div:nth-child(1) div p', el).text()
+                        .replace(/\s+/g, ' ')          // collapse multiple spaces/newlines
+                        .trim()                        // remove leading/trailing spaces
+                        .replace(/^[:\s]+/, '');       // remove any leading colons or spaces
+                    let home_team = $('div:nth-child(2) div:nth-child(1) p', liEl).text().trim()
+                    let away_team = $('div:nth-child(2) div:nth-child(2) p', liEl).text().trim()
+                    let match = `${home_team} - ${away_team}`
 
-                //check if we have match the add to database
-                if (match.length > 5) {
-                    await PassionUnder35Model.create({
-                        time, siku, league, match, tip, nano
-                    })
-                }
+                    //results
+                    let home_results = $('div:nth-child(3) div:nth-child(1)', liEl).text().trim()
+                    let away_results = $('div:nth-child(3) div:nth-child(2)', liEl).text().trim()
+                    let matokeo = `${home_results}:${away_results}`
+
+
+                    //for testing before production
+                    if (process.env.ENVIRONMENT === 'local') {
+                        console.log(match)
+                    }
+                    let tip = $('div:nth-child(4)', liEl).text().trim()
+                    let odds = $('div:nth-child(5)', liEl).text().trim()
+
+                    //check if we have match the add to database
+                    if (match.length > 5) {
+                        await PassionUnder35Model.create({
+                            time, siku, league, match, tip, nano, odds
+                        })
+                        console.log(time, league, match, tip, odds)
+                    }
+                })
             })
-            await bot.api.sendMessage(imp.shemdoe, `PassionPredict tomorrow found and created`)
+            await bot.api.sendMessage(imp.shemdoe, `PassionPredict found and created`)
         } else {
             await bot.api.sendMessage(imp.shemdoe, `PassionPredict - nothing found\n\n Our Length: ${ourDb.length}\nHer Length: ${tday_table.length}`)
         }
@@ -160,23 +186,33 @@ const checkMatokeoJana = async (bot, imp) => {
         let $ = cheerio.load(html.data)
 
         //fetch PassionPredict table
-        let yday_table = $(`.container .row .tabs section:nth-of-type(1) table tbody tr`)
+        let yday_table = $(`main .container section:nth-of-type(1) section.grid`)
 
         //compare length
         if (yday_table && yday_table.length > 1) {
             yday_table.each(async (i, el) => {
-                let match = $('td:nth-child(2)', el).text().trim()
-                match = match.replace(/\s+VS\s+/gi, ' - ')
-                let matokeo = $('td:nth-child(4)', el).text().trim().replace(/\s+/g, '')
-                //for testingbefore production
-                if (process.env.ENVIRONMENT === 'local') {
-                    console.log(matokeo)
-                }
-                //update table
-                let data = await PassionUnder35Model.findOne({ match, siku })
-                if (data && (data.matokeo == '-:-' || data.matokeo == ':') && matokeo != ':') {
-                    await data.updateOne({ $set: { matokeo } })
-                }
+                let table_li = $('ul li', el)
+                table_li.each(async (i, liEl) => {
+                    let league = $('div:nth-child(1) div p', el).text()
+                        .replace(/\s+/g, ' ')          // collapse multiple spaces/newlines
+                        .trim()                        // remove leading/trailing spaces
+                        .replace(/^[:\s]+/, '');       // remove any leading colons or spaces
+                    let home_team = $('div:nth-child(2) div:nth-child(1) p', liEl).text().trim()
+                    let away_team = $('div:nth-child(2) div:nth-child(2) p', liEl).text().trim()
+                    let match = `${home_team} - ${away_team}`
+
+                    //results
+                    let home_results = $('div:nth-child(3) div:nth-child(1)', liEl).text().trim()
+                    let away_results = $('div:nth-child(3) div:nth-child(2)', liEl).text().trim()
+                    let matokeo = `${home_results}:${away_results}`
+
+                    //update table
+                    let data = await PassionUnder35Model.findOne({ match, siku })
+                    if (data && (data.matokeo == '-:-' || data.matokeo == ':') && matokeo != ':') {
+                        await data.updateOne({ $set: { matokeo } })
+                        console.log(matokeo)
+                    }
+                })
             })
         } else {
             await bot.api.sendMessage(imp.shemdoe, `PassionPredict - no yesterday results`)

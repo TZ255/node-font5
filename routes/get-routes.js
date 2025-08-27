@@ -22,6 +22,7 @@ const oh_vids = require('../model/ohmy-vids')
 const { extractMyBetsToday } = require('../bots/regibot/fns/scheduled-odds')
 const { correctScoreFn } = require('../bots/regibot/fns/correct-score')
 const { scrapeBetimateBothToScore } = require('../bots/regibot/fns/Betimate')
+const { checkOdds, checkTomorrowOdds, checkMatokeoJana } = require('../bots/regibot/fns/passionpredict')
 
 //send success (no content) response to browser
 const limiter = elimit({
