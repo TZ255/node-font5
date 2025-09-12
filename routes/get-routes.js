@@ -23,6 +23,7 @@ const { extractMyBetsToday } = require('../bots/regibot/fns/scheduled-odds')
 const { correctScoreFn } = require('../bots/regibot/fns/correct-score')
 const { scrapeBetimateBothToScore } = require('../bots/regibot/fns/Betimate')
 const { checkOdds, checkTomorrowOdds, checkMatokeoJana } = require('../bots/regibot/fns/passionpredict')
+const GenerateSitemap = require('./functions/sitemapGenerator')
 
 //send success (no content) response to browser
 const limiter = elimit({
@@ -231,11 +232,13 @@ router.get('/:code', async (req, res) => {
 
 router.get('/API/testing', async (req, res) => {
     try {
-        //scrapeBetimateBothToScore('2025-06-17')
+        await GenerateSitemap('https://mkekawaleo.com')
+        console.log('Sitemap generated')
         res.end()
     } catch (err) {
         console.log(err)
         console.log(err.message)
+        res.end()
     }
 })
 
