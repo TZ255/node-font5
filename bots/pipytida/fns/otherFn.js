@@ -393,11 +393,11 @@ const updatePhone = async (bot, ctx) => {
 }
 
 //update title
-const updateAdminTitle = async (bot, ctx, imp, chatid = null) => {
+const updateAdminTitle = async (bot, ctx, imp, chat_id = null) => {
     let Groups = [imp.r_chatting]
     try {
         let txt = ctx.message.text
-        let chatid = chatid ? chatid : ctx.message?.reply_to_message?.from.id
+        let chatid = chat_id ? chat_id : ctx.message?.reply_to_message?.from.id
         let title = txt.split('itle=')[1].trim()
         let user = await verifiedList.findOneAndUpdate({ chatid }, { $set: { title } }, { new: true })
 
