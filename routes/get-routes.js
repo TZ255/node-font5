@@ -231,11 +231,11 @@ router.get('/:code', async (req, res) => {
 
 router.get('/API/testing', async (req, res) => {
     try {
-        //scrapeBetimateBothToScore('2025-06-17')
         res.end()
     } catch (err) {
         console.log(err)
         console.log(err.message)
+        res.end()
     }
 })
 

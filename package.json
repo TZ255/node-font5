@@ -10,6 +10,9 @@
   "keywords": [],
   "author": "shemdoe",
   "license": "ISC",
+  "engines": {
+    "node": "22.x"
+  },
   "dependencies": {
     "@grammyjs/auto-retry": "^2.0.1",
     "@grammyjs/parse-mode": "^1.10.0",
