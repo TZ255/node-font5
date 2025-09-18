@@ -393,11 +393,11 @@ const updatePhone = async (bot, ctx) => {
 }
 
 //update title
-const updateAdminTitle = async (bot, ctx, imp) => {
+const updateAdminTitle = async (bot, ctx, imp, chatid = null) => {
     let Groups = [imp.r_chatting]
     try {
         let txt = ctx.message.text
-        let chatid = ctx.message.reply_to_message.from.id
+        let chatid = chatid ? chatid : ctx.message?.reply_to_message?.from.id
         let title = txt.split('itle=')[1].trim()
         let user = await verifiedList.findOneAndUpdate({ chatid }, { $set: { title } }, { new: true })
 
@@ -465,7 +465,8 @@ const modFunction = async (bot, ctx, imp, delay) => {
                 break;
             case 'title':
                 let upTitle = await verifiedList.findOneAndUpdate({ chatid }, { $set: { title: value } }, { new: true });
-                await ctx.reply(`${upTitle.chatid} name is updated to ${upTitle.fname}`);
+                await updateAdminTitle(bot, ctx, imp, chatid)
+                await ctx.reply(`${upTitle.chatid} title is updated to ${upTitle.title}`);
                 break;
             case 'username':
                 let upUsename = await verifiedList.findOneAndUpdate({ chatid }, { $set: { username: value } }, { new: true });

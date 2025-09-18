@@ -341,7 +341,8 @@ const PipyBot = async (app) => {
         bot.command('mod', async ctx => {
             try {
                 if (admins.includes(ctx.chat.id)) {
-                    await otheFns.modFunction(bot, ctx, imp, delay)
+                    otheFns.modFunction(bot, ctx, imp, delay)
+                    .catch(e => console.log(e?.message))
                 }
             } catch (error) {
                 await ctx.reply(error.message)
