@@ -86,8 +86,8 @@ const RegiChannelPostHandler = async (bot, ctx, imp) => {
                 let cap = ctx.channelPost.reply_to_message?.caption
                 let title = `*${cap.split('🔥')[0].trim().split('\n')[0].replace('Leo', 'Siku')}*\n\`\`\`${cap.split('🔥')[0].trim().split('\n')[1]}\`\`\``
                 let odds = cap.split('Total Odds: ')[1].substring(0, 4)
-                let splitData = cap.split('📠 Booking code:')[0].trim().split('•••')
-                let booking_code = cap.split('📠 Booking code: ')[1].split('\n')[0].trim()
+                let splitData = cap.split('📠 Booking 👉')[0].trim().split('•••')
+                let booking_code = cap.split('Booking 👉')[1].trim().split('👈')[0].trim()
                 let final_text = `${title}\n\n\n`
                 let other_ct = `\n\n*🇰🇪 Kenya*\n*www.bet-link.top/betwinner/register*\n\n*🇺🇬 Uganda*\n*www.bet-link.top/gsb-ug/register*`
                 let bottom_text = `•••\n\n*🔥 Total Odds: ${odds}*\n📲 Booking Code: *${booking_code}*\n\n> Mkeka huu umeandaliwa *BetWay*. Wanatoa refund kwa mkeka uliochanwa na mechi moja.\n\nIkiwa bado huna account\n*🔗 Jisajili Hapa!*\n\n*🇹🇿 Tanzania*\n*www.bet-link.top/betway/register*${other_ct}`
