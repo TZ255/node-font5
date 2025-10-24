@@ -37,7 +37,9 @@ const matchExplanation = (tip) => {
         case 'Total Goals Rangess: 2 - 4':
         case 'Multigoals: 2 - 4':
         case 'Goal Bounds: 2 -4':
-            return 'Mechi kuisha na jumla ya kati ya magoli mawili hadi manne.'
+            return 'Mechi kuisha na jumla ya kati ya magoli mawili hadi manne.';
+        case "1st 10 min: Draw":
+            return 'Droo dakika 10 za mwanzo wa mechi'
 
         default:
             return ''

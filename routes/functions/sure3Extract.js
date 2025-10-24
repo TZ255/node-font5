@@ -144,6 +144,13 @@ const expected_output_example = {
             "match": "PSG - Lyon",
             "bet": "1st Half Multigoals: 1 - 2",
             "odds": "2.37",
+        },
+        {
+            "time": "16:00",
+            "league": "France - Ligue 1",
+            "match": "PSG - Lyon",
+            "bet": "1st 10 min: Draw",
+            "odds": "2.37",
         }
     ],
     "totalOdds": "7.2",
