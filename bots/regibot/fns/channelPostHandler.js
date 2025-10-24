@@ -145,16 +145,9 @@ const RegiChannelPostHandler = async (bot, ctx, imp) => {
 
                 //post to vips
                 for (let match of gpt_res.matches) {
-                    if (Number(vip_no) === 3) {
-                        await paidVipModel.create({
-                            date, vip_no: 3, time: match.time, tip: match.bet, league: match.league, match: match.match, odd: match.odds, expl: matchExplanation(match.bet)
-                        })
-                    }
-                    else {
-                        await BetslipModel.create({
-                            date, vip_no: Number(vip_no), time: match.time, tip: match.bet, league: match.league, match: match.match, odd: match.odds, expl: matchExplanation(match.bet)
-                        })
-                    }
+                    await BetslipModel.create({
+                        date, vip_no: Number(vip_no), time: match.time, tip: match.bet, league: match.league, match: match.match, odd: match.odds, expl: matchExplanation(match.bet)
+                    })
                 }
                 await BookingCodesModel.findOneAndUpdate({ date, slip_no: Number(vip_no) }, { $set: { code: booking } }, { upsert: true })
                 await ctx.deleteMessage()
