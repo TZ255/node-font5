@@ -179,6 +179,7 @@ Recognize and extract various bet types, such as:
 - Double Chance (DC)
 - Both Teams to Score (BTTS / GG-NG)
 - Combinations like DC & BTTS or DC & Total
+- 1st 10 min: Draw
 
 Format bet value and return its direct bet type, such as:
 - 1 will be "Home Win"
@@ -190,6 +191,7 @@ Format bet value and return its direct bet type, such as:
 - For FT Double chances use "Double Chance: 12, 1X or X2" based on the bet and for HT Double chances use "HT Double Chance: 12, 1X or X2" based on the bet.
 - For BTTS use "GG - Yes" or "GG - No" based on the bet.
 - For combinations like "DC & BTTS, 1X2 & Total etc", format as for example "1 & Over 2.5, 1X & Under 3.5, 12 & GG etc".
+- For First 10 min: 1X2 - X format as 1st 10 min: Draw
 `;
 
 
