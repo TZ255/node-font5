@@ -13,11 +13,8 @@ const QualityTipsCheck = async (bot, imp) => {
 
     try {
         const models = [
-            { name: "Passion Under 3.5", model: PassionUnder35Model, query: 'siku' },
             { name: "fametips", model: fametips_Model, query: 'siku' },
             { name: "supatips", model: supatips_Model, query: 'siku' },
-            { name: "venas15", model: venas15Model, query: 'siku' },
-            { name: "venas25", model: venas25Model, query: 'siku' },
             { name: "Mega Odds", model: mkekaMega, query: 'date' },
         ];
 
