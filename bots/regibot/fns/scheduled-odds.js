@@ -200,7 +200,7 @@ async function extractMyBetsToday(path, trh) {
         if(results.length > 0 && (db_length != results.length)) {
             await supatips_Model.deleteMany({siku: trh})
             await supatips_Model.insertMany(results)
-            console.log('MyBetsToday Fetched successfully')
+            console.log('MyBetsToday DirectWin Fetched successfully: ', trh)
         }
     } catch (error) {
         console.error('Error fetching or processing data:', error);
