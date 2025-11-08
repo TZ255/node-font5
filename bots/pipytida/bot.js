@@ -380,7 +380,7 @@ const PipyBot = async (app) => {
 
         bot.command('ondoa', async ctx => {
             try {
-                if (chatGroups.includes(ctx.chat.id) && ctx.message.reply_to_message) {
+                if (chatGroups.includes(ctx.chat.id) && ctx.message?.reply_to_message) {
                     let userid = ctx.message.reply_to_message.from.id
                     let fname = ctx.message.reply_to_message.from.first_name
                     let fullName = ctx.message.reply_to_message.from.last_name ? `${fname} ${ctx.message.reply_to_message.from.last_name}` : fname
@@ -389,10 +389,20 @@ const PipyBot = async (app) => {
                     let myid = ctx.message.from.id
                     let mention = `<a href="tg://user?id=123456789">${fullName}</a>`
                     let status = await ctx.getChatMember(myid)
+                    let user_status = await ctx.getChatMember(userid)
 
+                    //check if admin is tried to be removed
+                    if (['administrator', 'creator'].includes(user_status.status)) {
+                        return await ctx.reply(`Wasiliana na Admin kumuondoa <b>${fullName}</b> kwenye group hili`, {
+                            reply_parameters: { message_id: rep_msgid },
+                            parse_mode: 'HTML'
+                        })
+                    }
+
+                    //remove the user if command is from admin
                     if (['administrator', 'creator'].includes(status.status)) {
                         await ctx.banChatMember(userid, 0)
-                        await ctx.reply(`<b>${mention}</b> amekula ban ya maisha kwenye hili group.`, {
+                        await ctx.reply(`Kazi nzuri 😂\n<b>${mention}</b> amekula ban ya maisha kwenye hili group.`, {
                             reply_parameters: { message_id: rep_msgid },
                             parse_mode: 'HTML'
                         })
