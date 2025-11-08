@@ -76,7 +76,7 @@ const TikTokDownloaderBot = async (app) => {
                         return await ctx.reply(tik.message)
                     }
 
-                    const caption = tik.caption.substring(0, 200) + `\n\n<b>@DownloadFromTikTokerBot</b>`
+                    const caption = tik.caption.substring(0, 200) + `\n\n<b>@TiktokDownloader67_Bot</b>`
                     streamTikTokVideo(ctx, tik.video, caption)
                 }
             } catch (error) {
