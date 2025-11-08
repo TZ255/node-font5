@@ -378,7 +378,7 @@ const PipyBot = async (app) => {
             }
         })
 
-        bot.command('ondoa', async ctx => {
+        bot.command(['ondoa', 'toa'], async ctx => {
             try {
                 if (chatGroups.includes(ctx.chat.id) && ctx.message?.reply_to_message) {
                     let userid = ctx.message.reply_to_message.from.id
