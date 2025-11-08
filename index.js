@@ -24,7 +24,7 @@ app.set('trust proxy', true)
 async function startServer() {
   try {
     // 1. connect to MongoDB
-    await mongoose.connect(process.env.MONGO_URI)
+    await mongoose.connect(process.env.MONGO_URI).catch(e => console.log('❌ Failed to connect DB:', e?.message))
     console.log('✅ Connected to Vyuo Degree')
 
     // 2. setup bots only in production
