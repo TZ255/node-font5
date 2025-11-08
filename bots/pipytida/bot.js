@@ -402,12 +402,16 @@ const PipyBot = async (app) => {
                     //remove the user if command is from admin
                     if (['administrator', 'creator'].includes(status.status)) {
                         await ctx.banChatMember(userid, 0)
-                        await ctx.reply(`Kazi nzuri 😂\n<b>${mention}</b> amekula ban ya maisha kwenye hili group.`, {
+                        await ctx.reply(`<b>${mention}</b> amekula ban ya maisha kwenye hili group.`, {
                             reply_parameters: { message_id: rep_msgid },
                             parse_mode: 'HTML'
                         })
+                    } else {
+                        await ctx.reply(`Huruhusiwi kuondoa member. Ruhusa ipo kwa watoa huduma wa group hili tu.`, {
+                            reply_parameters: { message_id: my_msgid },
+                            parse_mode: 'HTML'
+                        })
                     }
-
                 }
             } catch (error) {
                 await ctx.reply(error.message)
