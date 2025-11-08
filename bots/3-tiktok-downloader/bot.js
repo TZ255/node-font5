@@ -3,6 +3,7 @@ const { limit } = require("@grammyjs/ratelimiter");
 const { hydrateReply, parseMode } = require("@grammyjs/parse-mode")
 const UsersModel = require('./databases/users');
 const { downloadTikTok } = require('../../routes/functions/TikTokDownload');
+const { streamTikTokVideo } = require('./utils/buffer');
 
 const TikTokDownloaderBot = async (app) => {
     try {
@@ -12,7 +13,7 @@ const TikTokDownloaderBot = async (app) => {
         let hookPath = `/telebot/${process.env.USER}/tiktokbot`
         app.use(hookPath, webhookCallback(bot, 'express'))
         await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`)
-            .then(() => console.log(`hook for AutoAcceptor is set`))
+            .then(() => console.log(`hook for TikTok Bot is set`))
             .catch(e => console.log(e.message))
 
         //ratelimit 1 msg per 3 seconds
@@ -57,6 +58,8 @@ const TikTokDownloaderBot = async (app) => {
                     let botname = ctx.me.username
                     let text = ctx.message.text
 
+                    await ctx.replyWithChatAction('upload_video')
+
                     //update user informations if not upsert
                     await UsersModel.findOneAndUpdate(
                         { chatid: id },
@@ -73,13 +76,8 @@ const TikTokDownloaderBot = async (app) => {
                         return await ctx.reply(tik.message)
                     }
 
-                    await ctx.replyWithChatAction('upload_video')
-
-                    const videoFile = new InputFile(tik.video, `${Date.now().toString(36)}.mp4`)
-                    return await ctx.replyWithVideo(videoFile, {
-                        parse_mode: 'HTML',
-                        caption: tik.caption.substring(0, 200) + `\n\nDownloaded From: <b>DownloadFromTikTokerBot</b>`
-                    })
+                    const caption = tik.caption.substring(0, 200) + `\n\n<b>@DownloadFromTikTokerBot</b>`
+                    streamTikTokVideo(ctx, tik.video, caption)
                 }
             } catch (error) {
                 console.error(error)

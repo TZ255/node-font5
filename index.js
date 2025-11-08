@@ -4,7 +4,6 @@ require('dotenv').config()
 
 const getRouter = require('./routes/get-routes')
 const postRouter = require('./routes/post')
-const { handlePriceBots } = require('./bots/handleBotFunctions')
 const { CPABots } = require('./bots/1-mzansi/bot')
 const { AutoAcceptorBot } = require('./bots/2-AutoAcceptor/bot')
 const dayonce_bot = require('./bots/dayonce/bot')
@@ -22,33 +21,32 @@ app.use(express.static(__dirname + '/public'))
 app.set('trust proxy', true)
 
 async function startServer() {
-  try {
-    // 1. connect to MongoDB
-    await mongoose.connect(process.env.MONGO_URI).catch(e => console.log('❌ Failed to connect DB:', e?.message))
-    console.log('✅ Connected to Vyuo Degree')
+    try {
+        // 1. connect to MongoDB
+        await mongoose.connect(process.env.MONGO_URI).catch(e => console.log('❌ Failed to connect DB:', e?.message))
+        console.log('✅ Connected to Vyuo Degree')
 
-    // 2. setup bots only in production
-    if (process.env.ENVIRONMENT === 'production') {
-      dayonce_bot.DayoBot(app)
-      pipyTida_bot.PipyBot(app)
-      regina_bot.rbot(app)
-      handlePriceBots(app)
-      CPABots(app)
-      AutoAcceptorBot(app)
-      TikTokDownloaderBot(app)
+        // 2. setup bots only in production
+        if (process.env.ENVIRONMENT === 'production') {
+            dayonce_bot.DayoBot(app)
+            pipyTida_bot.PipyBot(app)
+            regina_bot.rbot(app)
+            CPABots(app)
+            AutoAcceptorBot(app)
+            TikTokDownloaderBot(app)
+        }
+
+        // 3. routes
+        app.use(getRouter)
+        app.use(postRouter)
+
+        // 4. start server
+        const PORT = process.env.PORT || 3000
+        app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`))
+
+    } catch (err) {
+        console.error('❌ Startup error:', err)
     }
-
-    // 3. routes
-    app.use(getRouter)
-    app.use(postRouter)
-
-    // 4. start server
-    const PORT = process.env.PORT || 3000
-    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`))
-
-  } catch (err) {
-    console.error('❌ Startup error:', err)
-  }
 }
 
 // Run the app
