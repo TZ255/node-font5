@@ -42,7 +42,7 @@ const TikTokDownloaderBot = async (app) => {
                         { upsert: true }
                     )
 
-                    await ctx.reply(`Hi there! \n👋 Welcome!  \n\nJust send me a TikTok video link (for example: <code>https://vm.tiktok.com/example</code>) and I’ll download it for you without a watermark 🎥✨`);
+                    await ctx.reply(`Hi there! \n👋 Welcome!  \n\nJust send me a TikTok video link and I’ll download it for you without a watermark 🎥✨\n\nExample:\n<code>https://vm.tiktok.com/ZMAduTudCU</code>`);
                 }
             } catch (error) {
                 console.error(error.message, error)
@@ -65,7 +65,7 @@ const TikTokDownloaderBot = async (app) => {
                     )
 
                     if (!text.startsWith('https://')) {
-                        return await ctx.reply(`Hi there! \n👋 Welcome!  \n\nJust send me a TikTok video link and I’ll download it for you without a watermark 🎥✨\n\nVideo link should be in this format\n<code>https://vm.tiktok.com/ZMAduTudCU/</code>`);
+                        return await ctx.reply(`Hi there! \n\nJust send me a TikTok video link and I’ll download it for you without a watermark 🎥✨\n\nExample:\n<code>https://vm.tiktok.com/ZMAduTudCU/</code>`);
                     }
 
                     const tik = await downloadTikTok(text.trim())
@@ -73,7 +73,9 @@ const TikTokDownloaderBot = async (app) => {
                         return await ctx.reply(tik.message)
                     }
 
-                    await ctx.replyWithVideo(new InputFile(tik.video), {
+                    await ctx.replyWithChatAction('upload_video')
+
+                    return await ctx.replyWithVideo(tik.video, {
                         parse_mode: 'HTML',
                         caption: tik.caption + `\n\nDownloaded From: <b>DownloadFromTikTokerBot</b>`
                     })
