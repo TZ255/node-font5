@@ -75,13 +75,15 @@ const TikTokDownloaderBot = async (app) => {
 
                     await ctx.replyWithChatAction('upload_video')
 
-                    return await ctx.replyWithVideo(tik.video, {
+                    const videoFile = new InputFile(tik.video, `${Date.now().toString(36)}.mp4`)
+                    return await ctx.replyWithVideo(videoFile, {
                         parse_mode: 'HTML',
-                        caption: tik.caption + `\n\nDownloaded From: <b>DownloadFromTikTokerBot</b>`
+                        caption: tik.caption.substring(0, 200) + `\n\nDownloaded From: <b>DownloadFromTikTokerBot</b>`
                     })
                 }
             } catch (error) {
                 console.error(error)
+                await ctx.reply('Oops! Failed to upload the video. Make sure you provided a valid TikTok video link and the size of the video is not above 50 MB')
             }
         })
     } catch (error) {
