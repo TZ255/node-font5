@@ -9,10 +9,10 @@ const AutoAcceptorBot = async (app) => {
 
         //setwebhook
         let hookPath = `/telebot/${process.env.USER}/auto-acceptor`
+        app.use(hookPath, webhookCallback(bot, 'express'))
         await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`)
             .then(() => console.log(`hook for AutoAcceptor is set`))
             .catch(e => console.log(e.message))
-        app.use(hookPath, webhookCallback(bot, 'express'))
 
         //ratelimit 1 msg per 3 seconds
         bot.use(limit({ timeFrame: 3000, limit: 1 }))

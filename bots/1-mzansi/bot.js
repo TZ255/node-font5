@@ -25,12 +25,12 @@ const myBotsFn = async (app) => {
             if (process.env.ENVIRONMENT == 'production') {
                 let hookPath = `/telebot/mzansi/${process.env.USER}/${tk.botname}`
                 let domain = process.env.DOMAIN
+                app.use(hookPath, webhookCallback(bot, 'express'))
                 await bot.api.setWebhook(`https://${domain}${hookPath}`, {
                     drop_pending_updates: true
                 })
                     .then(() => console.log(`hook for ${tk.botname} set`))
                     .catch(e => console.log(e.message, e))
-                app.use(hookPath, webhookCallback(bot, 'express'))
             }
 
             //ratelimit 1 msg per 3 seconds

@@ -81,6 +81,7 @@ const DayoBot = async (app) => {
 
         //set webhook
         let hookPath = `/telebot/${process.env.USER}/dayonce`
+        app.use(`${hookPath}`, webhookCallback(bot, 'express', { timeoutMilliseconds: 30000 }))
         await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
             drop_pending_updates: true
         })
@@ -90,7 +91,6 @@ const DayoBot = async (app) => {
                     .catch(e => console.log(e.message))
             })
             .catch(e => console.log(e.message))
-        app.use(`${hookPath}`, webhookCallback(bot, 'express', { timeoutMilliseconds: 30000 }))
 
         bot.command('start', async ctx => {
             try {
