@@ -183,11 +183,11 @@ const RegiChannelPostHandler = async (bot, ctx, imp) => {
                 for (let match of gpt_res.matches) {
                     if (String(type) === 'over') {
                         await Over15Mik.create({
-                            date, time: match.time, bet: match.bet, league: match.league, match: match.match, odds: match.odds, jsDate: GetJsDate(date), weekday: GetDayFromDateString(date)
+                            date, time: match.time, bet: match.bet, league: match.league.substring(0, 36), match: match.match, odds: match.odds, jsDate: GetJsDate(date), weekday: GetDayFromDateString(date)
                         })
                     } else {
                         await mkekaMegaModel.create({
-                            date, time: match.time, bet: match.bet, league: match.league, match: match.match, odds: match.odds, expl: matchExplanation(match.bet), jsDate: GetJsDate(date), weekday: GetDayFromDateString(date)
+                            date, time: match.time, bet: match.bet, league: match.league.substring(0, 36), match: match.match, odds: match.odds, expl: matchExplanation(match.bet), jsDate: GetJsDate(date), weekday: GetDayFromDateString(date)
                         })
                     }
                 }
