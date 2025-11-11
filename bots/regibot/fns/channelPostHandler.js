@@ -181,9 +181,11 @@ const RegiChannelPostHandler = async (bot, ctx, imp) => {
 
                 //post to vips
                 for (let match of gpt_res.matches) {
-                    if (String(type) === 'over') {
+                    if (String(type).trim() === 'over') {
                         await Over15Mik.create({
                             date, time: match.time, bet: 'Over 1.5', league: match.league.substring(0, 36), match: match.match, odds: match.odds, jsDate: GetJsDate(date), weekday: GetDayFromDateString(date)
+                        }).catch(async e => {
+                            await ctx.reply(`Error on creating the betslip: ${e?.error}`)
                         })
                     } else {
                         await mkekaMegaModel.create({
