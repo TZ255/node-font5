@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const megaSchema = new Schema({
+const slipSchema = new Schema({
     match: {type: String},
     league: {type: String},
     odds: {type: Number, default: 1},
@@ -11,8 +11,10 @@ const megaSchema = new Schema({
     status: {type: String, default: 'Pending'},
     weekday: {type: String, default: 'unknown'},
     jsDate: {type: String, default: 'unknown'},
-}, {strict: false, timestamps: true})
+}, {strict: false, timestamps: true })
 
-const mega = mongoose.connection.useDb('mkeka-wa-leo')
-const mkekaMegaModel = mega.model('Accumulator', megaSchema)
-module.exports = mkekaMegaModel
+let MikekaDb = mongoose.connection.useDb('mikeka-ya-uhakika')
+let Over15Mik = MikekaDb.model('betslip', slipSchema)
+
+module.exports = Over15Mik
+// module.exports = mongoose.model('betslip', slipSchema)
