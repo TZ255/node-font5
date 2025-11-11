@@ -175,17 +175,15 @@ const RegiChannelPostHandler = async (bot, ctx, imp) => {
 
                 if (!gpt_res.ok) return await ctx.reply(gpt_res?.error || 'Unknown error on fn call');
 
-                if((!date || String(date).split('/').length !== 3) || !['direct', 'normal', 'over'].includes(String(type).toLowerCase())) {
+                if ((!date || String(date).split('/').length !== 3) || !['direct', 'normal', 'over'].includes(String(type).toLowerCase())) {
                     return await ctx.reply('Wrong format, format should be like:\nFree\nNormal || Direct || Over\ndd/mm/yyyy');
                 }
 
                 //post to vips
                 for (let match of gpt_res.matches) {
-                    if (String(type).trim() === 'over') {
+                    if (String(type).toLowerCase().trim() === 'over') {
                         await Over15Mik.create({
                             date, time: match.time, bet: 'Over 1.5', league: match.league.substring(0, 36), match: match.match, odds: match.odds, jsDate: GetJsDate(date), weekday: GetDayFromDateString(date)
-                        }).catch(async e => {
-                            await ctx.reply(`Error on creating the betslip: ${e?.error}`)
                         })
                     } else {
                         await mkekaMegaModel.create({
