@@ -163,7 +163,7 @@ const RegiChannelPostHandler = async (bot, ctx, imp) => {
 
             //normal free bets
             else if (txt.toLocaleLowerCase().startsWith('free') && ctx.channelPost?.reply_to_message?.photo) {
-                let [, date, prompt = ''] = txt.split('\n').map(x => x.trim());
+                let [, type, date, prompt = ''] = txt.split('\n').map(x => x.trim());
 
 
                 let photo = ctx.channelPost.reply_to_message.photo.at(-1)
@@ -175,18 +175,19 @@ const RegiChannelPostHandler = async (bot, ctx, imp) => {
 
                 if (!gpt_res.ok) return await ctx.reply(gpt_res?.error || 'Unknown error on fn call');
 
-                const for_over15 = ['over 2.5', 'over 3.5', 'over 1.5', 'btts', 'yes', 'gg', '1 & Over 1.5', '1 & Over 2.5', '1 & Over 3.5', '2 & Over 1.5', '2 & Over 2.5', '2 & Over 3.5', '1 & GG', '2 & GG', 'X & GG', '1/1', '2/2', '1X & GG', 'X2 & GG', '12 & GG']
+                if((!date || String(date).split('/').length !== 3) || !['direct', 'normal', 'over'].includes(String(type).toLowerCase())) {
+                    return await ctx.reply('Wrong format, format should be like:\nFree\nNormal || Direct || Over\ndd/mm/yyyy');
+                }
 
                 //post to vips
                 for (let match of gpt_res.matches) {
-                    await mkekaMegaModel.create({
-                        date, time: match.time, bet: match.bet, league: match.league, match: match.match, odds: match.odds, expl: matchExplanation(match.bet), jsDate: GetJsDate(date), weekday: GetDayFromDateString(date)
-                    })
-
-                    //save to over 1.5 if eligible
-                    if (for_over15.includes(match?.match.toLowerCase())) {
+                    if (String(type) === 'over') {
                         await Over15Mik.create({
                             date, time: match.time, bet: match.bet, league: match.league, match: match.match, odds: match.odds, jsDate: GetJsDate(date), weekday: GetDayFromDateString(date)
+                        })
+                    } else {
+                        await mkekaMegaModel.create({
+                            date, time: match.time, bet: match.bet, league: match.league, match: match.match, odds: match.odds, expl: matchExplanation(match.bet), jsDate: GetJsDate(date), weekday: GetDayFromDateString(date)
                         })
                     }
                 }
