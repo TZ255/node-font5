@@ -378,7 +378,7 @@ const PipyBot = async (app) => {
             }
         })
 
-        bot.command(['ondoa', 'toa'], async ctx => {
+        bot.command(['ondoa', 'toa', 'Ondoa', 'Toa'], async ctx => {
             try {
                 if (chatGroups.includes(ctx.chat.id) && ctx.message?.reply_to_message) {
                     let userid = ctx.message.reply_to_message.from.id
@@ -387,6 +387,7 @@ const PipyBot = async (app) => {
                     let my_msgid = ctx.message.message_id
                     let rep_msgid = ctx.message.reply_to_message.message_id
                     let myid = ctx.message.from.id
+                    let adminName = ctx.message.from.last_name ? `${ctx.message.from.first_name} ${ctx.message.from.last_name}` : ctx.message.from.first_name
                     let mention = `<a href="tg://user?id=123456789">${fullName}</a>`
                     let status = await ctx.getChatMember(myid)
                     let user_status = await ctx.getChatMember(userid)
@@ -411,9 +412,11 @@ const PipyBot = async (app) => {
                     if (['administrator', 'creator'].includes(status.status)) {
                         await ctx.banChatMember(userid, 0)
                         await ctx.reply(`<b>${mention}</b> amekula ban ya maisha kwenye hili group.`, {
-                            reply_parameters: { message_id: rep_msgid },
+                            reply_parameters: { message_id: my_msgid },
                             parse_mode: 'HTML'
                         })
+                        await ctx.api.sendMessage(imp.blackberry, `<b>${mention}</b> ameondolewa na <a href="tg://user?id=${ctx.message.from.id}">${adminName}</a>`, { parse_mode: 'HTML' })
+                        return await ctx.api.deleteMessage(ctx.chat.id, rep_msgid).catch(e => {})
                     } else {
                         await ctx.reply(`Huruhusiwi kuondoa member. Ruhusa ipo kwa watoa huduma wa group hili tu.`, {
                             reply_parameters: { message_id: my_msgid },
