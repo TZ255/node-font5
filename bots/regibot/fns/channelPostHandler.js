@@ -1,14 +1,17 @@
 const BetslipModel = require("../../../model/betslip")
 const BookingCodesModel = require("../../../model/booking_code")
+const Over15Mik = require("../../../model/ove15mik")
 const paidVipModel = require("../../../model/paid-vips")
 const { ExtractTextFromSlip } = require("../../../routes/functions/extractSlipText")
 const { ShemdoeAssistant } = require("../../../routes/functions/kbase")
 const matchExplanation = require("../../../routes/functions/match-expl")
 const { ExtractSure3FromSlip } = require("../../../routes/functions/sure3Extract")
+const mkekaMegaModel = require("../database/mkeka-mega")
 const myBongoChannelsModel = require("../database/my_channels")
 const tgSlipsModel = require("../database/tg_slips")
 const waombajiModel = require("../database/waombaji")
 const { StructureBetslipCaption } = require("./structureSlipMessage")
+const { GetJsDate, WeekDayFn, GetDayFromDateString } = require("./weekday")
 
 
 
@@ -156,6 +159,44 @@ const RegiChannelPostHandler = async (bot, ctx, imp) => {
                 setTimeout(async () => {
                     await ctx.api.deleteMessage(ctx.chat.id, success?.message_id)
                 }, 5000)
+            }
+
+            //normal free bets
+            else if (txt.toLocaleLowerCase().startsWith('free') && ctx.channelPost?.reply_to_message?.photo) {
+                let [, type, date, prompt = ''] = txt.split('\n').map(x => x.trim());
+
+
+                let photo = ctx.channelPost.reply_to_message.photo.at(-1)
+                let file = await ctx.api.getFile(photo.file_id)
+                let imgUrl = `https://api.telegram.org/file/bot${ctx.api.token}/${file.file_path}`
+
+                //extract
+                let gpt_res = await ExtractSure3FromSlip(imgUrl, prompt)
+
+                if (!gpt_res.ok) return await ctx.reply(gpt_res?.error || 'Unknown error on fn call');
+
+                if ((!date || String(date).split('/').length !== 3) || !['direct', 'normal', 'over'].includes(String(type).toLowerCase())) {
+                    return await ctx.reply('Wrong format, format should be like:\nFree\nNormal || Direct || Over\ndd/mm/yyyy');
+                }
+
+                //post to vips
+                for (let match of gpt_res.matches) {
+                    if (String(type).toLowerCase().trim() === 'over') {
+                        await Over15Mik.create({
+                            date, time: match.time, bet: 'Over 1.5', league: match.league.substring(0, 36), match: match.match, odds: match.odds, jsDate: GetJsDate(date), weekday: GetDayFromDateString(date)
+                        })
+                    } else {
+                        await mkekaMegaModel.create({
+                            date, time: match.time, bet: match.bet, league: match.league.substring(0, 36), match: match.match, odds: match.odds, expl: matchExplanation(match.bet), jsDate: GetJsDate(date), weekday: GetDayFromDateString(date)
+                        })
+                    }
+                }
+                await ctx.deleteMessage()
+                await ctx.api.deleteMessage(ctx.channelPost.chat.id, ctx.channelPost?.reply_to_message?.message_id)
+                let success = await ctx.reply(`Freebet with ${gpt_res.matches?.length || 0} matches updated`)
+                setTimeout(async () => {
+                    await ctx.api.deleteMessage(ctx.chat.id, success?.message_id)
+                }, 15000)
             }
         }
     } catch (err) {
