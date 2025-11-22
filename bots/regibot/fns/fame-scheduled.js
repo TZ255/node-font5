@@ -5,22 +5,18 @@ const { nanoid } = require('nanoid')
 
 const fametips_Model = require('../database/fametips')
 
+const SCRAPER_API_KEY = process.env.SCRAPER_API_KEY
 
-const famecheckOdds = async (bot, imp, tablehusika, siku) => {
+const famecheckOdds = async (tablehusika, siku) => {
     try {
         let fame_url = `https://www.tipsfame.com/`
+        const proxyUrl = `https://api.scraperapi.com/?api_key=${SCRAPER_API_KEY}&url=${encodeURIComponent(fame_url)}`;
 
-        let html = await axios.get(fame_url)
+        let html = await axios.get(proxyUrl)
         let $ = cheerio.load(html.data)
 
-        let text = ''
-        let nanoArr = ''
-
-        //check our odds length
-        let ourDb = await fametips_Model.find({ siku })
-
         //fetch fametips table
-        let tday_trs = $(`#pills-tabContent ${tablehusika} table tbody tr`)
+        let tday_trs = $(`${tablehusika} table tbody tr`)
 
         //compare length
         if (tday_trs && tday_trs.length > 1) {
@@ -53,31 +49,21 @@ const famecheckOdds = async (bot, imp, tablehusika, siku) => {
                     matokeo = '-:-'
                 }
 
-                //create text
-                text = text + `⌚ ${time}, ${league}\n<b>⚽ ${match}</b>\n🎯 Tip: <b>${tip} (${matokeo})</b>\n\n`
-                if (i == tday_trs.length - 1) {
-                    nanoArr = nanoArr + `${nano}`
-                } else {
-                    nanoArr = nanoArr + `${nano}+`
-                }
-
                 await fametips_Model.create({
                     time, league, match, tip, siku, nano, matokeo, UTC3
                 })
             })
 
-            await bot.api.sendMessage(imp.shemdoe, `Fames: New matches found and mkeka created successfully\n\n` + text + `Arrs: ${nanoArr}`, {
-                parse_mode: 'HTML'
-            })
+            console.log(`Fames: New matches found and mkeka created successfully`)
         } else {
-            await bot.api.sendMessage(imp.shemdoe, `Fame: Automatic fetcher run and nothing found\n\n Our Length: ${ourDb.length}\nHer Length: ${tday_trs.length}`)
+            console.log(`Fame: Automatic fetcher run and nothing found`)
         }
     } catch (err) {
-        await bot.api.sendMessage(imp.shemdoe, 'Not getting odds... ' + err.message)
+        console.log('Fame: Not getting odds:', err.message)
     }
 }
 
-const famecheckMatokeo = async (bot, imp, tablehusika, siku) => {
+const famecheckMatokeo = async (tablehusika, siku) => {
     try {
         let sup_url = `https://www.tipsfame.com/`
 
@@ -85,7 +71,7 @@ const famecheckMatokeo = async (bot, imp, tablehusika, siku) => {
         let $ = cheerio.load(html.data)
 
         //fetch supatips today table
-        let tday_trs = $(`#pills-tabContent ${tablehusika} table tbody tr`)
+        let tday_trs = $(`${tablehusika} table tbody tr`)
 
         tday_trs.each(async (i, el) => {
             let match = $('td:nth-child(3)', el).text().trim()
@@ -101,7 +87,7 @@ const famecheckMatokeo = async (bot, imp, tablehusika, siku) => {
         })
         
     } catch (err) {
-        await bot.api.sendMessage(imp.shemdoe, 'Not getting odds... ' + err.message)
+        console.log('Fame: Not getting results:', err.message)
     }
 }
 
