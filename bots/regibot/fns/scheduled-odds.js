@@ -179,6 +179,7 @@ async function extractMyBetsToday(path, trh) {
                     const homeTeam = $element.find('.homediv .homeTeam .homespan').text().trim();
                     const awayTeam = $element.find('.awaydiv .awayTeam .awayspan').text().trim();
                     const tip = $element.find('.tipdiv span').text().trim();
+                    const prediction_url = $element.find('a.linkgames').attr('href');
 
                     let nano = nanoid(6)
 
@@ -190,7 +191,8 @@ async function extractMyBetsToday(path, trh) {
                         tip,
                         nano,
                         jsDate: GetJsDate(trh),
-                        weekday: GetDayFromDateString(trh)
+                        weekday: GetDayFromDateString(trh),
+                        prediction_url
                     });
                 }
             }

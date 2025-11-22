@@ -38,6 +38,10 @@ const cscoreSchema = new Schema({
     status: {
         type: String,
         default: 'pending'
+    },
+    prediction_url: {
+        type: String,
+        default: 'unknown'
     }
 }, {strict: false, timestamps: true })
 
