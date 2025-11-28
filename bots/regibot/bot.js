@@ -442,7 +442,7 @@ const reginaBot = async (app) => {
 
         bot.on('message:text', async ctx => {
             try {
-                if(['group', 'supergroup'].includes(ctx.chat.type) && ctx.chat.id == imp.ai_group) {
+                if (['group', 'supergroup'].includes(ctx.chat.type) && ctx.chat.id == imp.ai_group) {
                     const userid = ctx.message.from.id
                     RegiAIGroupHandler(bot, ctx, imp, userid)
                 }
@@ -602,8 +602,8 @@ const reginaBot = async (app) => {
             j.setDate(j.getDate() - 1)
             let trhJana = j.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
 
-            //Quality Check
-            if (time2check == '09:04') {
+            //Quality Check every hour at 14th minute
+            if (timeStrings[1] == '14') {
                 QualityTipsCheck(bot, imp).catch(e => console.log(e?.message))
             }
 
@@ -634,6 +634,20 @@ const reginaBot = async (app) => {
                     setTimeout(() => {
                         correctScoreFn('soccer-predictions/correct-score-predictions/after-tomorrow/', afterKesho)
                     }, 15000);
+                    break;
+
+
+                //fametips
+                case '06:07': case '08:07': case '09:07': case '10:07': case '12:07': case '15:07':
+                    call_famescheduled_fn.famecheckMatokeo('#yesterday-content', trhJana)
+                    break;
+
+                case '03:07': case '04:07': case '05:07': case '06:57': case '07:57': case '08:57': case '09:57': case '10:57': case '11:57': case '12:57':
+                    call_famescheduled_fn.famecheckOdds('#today-content', trhLeo)
+                    break;
+
+                case '16:07': case '18:07': case '19:07': case '20:07': case '21:07': case '22:07': case '23:07': case '23:57':
+                    call_famescheduled_fn.famecheckOdds('#tomorrow-content', trhKesho)
                     break;
             }
         }, 59 * 1000)

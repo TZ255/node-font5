@@ -24,6 +24,7 @@ const { correctScoreFn } = require('../bots/regibot/fns/correct-score')
 const { scrapeBetimateBothToScore } = require('../bots/regibot/fns/Betimate')
 const { checkOdds, checkTomorrowOdds, checkMatokeoJana } = require('../bots/regibot/fns/passionpredict')
 const { downloadTikTok } = require('./functions/TikTokDownload')
+const { famecheckOdds } = require('../bots/regibot/fns/fame-scheduled')
 
 //send success (no content) response to browser
 const limiter = elimit({

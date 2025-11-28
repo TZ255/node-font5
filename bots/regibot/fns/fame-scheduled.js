@@ -1,63 +1,115 @@
-//midds
+// midds
 const cheerio = require('cheerio')
 const axios = require('axios').default
 const { nanoid } = require('nanoid')
 
 const fametips_Model = require('../database/fametips')
 
-const SCRAPER_API_KEY = process.env.SCRAPER_API_KEY
+// small helper for zero-padding
+const pad2 = (n) => n.toString().padStart(2, '0');
 
 const famecheckOdds = async (tablehusika, siku) => {
     try {
-        let fame_url = `https://www.tipsfame.com/`
-        const proxyUrl = `https://api.scraperapi.com/?api_key=${SCRAPER_API_KEY}&url=${encodeURIComponent(fame_url)}`;
+        const fame_url = 'https://www.tipsfame.com/'
 
-        let html = await axios.get(proxyUrl)
-        let $ = cheerio.load(html.data)
+        const html = await axios.get(fame_url, {
+            headers: {
+                // Some sites only respond correctly when a browser-like UA is sent
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                'Accept-Language': 'en-US,en;q=0.9',
+            },
+        })
 
-        //fetch fametips table
-        let tday_trs = $(`${tablehusika} table tbody tr`)
+        const $ = cheerio.load(html.data)
 
-        //compare length
-        if (tday_trs && tday_trs.length > 1) {
-            await fametips_Model.deleteMany({ siku })
-            tday_trs.each(async (i, el) => {
-                let time_data = $('td:nth-child(1)', el).text()
-                let time_arr = time_data.split(':')
-                let hrs = Number(time_arr[0])
-                let actual_time = hrs + 2
-                if (actual_time > 24) {
-                    actual_time = '0' + (actual_time - 25)
-                }
-                let min = time_arr[1]
-                let time = `${actual_time}:${min}`
+        // fetch fametips table rows
+        const tday_trs = $(`${tablehusika} table tbody tr`).toArray()
 
-                let mwk = Number(siku.split('/')[2])
-                let mwz = Number(siku.split('/')[1])
-                let trh = Number(siku.split('/')[0])
-                let nano = nanoid(4)
-                let UTC3 = Date.UTC(mwk, mwz - 1, trh, actual_time, Number(min))
-
-                let league = $('td:nth-child(2)', el).text().trim()
-                let match = $('td:nth-child(3)', el).text().trim()
-                match = match.replace(/\s*VS\s*/gi, ' - ')
-
-                let tip = $('td:nth-child(4)', el).text().trim()
-                let matokeo = $('td:nth-child(5)', el).text().trim()
-                matokeo = matokeo.replace(/\n/g, '')
-                if (matokeo.length < 2) {
-                    matokeo = '-:-'
-                }
-
-                await fametips_Model.create({
-                    time, league, match, tip, siku, nano, matokeo, UTC3
-                })
-            })
-
-            console.log(`Fames: New matches found and mkeka created successfully`)
-        } else {
-            console.log(`Fame: Automatic fetcher run and nothing found`)
+        if (!tday_trs || tday_trs.length < 1) {
+            console.log(`Fame: Automatic fetcher run and nothing found for ${siku}`)
+            return
         }
+
+        // parse siku "dd/mm/yyyy" once
+        const [dayStr, monthStr, yearStr] = siku.split('/')
+        const day = Number(dayStr)
+        const month = Number(monthStr) // 1–12
+        const year = Number(yearStr)
+
+        if (!day || !month || !year) {
+            console.log(`Fame: Invalid siku format "${siku}", expected dd/mm/yyyy`)
+            return
+        }
+
+        // clear old docs for this date, then insert fresh ones
+        await fametips_Model.deleteMany({ siku })
+
+        const docsToInsert = []
+
+        for (const el of tday_trs) {
+            const $el = $(el)
+
+            // time col: td:nth-child(1)
+            const time_data = $el.find('td').eq(0).text().trim()
+            if (!time_data || !time_data.includes(':')) {
+                // skip header or weird rows
+                continue
+            }
+
+            const [hourStr, minuteStr] = time_data.split(':').map(t => t.trim())
+            let hour = Number(hourStr)
+            const minute = Number(minuteStr)
+
+            if (Number.isNaN(hour) || Number.isNaN(minute)) {
+                continue
+            }
+
+            // add +2 hours, wrap around 24h
+            hour = (hour + 2) % 24
+
+            const time = `${pad2(hour)}:${pad2(minute)}`
+
+            const league = $el.find('td').eq(1).text().trim()
+
+            let match = $el.find('td').eq(2).text().trim()
+            match = match.replace(/\s*VS\s*/gi, ' - ')
+
+            const tip = $el.find('td').eq(3).text().trim()
+
+            // result (matokeo)
+            let matokeo = $el.find('td').eq(4).text()
+            matokeo = matokeo.replace(/\s+/g, '').trim()
+            if (matokeo.length < 3) {
+                matokeo = '-:-'
+            }
+
+            const UTC3 = Date.UTC(year, month - 1, day, hour, minute)
+            const nano = nanoid(4)
+
+            console.log(`Fame: New match found - ${match}`)
+
+            docsToInsert.push({
+                time,
+                league,
+                match,
+                tip,
+                siku,
+                nano,
+                matokeo,
+                UTC3
+            })
+        }
+
+        if (!docsToInsert.length) {
+            console.log(`Fame: No valid rows parsed for ${siku}`)
+            return
+        }
+
+        await fametips_Model.insertMany(docsToInsert)
+        console.log(
+            `Fames: ${docsToInsert.length} matches found and mkeka created successfully for ${siku}`
+        )
     } catch (err) {
         console.log('Fame: Not getting odds:', err.message)
     }
@@ -65,27 +117,44 @@ const famecheckOdds = async (tablehusika, siku) => {
 
 const famecheckMatokeo = async (tablehusika, siku) => {
     try {
-        let sup_url = `https://www.tipsfame.com/`
+        const sup_url = 'https://www.tipsfame.com/'
 
-        let html = await axios.get(sup_url)
-        let $ = cheerio.load(html.data)
+        const html = await axios.get(sup_url, {
+            headers: {
+                // Some sites only respond correctly when a browser-like UA is sent
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                'Accept-Language': 'en-US,en;q=0.9',
+            },
+        })
 
-        //fetch supatips today table
-        let tday_trs = $(`${tablehusika} table tbody tr`)
+        const $ = cheerio.load(html.data)
 
-        tday_trs.each(async (i, el) => {
-            let match = $('td:nth-child(3)', el).text().trim()
-            match = match.replace(/\s*VS\s*/gi, ' - '); // replace vs with - (* any spaces follow)
-            let matokeo = $('td:nth-child(5)', el).text().trim().replace(/\n/g, '')
-            //check matokeo, if updated, update
+        const tday_trs = $(`${tablehusika} table tbody tr`).toArray()
+
+        for (const el of tday_trs) {
+            const $el = $(el)
+
+            let match = $el.find('td').eq(2).text().trim()
+            match = match.replace(/\s*VS\s*/gi, ' - ')
+
+            let matokeo = $el.find('td').eq(4).text()
+            matokeo = matokeo.replace(/\s+/g, '').trim()
+
+            // only care if matokeo looks like a score (e.g. "2:1")
             if (matokeo.length > 2) {
-                let mtch = await fametips_Model.findOne({ match, siku })
-                if (mtch.matokeo == '-:-') {
+                const mtch = await fametips_Model.findOne({ match, siku })
+                if (!mtch) {
+                    // not in our DB, skip quietly
+                    continue
+                }
+
+                if (mtch.matokeo === '-:-' && mtch.matokeo !== matokeo) {
                     await mtch.updateOne({ $set: { matokeo } })
+                    console.log(`Fame: Updated ${match} -> ${matokeo}`)
                 }
             }
-        })
-        
+        }
     } catch (err) {
         console.log('Fame: Not getting results:', err.message)
     }
