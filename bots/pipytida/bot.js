@@ -394,8 +394,8 @@ const PipyBot = async (app) => {
 
                     //check if admin is tried to be removed
                     if (['administrator', 'creator'].includes(user_status.status)) {
-                        return await ctx.reply(`Wasiliana na Admin kumuondoa <b>${fullName}</b> kwenye group hili`, {
-                            reply_parameters: { message_id: rep_msgid },
+                        return await ctx.reply(`<b>${fullName}</b> yuko kwenye list ya watoa huduma. Kama kuna tatizo wasiliana na Blackberry`, {
+                            reply_parameters: { message_id: my_msgid },
                             parse_mode: 'HTML'
                         })
                     }
@@ -403,7 +403,7 @@ const PipyBot = async (app) => {
                     //check if user is already removed
                     if(['left', 'kicked'].includes(user_status.status)) {
                         return await ctx.reply(`Mtumiaji tayari ameondolewa kwenye group hili`, {
-                            reply_parameters: { message_id: rep_msgid },
+                            reply_parameters: { message_id: my_msgid },
                             parse_mode: 'HTML'
                         })
                     }
