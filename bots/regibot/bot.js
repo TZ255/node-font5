@@ -14,7 +14,6 @@ const waombajiModel = require('./database/waombaji')
 const supatips_Model = require('./database/supatips')
 
 //functions
-const call_supatips_function = require('./fns/supatips')
 const call_fametips_function = require('./fns/fametips')
 const call_famescheduled_fn = require('./fns/fame-scheduled')
 const call_betslip_function = require('./fns/betslip')
@@ -386,15 +385,6 @@ const reginaBot = async (app) => {
             }
         })
 
-        bot.command('send', async ctx => {
-            try {
-                let all = await supatips_Model.updateMany({ siku: "09/05/2024" }, { $set: { matokeo: "-:-" } })
-                console.log('done')
-            } catch (error) {
-                console.log(error.message)
-            }
-        })
-
         bot.command(['wakubwa', 'sodoma', 'sex', 'wadogo'], async ctx => {
             try {
                 await bot.api.copyMessage(ctx.chat.id, imp.pzone, 8094)
@@ -608,7 +598,7 @@ const reginaBot = async (app) => {
             }
 
             switch (time2check) {
-                //mybets.today
+                //mybets.today correct score and mutating 1x2
                 case '03:10': case '06:00': case '08:00': case '09:00': case '10:00':
                     call_scheduled_checker_fn.extractMyBetsToday('soccer-predictions/', trhLeo)
                     setTimeout(() => {
@@ -616,7 +606,7 @@ const reginaBot = async (app) => {
                     }, 5000);
                     break;
 
-                case '11:30': case '14:30': case "15:25": case '18:45': case '20:35': case '23:45':
+                case '10:30': case '11:30': case '14:30': case "15:25": case '18:45': case '20:35': case '23:45':
                     //extract tomorrow 1x2
                     call_scheduled_checker_fn.extractMyBetsToday('soccer-predictions/tomorrow/', trhKesho)
 

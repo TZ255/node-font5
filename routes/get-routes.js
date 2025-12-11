@@ -231,8 +231,9 @@ router.get('/:code', async (req, res) => {
     }
 })
 
-router.get('/API/testing', async (req, res) => {
+router.get('/api/testing', async (req, res) => {
     try {
+        extractMyBetsToday('soccer-predictions/after-tomorrow/', '13/12/2025')
         res.end()
     } catch (err) {
         console.log(err)
