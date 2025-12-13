@@ -87,8 +87,6 @@ const famecheckOdds = async (tablehusika, siku) => {
             const UTC3 = Date.UTC(year, month - 1, day, hour, minute)
             const nano = nanoid(4)
 
-            console.log(`Fame: New match found - ${match}`)
-
             docsToInsert.push({
                 time,
                 league,

@@ -40,7 +40,7 @@ const cronJobFunction = () => {
                 }, 5000);
                 break;
 
-            case '10:30': case '11:30': case '14:30': case "15:25": case '16:35': case '18:45': case '20:35': case '23:45':
+            case '10:30': case '11:30': case '14:30': case "15:30": case '16:30': case '18:45': case '20:35': case '23:45':
                 //extract tomorrow 1x2
                 extractMyBetsToday('soccer-prediction/tomorrow/', trhKesho)
 
@@ -62,15 +62,11 @@ const cronJobFunction = () => {
 
 
             //fametips
-            case '06:07': case '08:07': case '09:07': case '10:07': case '12:07': case '15:07':
-                famecheckMatokeo('#yesterday-content', trhJana)
-                break;
-
             case '03:07': case '04:07': case '05:07': case '06:57': case '07:57': case '08:57': case '09:57': case '10:57': case '11:57': case '12:57':
                 famecheckOdds('#today-content', trhLeo)
                 break;
 
-            case '14:07': case '15:07': case '16:07': case '16:55': case '18:07': case '19:07': case '20:07': case '21:07': case '22:07': case '23:07': case '23:57':
+            case '14:07': case '15:07': case '16:07': case '17:07': case '18:07': case '19:07': case '20:07': case '21:07': case '22:07': case '23:07': case '23:57':
                 famecheckOdds('#tomorrow-content', trhKesho)
                 break;
         }

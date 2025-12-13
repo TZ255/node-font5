@@ -69,7 +69,7 @@ async function correctScoreFn(path, trh) {
         if (results.length > 0 && (db_length != results.length)) {
             await correctScoreModel.deleteMany({ siku: trh })
             await correctScoreModel.insertMany(results)
-            console.log('MyBetsToday CorrectScore Fetched successfully: ', trh)
+            console.log(`${results.length} CorrectScore matches fetched and inserted to db successfully for ${trh}`)
         }
     } catch (error) {
         console.error('Error fetching or processing data:', error);
