@@ -8,7 +8,7 @@ const { GetJsDate, GetDayFromDateString } = require('./weekday')
 
 
 //Mutating.com
-async function extractMyBetsToday(path, trh) {
+async function extractMutatingTips(path, trh) {
     try {
         const url = `https://www.mutating.com/${path}`
         const { data: html } = await axios.get(url);
@@ -54,23 +54,25 @@ async function extractMyBetsToday(path, trh) {
 
                 let nano = nanoid(6)
 
-                results.push({
-                    league: currentLeague,
-                    siku: trh,
-                    time: formattedTime,
-                    match: `${homeTeam} - ${awayTeam}`,
-                    tip,
-                    nano,
-                    jsDate: GetJsDate(trh),
-                    weekday: GetDayFromDateString(trh),
-                    prediction_url
-                });
+                if (!tip.toLowerCase().startsWith('calc')) {
+                    results.push({
+                        league: currentLeague,
+                        siku: trh,
+                        time: formattedTime,
+                        match: `${homeTeam} - ${awayTeam}`,
+                        tip,
+                        nano,
+                        jsDate: GetJsDate(trh),
+                        weekday: GetDayFromDateString(trh),
+                        prediction_url
+                    });
+                }
             });
         });
 
-        let db_length = await supatips_Model.countDocuments({siku: trh})
-        if(results.length > 0 && (db_length != results.length)) {
-            await supatips_Model.deleteMany({siku: trh})
+        let db_length = await supatips_Model.countDocuments({ siku: trh })
+        if (results.length > 0 && (db_length != results.length)) {
+            await supatips_Model.deleteMany({ siku: trh })
             await supatips_Model.insertMany(results)
             console.log(`${results.length} Mutating.com tips fetched successfully for`, trh)
         }
@@ -80,5 +82,5 @@ async function extractMyBetsToday(path, trh) {
 }
 
 module.exports = {
-    extractMyBetsToday
+    extractMutatingTips
 }

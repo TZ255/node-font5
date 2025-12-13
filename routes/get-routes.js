@@ -19,7 +19,7 @@ const bot_oh = new Bot(process.env.OH_TOKEN)
 
 //others
 const oh_vids = require('../model/ohmy-vids')
-const { extractMyBetsToday } = require('../bots/regibot/fns/scheduled-odds')
+const { extractMutatingTips } = require('../bots/regibot/fns/scheduled-odds')
 const { correctScoreFn } = require('../bots/regibot/fns/correct-score')
 const { scrapeBetimateBothToScore } = require('../bots/regibot/fns/Betimate')
 const { checkOdds, checkTomorrowOdds, checkMatokeoJana } = require('../bots/regibot/fns/passionpredict')
@@ -233,7 +233,7 @@ router.get('/:code', async (req, res) => {
 
 router.get('/api/testing', async (req, res) => {
     try {
-        extractMyBetsToday('soccer-predictions/after-tomorrow/', '13/12/2025')
+        //extractMutatingTips('soccer-predictions/future-days/', '16/12/2025')
         res.end()
     } catch (err) {
         console.log(err)

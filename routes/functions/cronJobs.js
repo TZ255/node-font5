@@ -1,7 +1,7 @@
 const { correctScoreFn } = require("../../bots/regibot/fns/correct-score")
 const { famecheckMatokeo, famecheckOdds } = require("../../bots/regibot/fns/fame-scheduled")
 const { QualityTipsCheck } = require("../../bots/regibot/fns/qualitycheck")
-const { extractMyBetsToday } = require("../../bots/regibot/fns/scheduled-odds")
+const { extractMutatingTips } = require("../../bots/regibot/fns/scheduled-odds")
 
 const cronJobFunction = () => {
     console.log('🕒 Cron Jobs initiated')
@@ -21,6 +21,11 @@ const cronJobFunction = () => {
         k2.setDate(k2.getDate() + 2)
         let afterKesho = k2.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
 
+        //mtondogoo
+        let k3 = new Date()
+        k3.setDate(k3.getDate() + 3)
+        let mtondogoo = k3.toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
+
         //jana
         let j = new Date()
         j.setDate(j.getDate() - 1)
@@ -34,30 +39,27 @@ const cronJobFunction = () => {
         switch (time2check) {
             //mybets.today correct score and mutating 1x2
             case '03:10': case '06:00': case '08:00': case '09:00': case '10:00':
-                extractMyBetsToday('soccer-predictions/', trhLeo)
+                extractMutatingTips('soccer-predictions/', trhLeo)
                 setTimeout(() => {
                     correctScoreFn('soccer-predictions/correct-score-predictions/', trhLeo)
                 }, 5000);
                 break;
 
             case '10:30': case '11:30': case '14:30': case "15:30": case '16:30': case '18:45': case '20:35': case '23:45':
-                //extract tomorrow 1x2
-                extractMyBetsToday('soccer-prediction/tomorrow/', trhKesho)
+                //extract tomorrow 1x2 and correct score in one go since theyre from different websites
+                extractMutatingTips('soccer-prediction/tomorrow/', trhKesho)
+                correctScoreFn('soccer-predictions/correct-score-predictions/tomorrow/', trhKesho)
 
-                //extract after tomorrow 1x2
+                //extract after tomorrow 1x2 and correct score
                 setTimeout(() => {
-                    extractMyBetsToday('soccer-predictions/after-tomorrow/', afterKesho)
+                    extractMutatingTips('soccer-predictions/after-tomorrow/', afterKesho)
+                    correctScoreFn('soccer-predictions/correct-score-predictions/after-tomorrow/', afterKesho)
                 }, 5000);
 
-                //extract correct score tomorrow
+                //extract mutating for future days
                 setTimeout(() => {
-                    correctScoreFn('soccer-predictions/correct-score-predictions/tomorrow/', trhKesho)
+                    extractMutatingTips('soccer-predictions/future-days/', mtondogoo)
                 }, 10000);
-
-                //extract correct score after tomorrow
-                setTimeout(() => {
-                    correctScoreFn('soccer-predictions/correct-score-predictions/after-tomorrow/', afterKesho)
-                }, 15000);
                 break;
 
 
