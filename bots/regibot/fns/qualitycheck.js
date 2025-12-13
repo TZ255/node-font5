@@ -7,7 +7,7 @@ const mkekaMega = require('../database/mkeka-mega')
 const { default: axios } = require('axios')
 const DBOT = process.env.DAYO_TOKEN
 
-const QualityTipsCheck = async (bot, imp) => {
+const QualityTipsCheck = async () => {
     //today date in dd/mm/yy +3
     let siku = new Date().toLocaleDateString('en-GB', { timeZone: 'Africa/Nairobi' })
 
@@ -23,7 +23,7 @@ const QualityTipsCheck = async (bot, imp) => {
             if (count === 0) {
                 let DURL = `https://api.telegram.org/bot${DBOT}/sendMessage`
                 let text = `❌❌ No any matches for ${name}`
-                await axios.post(DURL, {chat_id: imp.shemdoe, text})
+                await axios.post(DURL, {chat_id: 741815228, text})
             }
         }
     } catch (error) {

@@ -10,6 +10,7 @@ const dayonce_bot = require('./bots/dayonce/bot')
 const pipyTida_bot = require('./bots/pipytida/bot')
 const regina_bot = require('./bots/regibot/bot')
 const { TikTokDownloaderBot } = require('./bots/3-tiktok-downloader/bot')
+const { cronJobFunction } = require('./routes/functions/cronJobs')
 
 const app = express()
 
@@ -51,6 +52,9 @@ async function startServer() {
 
 // Run the app
 startServer()
+
+// Run Cron Jobs
+cronJobFunction()
 
 // safety handlers
 process.on('unhandledRejection', (reason) => console.error('Unhandled Rejection:', reason))
