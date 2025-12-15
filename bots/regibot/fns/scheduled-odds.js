@@ -19,6 +19,7 @@ async function extractMutatingTips(path, trh) {
                 'Accept-Language': 'en-US,en;q=0.9',
             }
         });
+        
         const $ = cheerio.load(html);
         const results = [];
         const normalizeText = (text) => (text || '').replace(/\s+/g, ' ').trim();

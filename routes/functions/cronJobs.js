@@ -45,9 +45,9 @@ const cronJobFunction = () => {
                 }, 5000);
                 break;
 
-            case '10:30': case '11:30': case '14:30': case "15:30": case '16:47': case '18:45': case '20:35': case '23:45':
+            case '10:30': case '11:30': case '14:30': case "15:30": case '16:30': case '17:30': case '18:45': case '20:35': case '23:45':
                 //extract tomorrow 1x2 and correct score in one go since theyre from different websites
-                extractMutatingTips('soccer-prediction/tomorrow/', trhKesho)
+                extractMutatingTips('soccer-predictions/tomorrow/', trhKesho)
                 correctScoreFn('soccer-predictions/correct-score-predictions/tomorrow/', trhKesho)
 
                 //extract after tomorrow 1x2 and correct score
