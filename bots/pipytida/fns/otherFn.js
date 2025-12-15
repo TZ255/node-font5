@@ -112,7 +112,7 @@ const reusableRestriction = async (bot, ctx, caption, charsNum, delay) => {
         let userid = ctx.message.from.id
         let msgid = ctx.message.message_id
         let list = await verifiedList.findOne({ chatid: userid })
-        let tag = `<a href="tg://user?id=${userid}">${list.fname}</a>`
+        let tag = `<a href="tg://user?id=${userid}">${list?.fname || 'Mtoa Huduma'}</a>`
         if ((list && list.paid && list.role == 'dada') && (caption.length > charsNum || wajinga.some(w => caption.includes(w)))) {
             let unix = ctx.message.date
             let until_date = unix + 600 //10 mins
