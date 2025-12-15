@@ -74,7 +74,9 @@ async function extractMutatingTips(path, trh) {
         if (results.length > 0 && (db_length != results.length)) {
             await supatips_Model.deleteMany({ siku: trh })
             await supatips_Model.insertMany(results)
-            console.log(`${results.length} Mutating.com tips fetched successfully for`, trh)
+            console.log(`${results.length} Mutating.com tips fetched successfully for ${trh}`)
+        } else {
+            console.log(`No new Mutating.com tips to update for ${trh}. Existing records: ${db_length}, Fetched records: ${results.length}`)
         }
     } catch (error) {
         console.error('Error fetching or processing data:', error);
