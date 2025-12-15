@@ -1,34 +1,13 @@
 const { Bot, webhookCallback } = require('grammy')
 const { autoRetry } = require("@grammyjs/auto-retry")
 const nyumbuModel = require('./database/chats')
-const dayoUsers = require('./database/dayo-chats')
-const pipyUsers = require('./database/dayo-chats')
 const tempChat = require('./database/temp-req')
 const my_channels_db = require('./database/my_channels')
-const mkekadb = require('./database/mkeka')
-const tg_slips = require('./database/tg_slips')
-const vidb = require('./database/db')
 const mkekaMega = require('./database/mkeka-mega')
-const graphDB = require('./database/graph-tips')
-const waombajiModel = require('./database/waombaji')
-const supatips_Model = require('./database/supatips')
 
 //functions
-const call_fametips_function = require('./fns/fametips')
-const call_famescheduled_fn = require('./fns/fame-scheduled')
-const call_betslip_function = require('./fns/betslip')
-const call_oncallbackquery_function = require('./fns/oncallbackquery')
 const call_sendMikeka_functions = require('./fns/mkeka-1-2-3')
-const call_scheduled_checker_fn = require('./fns/scheduled-odds')
-const call_venas15_fn = require('./fns/venas15')
-const call_venas25_fn = require('./fns/venas25')
-const call_passion35_fn = require('./fns/passionpredict')
-const { QualityTipsCheck } = require('./fns/qualitycheck')
-const { correctScoreFn } = require('./fns/correct-score')
 const makeConvo = require('./fns/convoFn')
-const { ExtractTextFromSlip } = require('../../routes/functions/extractSlipText')
-const { StructureBetslipCaption } = require('./fns/structureSlipMessage')
-const { ShemdoeAssistant } = require('../../routes/functions/kbase')
 const { RegiChannelPostHandler, RegiAIGroupHandler } = require('./fns/channelPostHandler')
 
 
@@ -424,11 +403,6 @@ const reginaBot = async (app) => {
         bot.on('channel_post', async ctx => {
             RegiChannelPostHandler(bot, ctx, imp)
         })
-
-        call_supatips_function(bot)
-        call_fametips_function(bot)
-        call_betslip_function(bot, imp)
-        call_oncallbackquery_function(bot, delay)
 
         bot.on('message:text', async ctx => {
             try {
