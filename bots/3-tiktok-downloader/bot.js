@@ -12,9 +12,18 @@ const TikTokDownloaderBot = async (app) => {
         //setwebhook
         let hookPath = `/telebot/${process.env.USER}/tiktokbot`
         app.use(hookPath, webhookCallback(bot, 'express'))
-        bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`)
-            .then(() => console.log(`hook for TikTok Bot is set`))
-            .catch(e => console.log(e.message))
+
+        if (process.env.ENVIRONMENT === "local") {
+            try {
+                await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
+                    drop_pending_updates: true, allowed_updates
+                })
+                console.log(`webhook for ${bot.botInfo.username} is set`)
+
+            } catch (error) {
+                console.log(error?.message || `Failed setting webhook for ${bot.botInfo.username}`)
+            }
+        }
 
         //ratelimit 1 msg per 3 seconds
         bot.use(limit({ timeFrame: 3000, limit: 1 }))

@@ -82,15 +82,19 @@ const DayoBot = async (app) => {
         //set webhook
         let hookPath = `/telebot/${process.env.USER}/dayonce`
         app.use(`${hookPath}`, webhookCallback(bot, 'express', { timeoutMilliseconds: 30000 }))
-        bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
-            drop_pending_updates: true
-        })
-            .then(() => {
-                console.log(`webhook for Dayonce is set`)
-                bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`)
-                    .catch(e => console.log(e.message))
-            })
-            .catch(e => console.log(e.message))
+
+        if (process.env.ENVIRONMENT === "local") {
+            try {
+                await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
+                    drop_pending_updates: true, allowed_updates
+                })
+                console.log(`webhook for Dayo is set`)
+                await bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`)
+
+            } catch (error) {
+                console.log(error?.message || 'Failed setting webhook for Dayo')
+            }
+        }
 
         bot.command('start', async ctx => {
             try {

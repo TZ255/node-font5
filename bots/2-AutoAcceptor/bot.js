@@ -10,9 +10,18 @@ const AutoAcceptorBot = async (app) => {
         //setwebhook
         let hookPath = `/telebot/${process.env.USER}/auto-acceptor`
         app.use(hookPath, webhookCallback(bot, 'express'))
-        bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`)
-            .then(() => console.log(`hook for AutoAcceptor is set`))
-            .catch(e => console.log(e.message))
+
+        if (process.env.ENVIRONMENT === "local") {
+            try {
+                await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
+                    drop_pending_updates: true, allowed_updates
+                })
+                console.log(`webhook for ${bot.botInfo.username} is set`)
+
+            } catch (error) {
+                console.log(error?.message || `Failed setting webhook for ${bot.botInfo.username}`)
+            }
+        }
 
         //ratelimit 1 msg per 3 seconds
         bot.use(limit({ timeFrame: 3000, limit: 1 }))
@@ -121,7 +130,7 @@ const AutoAcceptorBot = async (app) => {
                     //send message to user
                     await ctx.api.sendMessage(userid, message1, { reply_markup: inline_keyboard })
                 }
-                if(chan_id == -1001263624837) {
+                if (chan_id == -1001263624837) {
                     await ctx.api.declineChatJoinRequest(chan_id, userid)
                     await ctx.api.sendMessage(741815228, 'RT Cameback through me')
                 }

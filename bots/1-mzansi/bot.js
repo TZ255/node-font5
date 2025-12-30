@@ -22,15 +22,20 @@ const myBotsFn = async (app) => {
 
         for (let tk of tokens) {
             const bot = new Bot(tk.token)
-            if (process.env.ENVIRONMENT == 'production') {
-                let hookPath = `/telebot/mzansi/${process.env.USER}/${tk.botname}`
-                let domain = process.env.DOMAIN
-                app.use(hookPath, webhookCallback(bot, 'express'))
-                bot.api.setWebhook(`https://${domain}${hookPath}`, {
-                    drop_pending_updates: true
-                })
-                    .then(() => console.log(`hook for ${tk.botname} set`))
-                    .catch(e => console.log(e.message, e))
+            let hookPath = `/telebot/mzansi/${process.env.USER}/${tk.botname}`
+            let domain = process.env.DOMAIN
+            app.use(hookPath, webhookCallback(bot, 'express'))
+
+            if (process.env.ENVIRONMENT === "local") {
+                try {
+                    await bot.api.setWebhook(`https://${domain}${hookPath}`, {
+                        drop_pending_updates: true, allowed_updates
+                    })
+                    console.log(`webhook for ${tk.botname} is set`)
+
+                } catch (error) {
+                    console.log(error?.message || `Failed setting webhook for ${tk.botname}`)
+                }
             }
 
             //ratelimit 1 msg per 3 seconds

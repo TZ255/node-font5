@@ -50,15 +50,19 @@ const PipyBot = async (app) => {
 
         let hookPath = `/telebot/${process.env.USER}/pipytida`
         app.use(`${hookPath}`, webhookCallback(bot, 'express', { timeoutMilliseconds: 30000 }))
-        bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
-            drop_pending_updates: true, allowed_updates
-        })
-            .then((hook) => {
-                console.log(`webhook for Pipy is set`, hook)
-                bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`)
-                    .catch(e => console.log(e.message))
-            })
-            .catch(e => console.log(e.message))
+
+        if (process.env.ENVIRONMENT === "local") {
+            try {
+                await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
+                    drop_pending_updates: true, allowed_updates
+                })
+                console.log(`webhook for Pipy is set`)
+                await bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`)
+
+            } catch (error) {
+                console.log(error?.message || 'Failed setting webhook for Pipy')
+            }
+        }
 
         const mkArrs = ['mkeka', 'mkeka1', 'mkeka2', 'mkeka3', 'mikeka', 'mkeka wa leo', 'mikeka ya leo', 'mkeka namba 1', 'mkeka namba 2', 'mkeka namba 3', 'mkeka #1', 'mkeka #2', 'mkeka #3', 'mkeka no #1', 'mkeka no #2', 'mkeka no #3', 'za leo', 'naomba mkeka', 'naomba mikeka', 'naomba mkeka wa leo', 'nitumie mkeka', 'ntumie mkeka', 'nitumie mikeka ya leo', 'odds', 'odds za leo', 'odds ya leo', 'mkeka waleo', 'mkeka namba moja', 'mkeka namba mbili', 'mkeka namba tatu', 'nataka mkeka', 'nataka mikeka', 'mkeka wa uhakika', 'odds za uhakika', 'mkeka?', 'mkeka wa leo?', '/mkeka 1', '/mkeka 2', '/mkeka 3']
 
@@ -342,7 +346,7 @@ const PipyBot = async (app) => {
             try {
                 if (admins.includes(ctx.chat.id)) {
                     otheFns.modFunction(bot, ctx, imp, delay)
-                    .catch(e => console.log(e?.message))
+                        .catch(e => console.log(e?.message))
                 }
             } catch (error) {
                 await ctx.reply(error.message)
@@ -401,7 +405,7 @@ const PipyBot = async (app) => {
                     }
 
                     //check if user is already removed
-                    if(['left', 'kicked'].includes(user_status.status)) {
+                    if (['left', 'kicked'].includes(user_status.status)) {
                         return await ctx.reply(`Mtumiaji tayari ameondolewa kwenye group hili`, {
                             reply_parameters: { message_id: my_msgid },
                             parse_mode: 'HTML'
@@ -416,7 +420,7 @@ const PipyBot = async (app) => {
                             parse_mode: 'HTML'
                         })
                         await ctx.api.sendMessage(imp.blackberry, `<b>${mention}</b> ameondolewa na <a href="tg://user?id=${ctx.message.from.id}">${adminName}</a>`, { parse_mode: 'HTML' })
-                        return await ctx.api.deleteMessage(ctx.chat.id, rep_msgid).catch(e => {})
+                        return await ctx.api.deleteMessage(ctx.chat.id, rep_msgid).catch(e => { })
                     } else {
                         await ctx.reply(`Huruhusiwi kuondoa member. Ruhusa ipo kwa watoa huduma wa group hili tu.`, {
                             reply_parameters: { message_id: my_msgid },
@@ -520,12 +524,12 @@ const PipyBot = async (app) => {
                 if (ctx.chat.type == 'private') {
                     await create(bot, ctx)
                     //switch kybd, mkeka arrays, forwarding
-                    return switchUserText.switchTxt(call_sendMikeka_functions, bot, ctx, imp, mkArrs, delay).catch(e => {})
+                    return switchUserText.switchTxt(call_sendMikeka_functions, bot, ctx, imp, mkArrs, delay).catch(e => { })
                 }
 
                 if (chatGroups.includes(ctx.chat.id)) {
                     //check if member is restricted in our superGroups
-                    return otheFns.muteLongTextsAndVideos(bot, ctx, imp, delay).catch(e => {})
+                    return otheFns.muteLongTextsAndVideos(bot, ctx, imp, delay).catch(e => { })
                 }
             } catch (err) {
                 console.log(err.message, err)
@@ -573,10 +577,10 @@ const PipyBot = async (app) => {
                 }
                 if (chatGroups.includes(ctx.chat.id) && !admins.includes(ctx.message.from.id)) {
                     //check if is verified (only applicable if all users are allowed to post)
-                    otheFns.checkSenderFn(bot, ctx, imp).catch(e => {})
+                    otheFns.checkSenderFn(bot, ctx, imp).catch(e => { })
 
                     //check if restricted, if not mute 30 minutes
-                    otheFns.muteLongTextsAndVideos(bot, ctx, imp, delay).catch(e => {})
+                    otheFns.muteLongTextsAndVideos(bot, ctx, imp, delay).catch(e => { })
                 }
             } catch (err) {
                 console.log(err.message, err)
