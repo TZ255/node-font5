@@ -12,7 +12,7 @@ const TikTokDownloaderBot = async (app) => {
         //setwebhook
         let hookPath = `/telebot/${process.env.USER}/tiktokbot`
         app.use(hookPath, webhookCallback(bot, 'express'))
-        await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`)
+        bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`)
             .then(() => console.log(`hook for TikTok Bot is set`))
             .catch(e => console.log(e.message))
 
@@ -72,7 +72,7 @@ const TikTokDownloaderBot = async (app) => {
                     }
 
                     const tik = await downloadTikTok(text.trim())
-                    if(tik.success === false) {
+                    if (tik.success === false) {
                         return await ctx.reply(tik.message)
                     }
 

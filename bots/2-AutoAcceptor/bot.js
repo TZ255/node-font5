@@ -10,7 +10,7 @@ const AutoAcceptorBot = async (app) => {
         //setwebhook
         let hookPath = `/telebot/${process.env.USER}/auto-acceptor`
         app.use(hookPath, webhookCallback(bot, 'express'))
-        await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`)
+        bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`)
             .then(() => console.log(`hook for AutoAcceptor is set`))
             .catch(e => console.log(e.message))
 

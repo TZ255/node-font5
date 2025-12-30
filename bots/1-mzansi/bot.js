@@ -26,7 +26,7 @@ const myBotsFn = async (app) => {
                 let hookPath = `/telebot/mzansi/${process.env.USER}/${tk.botname}`
                 let domain = process.env.DOMAIN
                 app.use(hookPath, webhookCallback(bot, 'express'))
-                await bot.api.setWebhook(`https://${domain}${hookPath}`, {
+                bot.api.setWebhook(`https://${domain}${hookPath}`, {
                     drop_pending_updates: true
                 })
                     .then(() => console.log(`hook for ${tk.botname} set`))

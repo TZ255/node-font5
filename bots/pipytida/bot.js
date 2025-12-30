@@ -50,7 +50,7 @@ const PipyBot = async (app) => {
 
         let hookPath = `/telebot/${process.env.USER}/pipytida`
         app.use(`${hookPath}`, webhookCallback(bot, 'express', { timeoutMilliseconds: 30000 }))
-        await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
+        bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
             drop_pending_updates: true, allowed_updates
         })
             .then((hook) => {
