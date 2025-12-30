@@ -43,15 +43,19 @@ const reginaBot = async (app) => {
         //set webhook
         let hookPath = `/telebot/${process.env.USER}/regina`
         app.use(`${hookPath}`, webhookCallback(bot, 'express', { timeoutMilliseconds: 30000 }))
-        bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
-            drop_pending_updates: true
-        })
-            .then(() => {
-                console.log(`webhook for Regi is set`)
-                bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`)
-                    .catch(e => console.log(e.message))
-            })
-            .catch(e => console.log(e.message))
+
+        if (process.env.ENVIRONMENT === "local") {
+            try {
+                await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
+                    drop_pending_updates: true
+                })
+                console.log(`webhook for Pipy is set`)
+                await bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`)
+
+            } catch (error) {
+                console.log(error?.message || 'Failed setting webhook for Pipy')
+            }
+        }
 
         const mkArrs = ['mkeka', 'mkeka1', 'mkeka2', 'mkeka3', 'mikeka', 'mkeka wa leo', 'mikeka ya leo', 'mkeka namba 1', 'mkeka namba 2', 'mkeka namba 3', 'mkeka #1', 'mkeka #2', 'mkeka #3', 'mkeka no #1', 'mkeka no #2', 'mkeka no #3', 'za leo', 'naomba mkeka', 'naomba mikeka', 'naomba mkeka wa leo', 'nitumie mkeka', 'ntumie mkeka', 'nitumie mikeka ya leo', 'odds', 'odds za leo', 'odds ya leo', 'mkeka waleo', 'mkeka namba moja', 'mkeka namba mbili', 'mkeka namba tatu', 'nataka mkeka', 'nataka mikeka', 'mkeka wa uhakika', 'odds za uhakika', 'mkeka?', 'mkeka wa leo?', '/mkeka 1', '/mkeka 2', '/mkeka 3']
 

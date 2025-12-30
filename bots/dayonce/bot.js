@@ -86,7 +86,7 @@ const DayoBot = async (app) => {
         if (process.env.ENVIRONMENT === "local") {
             try {
                 await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
-                    drop_pending_updates: true, allowed_updates
+                    drop_pending_updates: true
                 })
                 console.log(`webhook for Dayo is set`)
                 await bot.api.sendMessage(imp.shemdoe, `${hookPath} set as webhook`)

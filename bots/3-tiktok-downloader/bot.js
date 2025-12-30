@@ -16,12 +16,12 @@ const TikTokDownloaderBot = async (app) => {
         if (process.env.ENVIRONMENT === "local") {
             try {
                 await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
-                    drop_pending_updates: true, allowed_updates
+                    drop_pending_updates: true
                 })
-                console.log(`webhook for ${bot.botInfo.username} is set`)
+                console.log(`webhook for Tikto Downloader is set`)
 
             } catch (error) {
-                console.log(error?.message || `Failed setting webhook for ${bot.botInfo.username}`)
+                console.log(error?.message || `Failed setting webhook for Tikto Downloader`)
             }
         }
 

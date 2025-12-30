@@ -29,7 +29,7 @@ const myBotsFn = async (app) => {
             if (process.env.ENVIRONMENT === "local") {
                 try {
                     await bot.api.setWebhook(`https://${domain}${hookPath}`, {
-                        drop_pending_updates: true, allowed_updates
+                        drop_pending_updates: true
                     })
                     console.log(`webhook for ${tk.botname} is set`)
 
