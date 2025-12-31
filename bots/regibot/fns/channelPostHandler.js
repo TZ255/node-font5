@@ -59,7 +59,7 @@ const RegiChannelPostHandler = async (bot, ctx, imp) => {
 
                 //create mkeka
                 let brand = data[0].toLowerCase()
-                let siku = data[1] + '/2025'
+                let siku = data[1] + '/2026'
 
                 //check if already there
                 let check1 = await tgSlipsModel.findOne({ brand, siku })
