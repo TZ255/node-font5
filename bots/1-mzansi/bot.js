@@ -26,7 +26,7 @@ const myBotsFn = async (app) => {
             let domain = process.env.DOMAIN
             app.use(hookPath, webhookCallback(bot, 'express'))
 
-            if (process.env.ENVIRONMENT === "local") {
+            if (process.env.ENVIRONMENT !== "local") {
                 try {
                     await bot.api.setWebhook(`https://${domain}${hookPath}`, {
                         drop_pending_updates: true

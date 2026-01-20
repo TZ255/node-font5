@@ -13,7 +13,7 @@ const TikTokDownloaderBot = async (app) => {
         let hookPath = `/telebot/${process.env.USER}/tiktokbot`
         app.use(hookPath, webhookCallback(bot, 'express'))
 
-        if (process.env.ENVIRONMENT === "local") {
+        if (process.env.ENVIRONMENT !== "local") {
             try {
                 await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
                     drop_pending_updates: true

@@ -83,7 +83,7 @@ const DayoBot = async (app) => {
         let hookPath = `/telebot/${process.env.USER}/dayonce`
         app.use(`${hookPath}`, webhookCallback(bot, 'express', { timeoutMilliseconds: 30000 }))
 
-        if (process.env.ENVIRONMENT === "local") {
+        if (process.env.ENVIRONMENT !== "local") {
             try {
                 await bot.api.setWebhook(`https://${process.env.DOMAIN}${hookPath}`, {
                     drop_pending_updates: true
