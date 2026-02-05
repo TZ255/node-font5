@@ -128,13 +128,13 @@ const RegiChannelPostHandler = async (bot, ctx, imp) => {
                 if (!gpt_res.ok) return await ctx.reply(gpt_res?.error || 'Unknown error on fn call');
 
                 //structure message
-                const caption = ''
+                let caption = ''
                 if (affiliate.toLowerCase() === 'yellowbet') {
                     caption = StructureYellowBetslipCaption(gpt_res, String(affiliate).toLocaleLowerCase(), booking, date)
                 } else {
                     caption = StructureBetslipCaption(gpt_res, String(affiliate).toLocaleLowerCase(), booking, date)
                 }
-                
+
                 await ctx.api.editMessageCaption(ctx.channelPost.chat.id, rp_id, { parse_mode: 'HTML', caption })
                 await ctx.deleteMessage()
             }
