@@ -10,7 +10,7 @@ const mkekaMegaModel = require("../database/mkeka-mega")
 const myBongoChannelsModel = require("../database/my_channels")
 const tgSlipsModel = require("../database/tg_slips")
 const waombajiModel = require("../database/waombaji")
-const { StructureBetslipCaption } = require("./structureSlipMessage")
+const { StructureBetslipCaption, StructureYellowBetslipCaption } = require("./structureSlipMessage")
 const { GetJsDate, WeekDayFn, GetDayFromDateString } = require("./weekday")
 
 
@@ -128,7 +128,13 @@ const RegiChannelPostHandler = async (bot, ctx, imp) => {
                 if (!gpt_res.ok) return await ctx.reply(gpt_res?.error || 'Unknown error on fn call');
 
                 //structure message
-                const caption = StructureBetslipCaption(gpt_res, String(affiliate).toLocaleLowerCase(), booking, date)
+                const caption = ''
+                if (affiliate.toLowerCase() === 'yellowbet') {
+                    caption = StructureYellowBetslipCaption(gpt_res, String(affiliate).toLocaleLowerCase(), booking, date)
+                } else {
+                    caption = StructureBetslipCaption(gpt_res, String(affiliate).toLocaleLowerCase(), booking, date)
+                }
+                
                 await ctx.api.editMessageCaption(ctx.channelPost.chat.id, rp_id, { parse_mode: 'HTML', caption })
                 await ctx.deleteMessage()
             }
