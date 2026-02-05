@@ -70,11 +70,10 @@ Ikiwa bado huna account <b>Unaweza Jisajili Hapa Chini</b>
 <a href="${aff[affiliate].href}">${aff[affiliate].link_text}</a>
 
 <u>🔗 Kenya 🇰🇪</u>
-<a href="http://bet-link.top/betwinner/register">www.betwinner.ke/register</a>
+<a href="https://bet-link.top/yellowbet-ke/register">www.yellowbet.ke/register</a>
 
 <u>🔗 Uganda 🇺🇬</u>
-<a href="http://bet-link.top/gsb-ug/register">www.gsb.ug/#/register</a>
-
+<a href="https://bet-link.top/gsb-ug/register">www.gsb.ug/#/register</a>
 
 ••••
 @mkeka_wa_leo</b>
