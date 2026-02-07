@@ -45,9 +45,6 @@ const txtArr = async (call_sendMikeka_functions, bot, ctx, imp, mkArrs, delay) =
                     await ctx.replyWithChatAction('typing');
                     await delay(1000);
                     await bot.api.copyMessage(userid, imp.pzone, 7664);
-                } else {
-                    if (ctx.chat.type == 'private')
-                        await bot.api.sendMessage(imp.halot, `<b>${txt}</b> \n\nfrom = <code>${username}</code>\nid = <code>${userid}</code>&mid=${rp_id}`, { parse_mode: 'HTML', disable_notification: true });
                 }
         }
     } catch (error) {
