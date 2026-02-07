@@ -67,14 +67,18 @@ const PipyBot = async (app) => {
         const mkArrs = ['mkeka', 'mkeka1', 'mkeka2', 'mkeka3', 'mikeka', 'mkeka wa leo', 'mikeka ya leo', 'mkeka namba 1', 'mkeka namba 2', 'mkeka namba 3', 'mkeka #1', 'mkeka #2', 'mkeka #3', 'mkeka no #1', 'mkeka no #2', 'mkeka no #3', 'za leo', 'naomba mkeka', 'naomba mikeka', 'naomba mkeka wa leo', 'nitumie mkeka', 'ntumie mkeka', 'nitumie mikeka ya leo', 'odds', 'odds za leo', 'odds ya leo', 'mkeka waleo', 'mkeka namba moja', 'mkeka namba mbili', 'mkeka namba tatu', 'nataka mkeka', 'nataka mikeka', 'mkeka wa uhakika', 'odds za uhakika', 'mkeka?', 'mkeka wa leo?', '/mkeka 1', '/mkeka 2', '/mkeka 3']
 
         async function create(bot, ctx) {
-            let starter = await pipyUsers.findOne({ chatid: ctx.chat.id })
-            if (!starter) {
-                await pipyUsers.create({
-                    chatid: ctx.chat.id,
-                    username: ctx.chat.first_name,
-                    promo: 'unknown',
-                    refferer: "Pipy"
-                })
+            try {
+                let starter = await pipyUsers.findOne({ chatid: ctx.chat.id })
+                if (!starter) {
+                    await pipyUsers.create({
+                        chatid: ctx.chat.id,
+                        username: ctx.chat.first_name,
+                        promo: 'unknown',
+                        refferer: "Pipy"
+                    })
+                }
+            } catch (error) {
+                console.log(error.message, error)
             }
         }
 
@@ -113,9 +117,6 @@ const PipyBot = async (app) => {
                     } else if (pload == 'watoa_huduma') {
                         await otheFns.watoaHudumaPrivateChat(bot, ctx, imp)
                     }
-                    //add to database
-                    await create(bot, ctx)
-
                 } else {
                     await ctx.reply(`Karibu ${ctx.chat.first_name}! \n\nNiko hapa kwaajili ya kukupatia na kukuhabarisha michongo ya kila siku katika magroup yetu. Utakuwa ukipokea michongo ya kila siku kupitia chat hii. \n\nAhsante!`)
 
@@ -129,7 +130,8 @@ const PipyBot = async (app) => {
                         await bot.api.sendMessage(imp.logsBin, '(Pipy) New user found me - Added to DB')
                     }
                 }
-
+                //add to database
+                create(bot, ctx)
             } catch (err) {
                 console.log(err.message, err)
             }
@@ -152,7 +154,7 @@ const PipyBot = async (app) => {
         bot.command(['help'], async ctx => {
             try {
                 await ctx.reply(`Karibu ${ctx.chat.first_name}! \n\nNiko hapa kwaajili ya kukupatia na kukuhabarisha michongo ya kila siku katika magroup yetu. Utakuwa ukipokea michongo ya kila siku kupitia chat hii. \n\nAhsante!`)
-                await create(bot, ctx)
+                create(bot, ctx)
             } catch (err) {
                 console.log(err.message)
             }
