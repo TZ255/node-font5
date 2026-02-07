@@ -109,9 +109,7 @@ const DayoBot = async (app) => {
                     await create(bot, ctx)
 
                 } else {
-                    await bot.api.copyMessage(ctx.chat.id, imp.pzone, 7653, {
-                        reply_markup: defaultReplyMkp
-                    })
+                    await ctx.reply(`Karibu ${ctx.chat.first_name}! \n\nNiko hapa kwaajili ya kukupatia na kukuhabarisha michongo ya kila siku katika magroup yetu. Utakuwa ukipokea michongo ya kila siku kupitia chat hii. \n\nAhsante!`)
 
                     let stt = await dayoUsers.findOne({ chatid: ctx.chat.id })
                     if (!stt) {
@@ -138,9 +136,9 @@ const DayoBot = async (app) => {
             }
         })
 
-        bot.command(['help', 'stop'], async ctx => {
+        bot.command(['help'], async ctx => {
             try {
-                await bot.api.copyMessage(ctx.chat.id, imp.pzone, 7653)
+                await ctx.reply(`Karibu ${ctx.chat.first_name}! \n\nNiko hapa kwaajili ya kukupatia na kukuhabarisha michongo ya kila siku katika magroup yetu. Utakuwa ukipokea michongo ya kila siku kupitia chat hii. \n\nAhsante!`)
                 await create(bot, ctx)
             } catch (err) {
                 console.log("(Dayo) " + err.message)
