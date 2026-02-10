@@ -25,6 +25,7 @@ const { scrapeBetimateBothToScore } = require('../bots/regibot/fns/Betimate')
 const { checkOdds, checkTomorrowOdds, checkMatokeoJana } = require('../bots/regibot/fns/passionpredict')
 const { downloadTikTok } = require('./functions/TikTokDownload')
 const { famecheckOdds } = require('../bots/regibot/fns/fame-scheduled')
+const { getProductDetails } = require('../utils/aliexpress-aff')
 
 //send success (no content) response to browser
 const limiter = elimit({
@@ -233,8 +234,8 @@ router.get('/:code', async (req, res) => {
 
 router.get('/api/testing', async (req, res) => {
     try {
-        extractMutatingTips('soccer-predictions/tomorrow/', "16/12/2025")
-        res.end()
+        //let aliexpress_product_details = await getProductDetails("1005006779445112")
+        res.json(aliexpress_product_details)
     } catch (err) {
         console.log(err)
         console.log(err.message)
