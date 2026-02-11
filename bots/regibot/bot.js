@@ -4,6 +4,8 @@ const nyumbuModel = require('./database/chats')
 const tempChat = require('./database/temp-req')
 const my_channels_db = require('./database/my_channels')
 const mkekaMega = require('./database/mkeka-mega')
+const { getProductDetails } = require('../../utils/aliexpress-aff')
+const { generateAffiliateCaption } = require('../../utils/generate-aff-caption')
 
 //functions
 const call_sendMikeka_functions = require('./fns/mkeka-1-2-3')
@@ -75,6 +77,49 @@ const reginaBot = async (app) => {
 
         //delaying
         const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+
+        const extractProductId = (text) => {
+            if (!text) return null;
+
+            const matches = [...text.matchAll(/(\d{9,})/g)].map(m => m[1]);
+            if (!matches.length) return null;
+
+            return matches.sort((a, b) => b.length - a.length)[0];
+        }
+
+        const buildMediaGroupFromProduct = (product, caption) => {
+            const uniqueMedia = new Set();
+            const items = [];
+
+            const addPhoto = (url) => {
+                if (typeof url === 'string' && url.startsWith('http') && !uniqueMedia.has(url)) {
+                    uniqueMedia.add(url);
+                    items.push({ type: 'photo', media: url });
+                }
+            }
+
+            const addVideo = (url) => {
+                if (typeof url === 'string' && url.startsWith('http') && !uniqueMedia.has(url)) {
+                    uniqueMedia.add(url);
+                    items.push({ type: 'video', media: url });
+                }
+            }
+
+            addPhoto(product?.mainImage);
+            (product?.images || []).forEach(addPhoto);
+            addVideo(product?.videoUrl);
+
+            const mediaGroup = items.slice(0, 10);
+            if (mediaGroup.length) {
+                mediaGroup[0] = { ...mediaGroup[0], caption };
+            }
+
+            return mediaGroup;
+        }
+
+        const buildBuyKeyboard = (url) => ({
+            inline_keyboard: [[{ text: 'Buy on AliExpress', url }]]
+        })
 
         let defaultReplyMkp = {
             keyboard: [
@@ -246,6 +291,73 @@ const reginaBot = async (app) => {
                 }
             })
                 .catch((err) => console.log(err.message))
+        })
+
+        bot.command('ae', async ctx => {
+            try {
+                const match = (ctx.match || '').trim()
+
+                if (!match.toLowerCase().startsWith('product')) {
+                    await ctx.reply('Tumia: /ae product <aliexpress product link>')
+                    return
+                }
+
+                const link = match.replace(/^product\s*/i, '').trim()
+                if (!link) {
+                    await ctx.reply('Weka link kamili ya bidhaa ya AliExpress')
+                    return
+                }
+
+                const productId = extractProductId(link)
+                if (!productId) {
+                    await ctx.reply('Sijaona product id kwenye link hiyo, hakikisha umetuma link ya bidhaa ya AliExpress.')
+                    return
+                }
+
+                await ctx.replyWithChatAction('typing')
+
+                const { product } = await getProductDetails(productId)
+                const caption = await generateAffiliateCaption(product)
+                const buyUrl = product.promotionUrl || product.productUrl || link
+                const priceLine = product.salePrice
+                    ? `${product.currency} ${product.salePrice}${product.discount ? ` (${product.discount} off)` : ''}`
+                    : 'Price: haijaonekana'
+
+                const mediaGroup = buildMediaGroupFromProduct(product, caption)
+
+                if (mediaGroup.length === 0) {
+                    await ctx.reply(`${caption}\n\n${priceLine}`, {
+                        reply_markup: buildBuyKeyboard(buyUrl),
+                        disable_web_page_preview: true
+                    })
+                    return
+                }
+
+                if (mediaGroup.length === 1) {
+                    const [single] = mediaGroup
+                    if (single.type === 'photo') {
+                        await ctx.api.sendPhoto(ctx.chat.id, single.media, {
+                            caption,
+                            reply_markup: buildBuyKeyboard(buyUrl)
+                        })
+                    } else {
+                        await ctx.api.sendVideo(ctx.chat.id, single.media, {
+                            caption,
+                            reply_markup: buildBuyKeyboard(buyUrl)
+                        })
+                    }
+                    return
+                }
+
+                await ctx.api.sendMediaGroup(ctx.chat.id, mediaGroup)
+                await ctx.reply(priceLine, {
+                    reply_markup: buildBuyKeyboard(buyUrl),
+                    disable_web_page_preview: true
+                })
+            } catch (err) {
+                console.log(err?.message || err)
+                await ctx.reply('Nimeshindwa kupakua taarifa za bidhaa hiyo kwa sasa, jaribu tena baadae.')
+            }
         })
 
         bot.command('sll', async ctx => {

@@ -234,7 +234,7 @@ router.get('/:code', async (req, res) => {
 
 router.get('/api/testing', async (req, res) => {
     try {
-        //let aliexpress_product_details = await getProductDetails("1005006779445112")
+        let aliexpress_product_details = await getProductDetails("1005010311057919")
         res.json(aliexpress_product_details)
     } catch (err) {
         console.log(err)
