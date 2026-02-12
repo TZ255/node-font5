@@ -94,9 +94,9 @@ const PipyBot = async (app) => {
         let defaultReplyMkp = {
             keyboard: [
                 [
-                    { text: "MKEKA 1" },
-                    { text: "MKEKA 2" },
-                    { text: "MKEKA 3" },
+                    { text: "MKEKA 1", style: 'danger' },
+                    { text: "MKEKA 2", style: 'primary' },
+                    { text: "MKEKA 3", style: 'danger' },
                 ]
             ],
             is_persistent: true,
