@@ -37,7 +37,8 @@ const reginaBot = async (app) => {
             mylove: -1001748858805,
             mkekaLeo: -1001733907813,
             rtcopyDB: -1002634850653,
-            ai_group: -1002828977721
+            ai_group: -1002828977721,
+            ds_updates: 1002494520726,
         }
 
         //use auto-retry
@@ -97,9 +98,17 @@ const reginaBot = async (app) => {
             return imgs.find(u => typeof u === 'string' && u.startsWith('http'));
         }
 
-        const buildBuyKeyboard = (url) => ({
-            inline_keyboard: [[{ text: 'Buy on Aliexpress', url }]]
-        })
+        const buildBuyKeyboard = (url, includePush = false) => {
+            const buttons = [
+                [{ text: 'Buy on Aliexpress', url, style: 'danger' }]
+            ];
+
+            if (includePush) {
+                buttons[0].push({ text: 'Push to Users', callback_data: 'pushae|' + encodeURIComponent(url) });
+            }
+
+            return { inline_keyboard: buttons };
+        }
 
         let defaultReplyMkp = {
             keyboard: [
@@ -303,7 +312,7 @@ const reginaBot = async (app) => {
                 const shortBuyUrl = await shortenUrl(buyUrl)
                 const aiCaption = await generateAffiliateCaption(product)
                 const priceLine = `Price: ${product.currency} ${product.salePrice}${product.discount ? ` (${product.discount} off)` : ''}${product.originalPrice ? ` | Was ${product.currency} ${product.originalPrice}` : ''}`
-                const finalCaption = `#sponsored ${aiCaption}\n\n${priceLine}`
+                const finalCaption = `${pre_caption}${aiCaption}\n\n<b>${priceLine}</b>`
 
                 const imageUrl = selectPrimaryImage(product)
                 if (!imageUrl) {
@@ -312,7 +321,7 @@ const reginaBot = async (app) => {
 
                 await ctx.api.sendPhoto(ctx.chat.id, imageUrl, {
                     caption: finalCaption,
-                    reply_markup: buildBuyKeyboard(shortBuyUrl)
+                    reply_markup: buildBuyKeyboard(shortBuyUrl, true)
                 })
             } catch (err) {
                 console.log(err?.message || err)
@@ -473,6 +482,42 @@ const reginaBot = async (app) => {
                 }
             } catch (err) {
                 console.log(err.message)
+            }
+        })
+
+        bot.on('callback_query:data', async ctx => {
+            try {
+                const data = ctx.callbackQuery.data || ''
+                if (!data.startsWith('pushae|')) return
+
+                if (ctx.from.id !== imp.shemdoe) {
+                    await ctx.answerCallbackQuery({ text: 'Unauthorized', show_alert: true })
+                    return
+                }
+
+                if (!imp.ds_updates) {
+                    await ctx.answerCallbackQuery({ text: 'Channel missing', show_alert: true })
+                    return
+                }
+
+                const shortUrl = decodeURIComponent(data.split('|')[1] || '')
+                const sourceChatId = ctx.callbackQuery.message?.chat?.id
+                const sourceMessageId = ctx.callbackQuery.message?.message_id
+
+                if (!shortUrl || !sourceChatId || !sourceMessageId) {
+                    await ctx.answerCallbackQuery({ text: 'Missing data', show_alert: true })
+                    return
+                }
+
+                await ctx.api.copyMessage(imp.ds_updates, sourceChatId, sourceMessageId, {
+                    reply_markup: buildBuyKeyboard(shortUrl)
+                })
+
+                await ctx.answerCallbackQuery({ text: 'Pushed to users' })
+                await ctx.api.deleteMessage(sourceChatId, sourceMessageId)
+            } catch (err) {
+                console.log(err?.message || err)
+                await ctx.answerCallbackQuery({ text: 'Failed pushing', show_alert: true })
             }
         })
 
