@@ -38,7 +38,7 @@ const reginaBot = async (app) => {
             mkekaLeo: -1001733907813,
             rtcopyDB: -1002634850653,
             ai_group: -1002828977721,
-            ds_updates: 1002494520726,
+            ds_updates: -1002494520726,
         }
 
         //use auto-retry
