@@ -320,6 +320,7 @@ const reginaBot = async (app) => {
                 }
 
                 await ctx.api.sendPhoto(ctx.chat.id, imageUrl, {
+                    parse_mode: 'HTML',
                     caption: finalCaption,
                     reply_markup: buildBuyKeyboard(shortBuyUrl, true)
                 })
