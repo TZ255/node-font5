@@ -11,19 +11,6 @@ const formatPrice = (price, currency) => {
     return currency ? `${currency} ${price}` : `${price}`;
 }
 
-function buildFallbackCaption(product) {
-    const parts = [
-        product.title,
-        product.discount ? `Save ${product.discount}` : null,
-        product.originalPrice ? `Was ${formatPrice(product.originalPrice, product.currency)}` : null,
-        product.salePrice ? `Now ${formatPrice(product.salePrice, product.currency)}` : null,
-        product.shopName ? `From ${product.shopName}` : null,
-        "Grab yours now."
-    ].filter(Boolean);
-
-    return parts.join(" ");
-}
-
 function buildProductDetailsText(product) {
     const {
         title,
@@ -74,11 +61,10 @@ const generateAffiliateCaption = async (product) => {
 
     try {
         const response = await openai.responses.create({
-            model: "gpt-4.1-mini",
-            temperature: 0.7,
+            model: "gpt-5-mini",
             input: [
                 {
-                    role: "assistant",
+                    role: "system",
                     content: systemInstruction
                 },
                 {
@@ -89,13 +75,18 @@ const generateAffiliateCaption = async (product) => {
                     ],
                 },
             ],
-            max_output_tokens: 120,
+            reasoning: {
+                effort: "medium"
+            },
+            text: {
+                verbosity: "low"
+            }
         });
 
-        return response.output_text?.trim() || buildFallbackCaption(product);
+        return response.output_text?.trim() || 'No caption generated.';
     } catch (error) {
         console.error("Error generating affiliate caption:", error?.message || error);
-        return buildFallbackCaption(product);
+        return "Sorry, I couldn't generate a caption for this product.";
     }
 };
 

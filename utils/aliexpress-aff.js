@@ -1,8 +1,8 @@
 const axios = require("axios");
 const crypto = require("crypto");
 
-const APP_KEY = "527494";
-const APP_SECRET = "hx3BtC2fm98RclNnjexubB3BtO7dabyi";
+const APP_KEY = process.env.ALIEXPRESS_APP_KEY
+const APP_SECRET = process.env.ALLIEXPRESS_APP_SECRET
 const AFFILIATE_METHOD = "aliexpress.affiliate.productdetail.get";
 const FIELDS = "commission_rate,sale_price,product_main_image_url,product_small_image_urls,product_video_url,product_title,product_detail_url,discount,target_sale_price,target_original_price,shop_name,evaluate_rate,lastest_volume";
 

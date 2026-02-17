@@ -6,6 +6,7 @@ const my_channels_db = require('./database/my_channels')
 const mkekaMega = require('./database/mkeka-mega')
 const { getProductDetails } = require('../../utils/aliexpress-aff')
 const { generateAffiliateCaption } = require('../../utils/generate-aff-caption')
+const { shortenUrl } = require('../../utils/shorten-url')
 
 //functions
 const call_sendMikeka_functions = require('./fns/mkeka-1-2-3')
@@ -87,38 +88,17 @@ const reginaBot = async (app) => {
             return matches.sort((a, b) => b.length - a.length)[0];
         }
 
-        const buildMediaGroupFromProduct = (product, caption) => {
-            const uniqueMedia = new Set();
-            const items = [];
+        const selectPrimaryImage = (product) => {
+            const imgs = [
+                product?.mainImage,
+                ...(product?.images || [])
+            ];
 
-            const addPhoto = (url) => {
-                if (typeof url === 'string' && url.startsWith('http') && !uniqueMedia.has(url)) {
-                    uniqueMedia.add(url);
-                    items.push({ type: 'photo', media: url });
-                }
-            }
-
-            const addVideo = (url) => {
-                if (typeof url === 'string' && url.startsWith('http') && !uniqueMedia.has(url)) {
-                    uniqueMedia.add(url);
-                    items.push({ type: 'video', media: url });
-                }
-            }
-
-            addPhoto(product?.mainImage);
-            (product?.images || []).forEach(addPhoto);
-            addVideo(product?.videoUrl);
-
-            const mediaGroup = items.slice(0, 10);
-            if (mediaGroup.length) {
-                mediaGroup[0] = { ...mediaGroup[0], caption };
-            }
-
-            return mediaGroup;
+            return imgs.find(u => typeof u === 'string' && u.startsWith('http'));
         }
 
         const buildBuyKeyboard = (url) => ({
-            inline_keyboard: [[{ text: 'Buy on AliExpress', url }]]
+            inline_keyboard: [[{ text: 'Buy on Aliexpress', url }]]
         })
 
         let defaultReplyMkp = {
@@ -314,45 +294,25 @@ const reginaBot = async (app) => {
                     return
                 }
 
+                const pre_caption = `<b>#sponsored</b>\n\n`
+
                 await ctx.replyWithChatAction('typing')
 
                 const { product } = await getProductDetails(productId)
-                const caption = await generateAffiliateCaption(product)
                 const buyUrl = product.promotionUrl || product.productUrl || link
-                const priceLine = product.salePrice
-                    ? `${product.currency} ${product.salePrice}${product.discount ? ` (${product.discount} off)` : ''}`
-                    : 'Price: haijaonekana'
+                const shortBuyUrl = await shortenUrl(buyUrl)
+                const aiCaption = await generateAffiliateCaption(product)
+                const priceLine = `Price: ${product.currency} ${product.salePrice}${product.discount ? ` (${product.discount} off)` : ''}${product.originalPrice ? ` | Was ${product.currency} ${product.originalPrice}` : ''}`
+                const finalCaption = `#sponsored ${aiCaption}\n\n${priceLine}`
 
-                const mediaGroup = buildMediaGroupFromProduct(product, caption)
-
-                if (mediaGroup.length === 0) {
-                    await ctx.reply(`${caption}\n\n${priceLine}`, {
-                        reply_markup: buildBuyKeyboard(buyUrl),
-                        disable_web_page_preview: true
-                    })
-                    return
+                const imageUrl = selectPrimaryImage(product)
+                if (!imageUrl) {
+                    throw new Error('Hakuna picha ya bidhaa iliyopatikana.')
                 }
 
-                if (mediaGroup.length === 1) {
-                    const [single] = mediaGroup
-                    if (single.type === 'photo') {
-                        await ctx.api.sendPhoto(ctx.chat.id, single.media, {
-                            caption,
-                            reply_markup: buildBuyKeyboard(buyUrl)
-                        })
-                    } else {
-                        await ctx.api.sendVideo(ctx.chat.id, single.media, {
-                            caption,
-                            reply_markup: buildBuyKeyboard(buyUrl)
-                        })
-                    }
-                    return
-                }
-
-                await ctx.api.sendMediaGroup(ctx.chat.id, mediaGroup)
-                await ctx.reply(priceLine, {
-                    reply_markup: buildBuyKeyboard(buyUrl),
-                    disable_web_page_preview: true
+                await ctx.api.sendPhoto(ctx.chat.id, imageUrl, {
+                    caption: finalCaption,
+                    reply_markup: buildBuyKeyboard(shortBuyUrl)
                 })
             } catch (err) {
                 console.log(err?.message || err)

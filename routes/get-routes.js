@@ -26,6 +26,7 @@ const { checkOdds, checkTomorrowOdds, checkMatokeoJana } = require('../bots/regi
 const { downloadTikTok } = require('./functions/TikTokDownload')
 const { famecheckOdds } = require('../bots/regibot/fns/fame-scheduled')
 const { getProductDetails } = require('../utils/aliexpress-aff')
+const { shortenUrl } = require('../utils/shorten-url')
 
 //send success (no content) response to browser
 const limiter = elimit({
@@ -234,8 +235,8 @@ router.get('/:code', async (req, res) => {
 
 router.get('/api/testing', async (req, res) => {
     try {
-        let aliexpress_product_details = await getProductDetails("1005010311057919")
-        res.json(aliexpress_product_details)
+        let shorten_url = await shortenUrl('https://www.google.com')
+        res.json({ short_url: shorten_url })
     } catch (err) {
         console.log(err)
         console.log(err.message)
