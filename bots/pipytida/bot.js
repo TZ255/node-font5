@@ -372,16 +372,6 @@ const PipyBot = async (app) => {
             }
         })
 
-        bot.command('clear_group', async ctx => {
-            try {
-                if (admins.includes(ctx.chat.id) || admins.includes(ctx.message.from.id)) {
-                    await otheFns.clearingGroup(bot, imp, delay)
-                }
-            } catch (error) {
-                await ctx.reply(error.message)
-            }
-        })
-
         bot.command(['ondoa', 'toa', 'Ondoa', 'Toa'], async ctx => {
             try {
                 if (chatGroups.includes(ctx.chat.id) && ctx.message?.reply_to_message) {

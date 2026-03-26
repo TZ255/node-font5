@@ -72,12 +72,10 @@ const verifyFn = async (bot, ctx, imp) => {
             })
             let mention = `<a href="tg://user?id=${userid}">${ver_user.fname}</a>`
             let msg = await ctx.reply(`Mtoa huduma ${mention} ameongezwa kwenye list ya watoa huduma waliothibitishwa kwenye group hili.`, { parse_mode: 'HTML' })
-            await toDeleteModel.create({ msgid: msg.message_id, chatid: ctx.chat.id })
         } else {
             let ver_user = await verifiedList.findOneAndUpdate({ chatid: userid }, { $set: { paid: true } }, { new: true })
             let mention = `<a href="tg://user?id=${userid}">${ver_user.fname}</a>`
             let msg = await ctx.reply(`Mtoa huduma ${mention} ameongezwa kwenye list ya watoa huduma waliothibitishwa kwenye group hili.`, { parse_mode: 'HTML' })
-            await toDeleteModel.create({ msgid: msg.message_id, chatid: ctx.chat.id })
         }
     } catch (error) {
         await ctx.reply(error.message)
@@ -339,7 +337,6 @@ const watoaHuduma = async (bot, imp, grpId) => {
         }
 
         let msg = await bot.api.sendMessage(grpId, `${txt}\n\n⚠ Kama wewe ni mtoa huduma au dalali na unataka kufanya kazi kwenye group hili, wasiliana na admin hapa <b>@Blackberry255</b>`, { parse_mode: 'HTML' })
-        await toDeleteModel.create({ msgid: msg.message_id, chatid: msg.chat.id })
     } catch (error) {
         console.log(error.message, error)
     }
@@ -359,7 +356,6 @@ const watoaHudumaPrivateChat = async (bot, ctx, imp) => {
         }
 
         let msg = await ctx.reply(`${txt}\n\n⚠ Kama wewe ni mtoa huduma au dalali na unataka kufanya kazi kwenye group hili, wasiliana na admin hapa <b>@Blackberry255</b>`, { parse_mode: 'HTML' })
-        await toDeleteModel.create({ msgid: msg.message_id, chatid: ctx.chat.id })
     } catch (error) {
         console.log(error.message, error)
     }
@@ -410,22 +406,6 @@ const updateAdminTitle = async (bot, ctx, imp, chat_id = null) => {
         }
     } catch (error) {
         await ctx.reply(error.message)
-    }
-}
-
-
-//clearing the group
-const clearingGroup = async (bot, imp, delay) => {
-    try {
-        let all = await toDeleteModel.find()
-
-        for (let m of all) {
-            await bot.api.deleteMessage(m.chatid, m.msgid).catch(e => console.log(e.message))
-            await m.deleteOne().catch(e => console.log(e.message))
-            await delay(20) //delete 50 msgs per sec
-        }
-    } catch (error) {
-        console.log(error.message)
     }
 }
 
@@ -523,5 +503,5 @@ const listYangu = async (ctx) => {
 }
 
 module.exports = {
-    verifyFn, UnverifyFn, checkSenderFn, adminReplyToMessageFn, adminReplyTextToPhotoFn, watoaHuduma, updateLocation, updatePhone, clearingGroup, muteVideosPhotos, muteLongTextsAndVideos, modFunction, listYangu, utapeliMsg, watoaHudumaPrivateChat, updateAdminTitle
+    verifyFn, UnverifyFn, checkSenderFn, adminReplyToMessageFn, adminReplyTextToPhotoFn, watoaHuduma, updateLocation, updatePhone, muteVideosPhotos, muteLongTextsAndVideos, modFunction, listYangu, utapeliMsg, watoaHudumaPrivateChat, updateAdminTitle
 }
