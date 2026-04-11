@@ -8,7 +8,7 @@ const zingatiaMsg = `<b>❌ ZINGATIA HILI, ACHA UFALA ❌\n\nMIMI PIPYTIDA SIO A
 const rmarkup = {
     inline_keyboard: [
         [
-            { text: 'List ya Watoa Huduma', url: 'https://t.me/PipyTidaBot?start=watoa_huduma' }
+            { text: 'List ya Watoa Huduma', url: 'https://t.me/pipitidabot?start=watoa_huduma' }
         ]
     ]
 }
