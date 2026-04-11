@@ -380,10 +380,10 @@ const PipyBot = async (app) => {
                     let fullName = ctx.message.reply_to_message.from.last_name ? `${fname} ${ctx.message.reply_to_message.from.last_name}` : fname
                     let my_msgid = ctx.message.message_id
                     let rep_msgid = ctx.message.reply_to_message.message_id
-                    let myid = ctx.message.from.id
+                    let adminId = ctx.message.from.id
                     let adminName = ctx.message.from.last_name ? `${ctx.message.from.first_name} ${ctx.message.from.last_name}` : ctx.message.from.first_name
                     let mention = `<a href="tg://user?id=123456789">${fullName}</a>`
-                    let status = await ctx.getChatMember(myid)
+                    let status = await ctx.getChatMember(adminId)
                     let user_status = await ctx.getChatMember(userid)
 
                     //check if admin is tried to be removed
@@ -404,6 +404,9 @@ const PipyBot = async (app) => {
 
                     //remove the user if command is from admin
                     if (['administrator', 'creator'].includes(status.status)) {
+                        const vichaa = [6396427623]
+                        if (vichaa.includes(adminId)) return await ctx.reply(`${adminName} umezuiwa kuondoa members kwenye group. Mtaarifu mtoa huduma mwingine afanye kazi hii`);
+                        
                         await ctx.banChatMember(userid, 0)
                         await ctx.reply(`<b>${mention}</b> amekula ban ya maisha kwenye hili group.`, {
                             reply_parameters: { message_id: my_msgid },
