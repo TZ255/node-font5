@@ -12,7 +12,8 @@ const mkekaSchema = new Schema({
         type: String
     },
     posted: {
-        type: Boolean
+        type: Boolean,
+        default: false
     }
 }, {strict: false, timestamps: true })
 
