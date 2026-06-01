@@ -14,6 +14,10 @@ const mkekaSchema = new Schema({
     posted: {
         type: Boolean,
         default: false
+    },
+    mkekaleo_mid: {
+        type: Number,
+        default: null
     }
 }, {strict: false, timestamps: true })
 
