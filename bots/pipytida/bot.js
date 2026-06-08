@@ -83,15 +83,9 @@ const PipyBot = async (app) => {
             }
         }
 
-        function startChatAction(bot, chatId, action) {
-            const sendAction = () => bot.api.sendChatAction(chatId, action).catch(e => { })
-            sendAction()
-            return setInterval(sendAction, 4000)
-        }
-
 
         async function channelPost(bot, ctx, imp) {
-            let chatActionInterval
+            let processingMsg
 
             try {
                 const post = ctx.channelPost
@@ -104,7 +98,9 @@ const PipyBot = async (app) => {
                 const match = plainMatch || looterMatch
                 if (!match) return
 
-                chatActionInterval = startChatAction(bot, ctx.chat.id, 'upload_video')
+                processingMsg = await bot.api.sendMessage(ctx.chat.id, 'processing....⏳', {
+                    reply_parameters: { message_id: post.message_id, allow_sending_without_reply: true }
+                })
 
                 const loot = plainMatch ? await instaPlain(match[1]) : await instaLoot(match[1])
                 const filePrefix = plainMatch ? 'insta-plain' : 'instaloot'
@@ -134,7 +130,9 @@ const PipyBot = async (app) => {
                 console.log('(Pipy instaloot): ' + error.message, error)
                 await bot.api.sendMessage(imp.shemdoe, '(Pipy instaloot): ' + error.message).catch(e => { })
             } finally {
-                if (chatActionInterval) clearInterval(chatActionInterval)
+                if (processingMsg) {
+                    await bot.api.deleteMessage(ctx.chat.id, processingMsg.message_id).catch(e => { })
+                }
             }
         }
 
