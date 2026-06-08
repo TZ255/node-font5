@@ -12,7 +12,7 @@ const switchUserText = require('./fns/text-arr')
 const otheFns = require('./fns/otherFn')
 const call_sendMikeka_functions = require('./fns/mkeka-1-2-3')
 const makeConvo = require('./fns/convoFn')
-const { instaLoot, fetchMediaBuffer } = require('./fns/insta')
+const { instaLoot, instaPlain, fetchMediaBuffer } = require('./fns/insta')
 
 const PipyBot = async (app) => {
     try {
@@ -91,14 +91,17 @@ const PipyBot = async (app) => {
 
                 if (ctx.chat.id !== imp.pzone || !text) return
 
-                const match = text.match(/^instaloot\s+(\S+)/i)
+                const looterMatch = text.match(/^instaloot\s+(\S+)/i)
+                const plainMatch = text.match(/^insta\s+plain\s+(\S+)/i)
+                const match = plainMatch || looterMatch
                 if (!match) return
 
                 await bot.api.sendChatAction(ctx.chat.id, 'upload_video').catch(e => { })
 
-                const loot = await instaLoot(match[1])
-                const media = await fetchMediaBuffer(loot.mediaLink, 'instaloot.mp4')
-                const thumbnail = loot.thumbnailLink ? await fetchMediaBuffer(loot.thumbnailLink, 'instaloot-thumb.jpg').catch(error => {
+                const loot = plainMatch ? await instaPlain(match[1]) : await instaLoot(match[1])
+                const filePrefix = plainMatch ? 'insta-plain' : 'instaloot'
+                const media = await fetchMediaBuffer(loot.mediaLink, filePrefix + '.mp4')
+                const thumbnail = loot.thumbnailLink ? await fetchMediaBuffer(loot.thumbnailLink, filePrefix + '-thumb.jpg').catch(error => {
                     console.log('(Pipy instaloot thumbnail): ' + error.message)
                     return null
                 }) : null

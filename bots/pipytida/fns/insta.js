@@ -3,6 +3,8 @@ const https = require('https')
 
 const RAPID_API_HOST = 'instagram-looter2.p.rapidapi.com'
 const RAPID_API_URL = 'https://' + RAPID_API_HOST + '/post-dl'
+const RAPID_API_PLAIN_HOST = 'instagram120.p.rapidapi.com'
+const RAPID_API_PLAIN_URL = 'https://' + RAPID_API_PLAIN_HOST + '/api/instagram/links'
 const CDN_HTTPS_AGENT = new https.Agent({ family: 4 })
 const CDN_HEADERS = {
     'User-Agent': 'Mozilla/5.0',
@@ -70,6 +72,20 @@ function buildVideoCaption(post) {
     return [escapeHtml(clippedCaption), instaLine].filter(Boolean).join('\n\n')
 }
 
+function getRapidApiKey() {
+    const apiKey = process.env.RAPID_API_KEY
+
+    if (!apiKey) {
+        throw new Error('RAPID_API_KEY is not set')
+    }
+
+    return apiKey
+}
+
+function isHttpUrl(url) {
+    return typeof url === 'string' && /^https?:\/\//i.test(url)
+}
+
 function getFileNameFromUrl(url, fallback) {
     try {
         const parsed = new URL(url)
@@ -104,12 +120,7 @@ async function fetchMediaBuffer(url, fallbackFileName) {
 }
 
 async function instaLoot(instagramUrl) {
-    const apiKey = process.env.RAPID_API_KEY
-
-    if (!apiKey) {
-        throw new Error('RAPID_API_KEY is not set')
-    }
-
+    const apiKey = getRapidApiKey()
     const url = assertInstagramUrl(instagramUrl)
 
     const response = await axios.request({
@@ -152,8 +163,75 @@ async function instaLoot(instagramUrl) {
     }
 }
 
+function getBestPlainVideo(items) {
+    const candidates = []
+
+    for (const item of items) {
+        const urls = Array.isArray(item?.urls) ? item.urls : []
+
+        for (const media of urls) {
+            const mediaUrl = media?.url
+            const isVideo = media?.extension === 'mp4' || media?.name === 'MP4' || /\.mp4(\?|$)/i.test(mediaUrl || '')
+
+            if (mediaUrl && isVideo) {
+                candidates.push({ item, media })
+            }
+        }
+    }
+
+    candidates.sort((a, b) => Number(b.media?.quality || 0) - Number(a.media?.quality || 0))
+    return candidates[0] || null
+}
+
+async function instaPlain(instagramUrl) {
+    const apiKey = getRapidApiKey()
+    const url = assertInstagramUrl(instagramUrl)
+
+    const response = await axios.request({
+        method: 'POST',
+        url: RAPID_API_PLAIN_URL,
+        timeout: 30000,
+        headers: {
+            'x-rapidapi-key': apiKey,
+            'x-rapidapi-host': RAPID_API_PLAIN_HOST,
+            'Content-Type': 'application/json'
+        },
+        data: { url },
+        validateStatus: status => status >= 200 && status < 500
+    })
+
+    if (response.status >= 400) {
+        throw new Error('Insta Plain request failed with status ' + response.status)
+    }
+
+    const items = Array.isArray(response.data) ? response.data : []
+    const selected = getBestPlainVideo(items)
+
+    if (!selected?.media?.url) {
+        throw new Error('No video link found from Insta Plain')
+    }
+
+    const meta = selected.item?.meta || {}
+    const post = {
+        caption: meta.title || '',
+        username: meta.username || ''
+    }
+    const thumbnailLink = isHttpUrl(selected.item?.pictureUrl) ? selected.item.pictureUrl : ''
+
+    return {
+        mediaLink: selected.media.url,
+        thumbnailLink,
+        mediaType: 'video',
+        caption: buildVideoCaption(post),
+        username: meta.username || '',
+        fullName: '',
+        sourceUrl: meta.sourceUrl || url
+    }
+}
+
 module.exports = {
     instaLoot,
+    instaPlain,
     fetchMediaBuffer,
     cleanCaption
 }
