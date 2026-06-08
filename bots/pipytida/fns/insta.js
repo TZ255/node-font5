@@ -42,18 +42,32 @@ function cleanCaption(caption) {
         .trim()
 }
 
+function escapeHtml(text) {
+    return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+}
+
+function getInstagramUsername(username) {
+    const cleaned = username ? String(username).replace(/^@+/, '').trim() : ''
+    return /^[A-Za-z0-9._]+$/.test(cleaned) ? cleaned : ''
+}
+
 function buildVideoCaption(post) {
     const caption = cleanCaption(post.caption)
-    const username = post.username ? String(post.username).replace(/^@+/, '').trim() : ''
-    const instaLine = username ? '\nInsta: @' + username : ''
+    const username = getInstagramUsername(post.username)
+    const visibleInstaLine = username ? '📸 Insta: @' + username : ''
 
-    if (!instaLine) return caption.slice(0, 1024)
+    if (!visibleInstaLine) return escapeHtml(caption.slice(0, 1024))
 
     const separatorLength = caption ? 2 : 0
-    const maxCaptionLength = Math.max(0, 1024 - instaLine.length - separatorLength)
+    const maxCaptionLength = Math.max(0, 1024 - visibleInstaLine.length - separatorLength)
     const clippedCaption = caption.length > maxCaptionLength ? caption.slice(0, maxCaptionLength).trim() : caption
+    const instaLine = '📸 Insta: <a href="https://www.instagram.com/' + username + '/">@' + escapeHtml(username) + '</a>'
 
-    return [clippedCaption, instaLine].filter(Boolean).join('\n\n')
+    return [escapeHtml(clippedCaption), instaLine].filter(Boolean).join('\n\n')
 }
 
 function getFileNameFromUrl(url, fallback) {

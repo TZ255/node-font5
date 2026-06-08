@@ -105,6 +105,7 @@ const PipyBot = async (app) => {
 
                 const sendOptions = {
                     caption: loot.caption || undefined,
+                    parse_mode: 'HTML',
                     supports_streaming: true,
                     reply_parameters: { message_id: post.message_id, allow_sending_without_reply: true }
                 }
