@@ -1,4 +1,4 @@
-const { Bot, webhookCallback } = require('grammy')
+const { Bot, InputFile, webhookCallback } = require('grammy')
 const { autoRetry } = require("@grammyjs/auto-retry")
 const bot = new Bot(process.env.PIPY_TOKEN)
 
@@ -12,7 +12,7 @@ const switchUserText = require('./fns/text-arr')
 const otheFns = require('./fns/otherFn')
 const call_sendMikeka_functions = require('./fns/mkeka-1-2-3')
 const makeConvo = require('./fns/convoFn')
-const { instaLoot } = require('./fns/insta')
+const { instaLoot, fetchMediaBuffer } = require('./fns/insta')
 
 const PipyBot = async (app) => {
     try {
@@ -97,10 +97,25 @@ const PipyBot = async (app) => {
                 await bot.api.sendChatAction(ctx.chat.id, 'upload_video').catch(e => { })
 
                 const loot = await instaLoot(match[1])
-                const sentVideo = await bot.api.sendVideo(ctx.chat.id, loot.mediaLink, {
+                const media = await fetchMediaBuffer(loot.mediaLink, 'instaloot.mp4')
+                const thumbnail = loot.thumbnailLink ? await fetchMediaBuffer(loot.thumbnailLink, 'instaloot-thumb.jpg').catch(error => {
+                    console.log('(Pipy instaloot thumbnail): ' + error.message)
+                    return null
+                }) : null
+
+                const sendOptions = {
                     caption: loot.caption || undefined,
+                    supports_streaming: true,
                     reply_parameters: { message_id: post.message_id, allow_sending_without_reply: true }
-                })
+                }
+
+                if (thumbnail && thumbnail.bytes <= 200000 && /^image\/jpe?g/i.test(thumbnail.contentType)) {
+                    sendOptions.thumbnail = new InputFile(thumbnail.buffer, thumbnail.fileName)
+                } else if (thumbnail) {
+                    console.log('(Pipy instaloot thumbnail): skipped incompatible thumbnail')
+                }
+
+                const sentVideo = await bot.api.sendVideo(ctx.chat.id, new InputFile(media.buffer, media.fileName), sendOptions)
 
                 await bot.api.copyMessage(imp.sio_shida, ctx.chat.id, sentVideo.message_id)
             } catch (error) {

@@ -1,7 +1,14 @@
 const axios = require('axios')
+const https = require('https')
 
 const RAPID_API_HOST = 'instagram-looter2.p.rapidapi.com'
 const RAPID_API_URL = 'https://' + RAPID_API_HOST + '/post-dl'
+const CDN_HTTPS_AGENT = new https.Agent({ family: 4 })
+const CDN_HEADERS = {
+    'User-Agent': 'Mozilla/5.0',
+    'Accept': 'video/mp4,video/*,image/avif,image/webp,image/apng,image/*,*/*',
+    'Referer': 'https://www.instagram.com/'
+}
 
 function assertInstagramUrl(url) {
     try {
@@ -38,7 +45,7 @@ function cleanCaption(caption) {
 function buildVideoCaption(post) {
     const caption = cleanCaption(post.caption)
     const username = post.username ? String(post.username).replace(/^@+/, '').trim() : ''
-    const instaLine = username ? 'Insta: @' + username : ''
+    const instaLine = username ? '\nInsta: @' + username : ''
 
     if (!instaLine) return caption.slice(0, 1024)
 
@@ -47,6 +54,39 @@ function buildVideoCaption(post) {
     const clippedCaption = caption.length > maxCaptionLength ? caption.slice(0, maxCaptionLength).trim() : caption
 
     return [clippedCaption, instaLine].filter(Boolean).join('\n\n')
+}
+
+function getFileNameFromUrl(url, fallback) {
+    try {
+        const parsed = new URL(url)
+        const filename = parsed.pathname.split('/').filter(Boolean).pop()
+        return filename || fallback
+    } catch (error) {
+        return fallback
+    }
+}
+
+async function fetchMediaBuffer(url, fallbackFileName) {
+    const response = await axios.request({
+        method: 'GET',
+        url,
+        responseType: 'arraybuffer',
+        timeout: 60000,
+        maxRedirects: 5,
+        httpsAgent: CDN_HTTPS_AGENT,
+        headers: CDN_HEADERS,
+        validateStatus: status => status >= 200 && status < 400
+    })
+
+    const buffer = Buffer.from(response.data)
+    if (!buffer.length) throw new Error('Downloaded Instagram media is empty')
+
+    return {
+        buffer,
+        contentType: response.headers['content-type'] || '',
+        fileName: getFileNameFromUrl(url, fallbackFileName),
+        bytes: buffer.length
+    }
 }
 
 async function instaLoot(instagramUrl) {
@@ -89,6 +129,7 @@ async function instaLoot(instagramUrl) {
 
     return {
         mediaLink: media.link,
+        thumbnailLink: media.img || '',
         mediaType: media.type || 'video',
         caption: buildVideoCaption(post),
         username: post.username || '',
@@ -99,6 +140,7 @@ async function instaLoot(instagramUrl) {
 
 module.exports = {
     instaLoot,
+    fetchMediaBuffer,
     cleanCaption
 }
 
