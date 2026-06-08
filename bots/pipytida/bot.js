@@ -12,6 +12,7 @@ const switchUserText = require('./fns/text-arr')
 const otheFns = require('./fns/otherFn')
 const call_sendMikeka_functions = require('./fns/mkeka-1-2-3')
 const makeConvo = require('./fns/convoFn')
+const { instaLoot } = require('./fns/insta')
 
 const PipyBot = async (app) => {
     try {
@@ -39,7 +40,7 @@ const PipyBot = async (app) => {
             muvikap2: 5940671686,
             blackberry: 1101685785,
             TelegramChannelId: 777000,
-            sio_shida: -1002110306030
+            sio_shida: -1002437373591
         }
 
         //use auto-retry
@@ -79,6 +80,32 @@ const PipyBot = async (app) => {
                 }
             } catch (error) {
                 console.log(error.message, error)
+            }
+        }
+
+
+        async function channelPost(bot, ctx, imp) {
+            try {
+                const post = ctx.channelPost
+                const text = post?.text?.trim()
+
+                if (ctx.chat.id !== imp.pzone || !text) return
+
+                const match = text.match(/^instaloot\s+(\S+)/i)
+                if (!match) return
+
+                await bot.api.sendChatAction(ctx.chat.id, 'upload_video').catch(e => { })
+
+                const loot = await instaLoot(match[1])
+                const sentVideo = await bot.api.sendVideo(ctx.chat.id, loot.mediaLink, {
+                    caption: loot.caption || undefined,
+                    reply_parameters: { message_id: post.message_id, allow_sending_without_reply: true }
+                })
+
+                await bot.api.copyMessage(imp.sio_shida, ctx.chat.id, sentVideo.message_id)
+            } catch (error) {
+                console.log('(Pipy instaloot): ' + error.message, error)
+                await bot.api.sendMessage(imp.shemdoe, '(Pipy instaloot): ' + error.message).catch(e => { })
             }
         }
 
@@ -424,6 +451,11 @@ const PipyBot = async (app) => {
             } catch (error) {
                 await ctx.reply(error.message)
             }
+        })
+
+
+        bot.on('channel_post:text', async ctx => {
+            await channelPost(bot, ctx, imp)
         })
 
         bot.on('callback_query:data', async ctx => {
