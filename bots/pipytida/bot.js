@@ -84,6 +84,135 @@ const PipyBot = async (app) => {
         }
 
 
+        function parseInstagramDownloadPost(text) {
+            const lines = text.split(/\r?\n/).map(line => line.trim()).filter(Boolean)
+            const command = lines[0] || ''
+            let provider = null
+
+            if (/^insta\s+plain\b/i.test(command)) {
+                provider = 'plain'
+            } else if (/^insta\s+loot\b/i.test(command) || /^instaloot\b/i.test(command)) {
+                provider = 'loot'
+            }
+
+            if (!provider) return null
+
+            const paddedCommand = ' ' + command + ' '
+            const noForward = /\s--no-f(?:\s|$)/i.test(paddedCommand)
+            const noCaption = /\s--no-cap(?:\s|$)/i.test(paddedCommand)
+            const links = lines
+                .flatMap(line => line.match(/https?:\/\/\S+/gi) || [])
+                .map(link => link.replace(/[),.;]+$/g, ''))
+
+            return { provider, noForward, noCaption, links }
+        }
+
+        function getThumbnailInput(thumbnail) {
+            if (!thumbnail || thumbnail.bytes > 200000 || !/^image\/jpe?g/i.test(thumbnail.contentType)) return null
+            return new InputFile(thumbnail.buffer, thumbnail.fileName)
+        }
+
+        async function getInstagramMedia(provider, url) {
+            if (provider === 'plain') return instaPlain(url)
+            return instaLoot(url)
+        }
+
+        async function prepareInstagramVideo(provider, url, filePrefix, index) {
+            const loot = await getInstagramMedia(provider, url)
+            const media = await fetchMediaBuffer(loot.mediaLink, filePrefix + '-' + (index + 1) + '.mp4')
+            const thumbnail = loot.thumbnailLink ? await fetchMediaBuffer(loot.thumbnailLink, filePrefix + '-' + (index + 1) + '-thumb.jpg').catch(error => {
+                console.log('(Pipy insta thumbnail): ' + error.message)
+                return null
+            }) : null
+
+            return { loot, media, thumbnail, sourceUrl: url }
+        }
+
+        function buildInputMediaVideo(item) {
+            const inputMedia = {
+                type: 'video',
+                media: new InputFile(item.media.buffer, item.media.fileName),
+                supports_streaming: true
+            }
+            const thumbnail = getThumbnailInput(item.thumbnail)
+
+            if (thumbnail) inputMedia.thumbnail = thumbnail
+            return inputMedia
+        }
+
+        async function copySentMessages(bot, imp, fromChatId, messages, noForward) {
+            if (noForward || !messages.length) return
+
+            const messageIds = messages.map(message => message.message_id)
+
+            try {
+                if (messageIds.length === 1) {
+                    await bot.api.copyMessage(imp.sio_shida, fromChatId, messageIds[0])
+                } else {
+                    await bot.api.copyMessages(imp.sio_shida, fromChatId, messageIds)
+                }
+            } catch (error) {
+                console.log('(Pipy insta copy): ' + error.message)
+                await bot.api.sendMessage(imp.shemdoe, '(Pipy insta copy): ' + error.message).catch(e => { })
+            }
+        }
+
+        async function sendPreparedSingle(bot, ctx, imp, post, item, includeCaption, noForward) {
+            const sendOptions = {
+                supports_streaming: true,
+                reply_parameters: { message_id: post.message_id, allow_sending_without_reply: true }
+            }
+            const thumbnail = getThumbnailInput(item.thumbnail)
+
+            if (includeCaption && item.loot.caption) {
+                sendOptions.caption = item.loot.caption
+                sendOptions.parse_mode = 'HTML'
+            }
+            if (thumbnail) sendOptions.thumbnail = thumbnail
+
+            const sentVideo = await bot.api.sendVideo(ctx.chat.id, new InputFile(item.media.buffer, item.media.fileName), sendOptions)
+            await copySentMessages(bot, imp, ctx.chat.id, [sentVideo], noForward)
+        }
+
+        async function sendAlbumChunk(bot, chatId, items, options = {}) {
+            try {
+                if (items.length === 1) {
+                    const item = items[0]
+                    const sendOptions = { supports_streaming: true, ...options }
+                    const thumbnail = getThumbnailInput(item.thumbnail)
+
+                    if (thumbnail) sendOptions.thumbnail = thumbnail
+                    return [await bot.api.sendVideo(chatId, new InputFile(item.media.buffer, item.media.fileName), sendOptions)]
+                }
+
+                return await bot.api.sendMediaGroup(chatId, items.map(buildInputMediaVideo), options)
+            } catch (error) {
+                console.log('(Pipy insta album upload): ' + error.message)
+
+                if (items.length <= 1) return []
+
+                const middle = Math.ceil(items.length / 2)
+                const first = await sendAlbumChunk(bot, chatId, items.slice(0, middle), options)
+                const second = await sendAlbumChunk(bot, chatId, items.slice(middle), {})
+                return first.concat(second)
+            }
+        }
+
+        async function sendPreparedAlbum(bot, ctx, imp, post, items, noForward) {
+            const sentMessages = []
+
+            for (let index = 0; index < items.length; index += 10) {
+                const chunk = items.slice(index, index + 10)
+                const options = index === 0 ? {
+                    reply_parameters: { message_id: post.message_id, allow_sending_without_reply: true }
+                } : {}
+                const sentChunk = await sendAlbumChunk(bot, ctx.chat.id, chunk, options)
+                sentMessages.push(...sentChunk)
+            }
+
+            await copySentMessages(bot, imp, ctx.chat.id, sentMessages, noForward)
+        }
+
         async function channelPost(bot, ctx, imp) {
             let processingMsg
 
@@ -93,42 +222,38 @@ const PipyBot = async (app) => {
 
                 if (ctx.chat.id !== imp.pzone || !text) return
 
-                const looterMatch = text.match(/^instaloot\s+(\S+)/i)
-                const plainMatch = text.match(/^insta\s+plain\s+(\S+)/i)
-                const match = plainMatch || looterMatch
-                if (!match) return
+                const parsed = parseInstagramDownloadPost(text)
+                if (!parsed || !parsed.links.length) return
 
                 processingMsg = await bot.api.sendMessage(ctx.chat.id, 'processing....⏳', {
                     reply_parameters: { message_id: post.message_id, allow_sending_without_reply: true }
                 })
 
-                const loot = plainMatch ? await instaPlain(match[1]) : await instaLoot(match[1])
-                const filePrefix = plainMatch ? 'insta-plain' : 'instaloot'
-                const media = await fetchMediaBuffer(loot.mediaLink, filePrefix + '.mp4')
-                const thumbnail = loot.thumbnailLink ? await fetchMediaBuffer(loot.thumbnailLink, filePrefix + '-thumb.jpg').catch(error => {
-                    console.log('(Pipy instaloot thumbnail): ' + error.message)
-                    return null
-                }) : null
+                const isAlbumRequest = parsed.links.length > 1
+                const filePrefix = parsed.provider === 'plain' ? 'insta-plain' : 'insta-loot'
+                const preparedVideos = []
 
-                const sendOptions = {
-                    caption: loot.caption || undefined,
-                    parse_mode: 'HTML',
-                    supports_streaming: true,
-                    reply_parameters: { message_id: post.message_id, allow_sending_without_reply: true }
+                for (const [index, link] of parsed.links.entries()) {
+                    try {
+                        const prepared = await prepareInstagramVideo(parsed.provider, link, filePrefix, index)
+                        preparedVideos.push(prepared)
+                    } catch (error) {
+                        console.log('(Pipy insta prepare): ' + link + ' - ' + error.message)
+                    }
                 }
 
-                if (thumbnail && thumbnail.bytes <= 200000 && /^image\/jpe?g/i.test(thumbnail.contentType)) {
-                    sendOptions.thumbnail = new InputFile(thumbnail.buffer, thumbnail.fileName)
-                } else if (thumbnail) {
-                    console.log('(Pipy instaloot thumbnail): skipped incompatible thumbnail')
+                if (!preparedVideos.length) {
+                    throw new Error('No Instagram videos could be prepared')
                 }
 
-                const sentVideo = await bot.api.sendVideo(ctx.chat.id, new InputFile(media.buffer, media.fileName), sendOptions)
-
-                await bot.api.copyMessage(imp.sio_shida, ctx.chat.id, sentVideo.message_id)
+                if (isAlbumRequest) {
+                    await sendPreparedAlbum(bot, ctx, imp, post, preparedVideos, parsed.noForward)
+                } else {
+                    await sendPreparedSingle(bot, ctx, imp, post, preparedVideos[0], !parsed.noCaption, parsed.noForward)
+                }
             } catch (error) {
-                console.log('(Pipy instaloot): ' + error.message, error)
-                await bot.api.sendMessage(imp.shemdoe, '(Pipy instaloot): ' + error.message).catch(e => { })
+                console.log('(Pipy insta): ' + error.message, error)
+                await bot.api.sendMessage(imp.shemdoe, '(Pipy insta): ' + error.message).catch(e => { })
             } finally {
                 if (processingMsg) {
                     await bot.api.deleteMessage(ctx.chat.id, processingMsg.message_id).catch(e => { })

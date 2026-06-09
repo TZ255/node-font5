@@ -1,10 +1,10 @@
 const axios = require('axios')
 const https = require('https')
 
-const RAPID_API_HOST = 'instagram-looter2.p.rapidapi.com'
-const RAPID_API_URL = 'https://' + RAPID_API_HOST + '/post-dl'
-const RAPID_API_PLAIN_HOST = 'instagram120.p.rapidapi.com'
-const RAPID_API_PLAIN_URL = 'https://' + RAPID_API_PLAIN_HOST + '/api/instagram/links'
+const RAPID_API_INSTA_LOOTER_HOST = 'instagram-looter2.p.rapidapi.com'
+const RAPID_API_INSTA_LOOTER_URL = 'https://' + RAPID_API_INSTA_LOOTER_HOST + '/post-dl'
+const RAPID_API_INSTAGRAM120_HOST = 'instagram120.p.rapidapi.com'
+const RAPID_API_INSTAGRAM120_URL = 'https://' + RAPID_API_INSTAGRAM120_HOST + '/api/instagram/links'
 const CDN_HTTPS_AGENT = new https.Agent({ family: 4 })
 const CDN_HEADERS = {
     'User-Agent': 'Mozilla/5.0',
@@ -119,37 +119,17 @@ async function fetchMediaBuffer(url, fallbackFileName) {
     }
 }
 
-async function instaLoot(instagramUrl) {
-    const apiKey = getRapidApiKey()
-    const url = assertInstagramUrl(instagramUrl)
-
-    const response = await axios.request({
-        method: 'GET',
-        url: RAPID_API_URL,
-        params: { url },
-        timeout: 30000,
-        headers: {
-            'x-rapidapi-key': apiKey,
-            'x-rapidapi-host': RAPID_API_HOST,
-            'Content-Type': 'application/json'
-        },
-        validateStatus: status => status >= 200 && status < 500
-    })
-
-    if (response.status >= 400) {
-        throw new Error('Instagram looter request failed with status ' + response.status)
+function normalizeLooterResponse(data, url, serviceName) {
+    if (!data?.status || !data?.data) {
+        throw new Error(serviceName + ' returned no usable data')
     }
 
-    if (!response.data?.status || !response.data?.data) {
-        throw new Error('Instagram looter returned no usable data')
-    }
-
-    const post = response.data.data
+    const post = data.data
     const medias = Array.isArray(post.medias) ? post.medias : []
     const media = medias.find(item => item?.type === 'video' && item?.link)
 
     if (!media?.link) {
-        throw new Error('No video link found for this Instagram post')
+        throw new Error('No video link found from ' + serviceName)
     }
 
     return {
@@ -161,6 +141,34 @@ async function instaLoot(instagramUrl) {
         fullName: post.full_name || '',
         sourceUrl: url
     }
+}
+
+async function requestLooterProvider(instagramUrl, host, requestUrl, serviceName) {
+    const apiKey = getRapidApiKey()
+    const url = assertInstagramUrl(instagramUrl)
+
+    const response = await axios.request({
+        method: 'GET',
+        url: requestUrl,
+        params: { url },
+        timeout: 30000,
+        headers: {
+            'x-rapidapi-key': apiKey,
+            'x-rapidapi-host': host,
+            'Content-Type': 'application/json'
+        },
+        validateStatus: status => status >= 200 && status < 500
+    })
+
+    if (response.status >= 400) {
+        throw new Error(serviceName + ' request failed with status ' + response.status)
+    }
+
+    return normalizeLooterResponse(response.data, url, serviceName)
+}
+
+async function instaLoot(instagramUrl) {
+    return requestLooterProvider(instagramUrl, RAPID_API_INSTA_LOOTER_HOST, RAPID_API_INSTA_LOOTER_URL, 'Instagram looter')
 }
 
 function getBestPlainVideo(items) {
@@ -189,11 +197,11 @@ async function instaPlain(instagramUrl) {
 
     const response = await axios.request({
         method: 'POST',
-        url: RAPID_API_PLAIN_URL,
+        url: RAPID_API_INSTAGRAM120_URL,
         timeout: 30000,
         headers: {
             'x-rapidapi-key': apiKey,
-            'x-rapidapi-host': RAPID_API_PLAIN_HOST,
+            'x-rapidapi-host': RAPID_API_INSTAGRAM120_HOST,
             'Content-Type': 'application/json'
         },
         data: { url },
