@@ -645,7 +645,7 @@ const PipyBot = async (app) => {
                     if (['administrator', 'creator'].includes(status.status)) {
                         const vichaa = [6396427623]
                         if (vichaa.includes(adminId)) return await ctx.reply(`${adminName} umezuiwa kuondoa members kwenye group. Mtaarifu mtoa huduma mwingine afanye kazi hii`);
-                        
+
                         await ctx.banChatMember(userid, 0)
                         await ctx.reply(`<b>${mention}</b> amekula ban ya maisha kwenye hili group.`, {
                             reply_parameters: { message_id: my_msgid },
@@ -667,7 +667,7 @@ const PipyBot = async (app) => {
 
 
         bot.on('channel_post:text', async ctx => {
-            await channelPost(bot, ctx, imp)
+            channelPost(bot, ctx, imp)
         })
 
         bot.on('callback_query:data', async ctx => {
