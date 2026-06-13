@@ -30,7 +30,7 @@ const PipyBot = async (app) => {
             sh1xbet: 5755271222,
             xzone: -1001740624527,
             ohmyDB: -1001586042518,
-            xbongo: -1001263624837,
+            xbongo: -1001879260426,
             mikekaDB: -1001696592315,
             logsBin: -1001845473074,
             mylove: -1001748858805,
@@ -148,9 +148,9 @@ const PipyBot = async (app) => {
 
             try {
                 if (messageIds.length === 1) {
-                    await bot.api.copyMessage(imp.sio_shida, fromChatId, messageIds[0])
+                    await bot.api.copyMessage(imp.xbongo, fromChatId, messageIds[0])
                 } else {
-                    await bot.api.copyMessages(imp.sio_shida, fromChatId, messageIds)
+                    await bot.api.copyMessages(imp.xbongo, fromChatId, messageIds)
                 }
             } catch (error) {
                 console.log('(Pipy insta copy): ' + error.message)
